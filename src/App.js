@@ -7,6 +7,7 @@ import Events from './components/Events';
 import Review from './components/Review';
 import Schedule from './components/Schedule';
 import Login from './components/Login';
+import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import ImageSlider from './components/ImageSlider';
@@ -14,7 +15,7 @@ import ImageSlider from './components/ImageSlider';
 
 const AppContent = () => {
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+  const isLoginPage = location.pathname === '/login' || location.pathname === '/join';
 
   return (
     <div className="App">
@@ -27,6 +28,7 @@ const AppContent = () => {
         <Route path="/review" element={<Review />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/join" element={<Join />} />
       </Routes>
       {!isLoginPage && <Footer />}
     </div>
