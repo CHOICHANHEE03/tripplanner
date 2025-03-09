@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import logo from "../image/logo.png";
-import "../css/Home.css";
+import "../css/LoginJoin.css";
 
 const Login = () => {
   const handleLogin = () => {
@@ -20,18 +20,23 @@ const Login = () => {
   };
 
   return (
-    <div className="info-section">
-      <div>
-        <img src={logo} alt="Logo" />
-      </div>
-      <input type="text" placeholder="아이디를 입력해주세요" />
-      <input type="password" placeholder="비밀번호를 입력해주세요" />
-      <button onClick={handleLogin}>로그인</button>
-      <p>
-        아직 회원가입을 안하셨나요?&nbsp;&nbsp;&nbsp;
-        <Link to="/join">회원가입</Link>
-      </p>
+  <div className="container">
+  <div className="Login-Join">
+    <div className="title-logo">
+      <img src={logo} alt="Logo" />
     </div>
+    <div>
+      <input type="text" placeholder="아이디를 입력해주세요" className="input"/>
+      <input type="password" placeholder="비밀번호를 입력해주세요" className="input"/>
+    </div>
+    <button onClick={handleLogin} className="button">로그인</button>
+    <p className="font-text">
+      아직 회원가입을 안하셨나요?&nbsp;&nbsp;&nbsp;
+      <Link to="/join" className="join-Btn">회원가입</Link>
+    </p>
+  </div>
+</div>
+
   );
 };
 

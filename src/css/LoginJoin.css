@@ -1,0 +1,68 @@
+/*배경 css*/
+.container {
+    height: 100vh; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+/*로고 css*/
+.title-logo{
+    margin-bottom: 40px;
+}
+/*로그인,회원가입 전체 폼 css*/
+.Login-Join{
+    background-color: #FFFFFF;
+    border: 5px solid #DAEFF1;
+    width: 800px;
+    height: 600px;
+    display: flex;     
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    border-radius: 10px;
+}
+/*입력창 전체 css*/
+.input-container{
+    margin-top: 20px;
+}
+/*입력창 css*/
+.input{
+    width: 400px;
+    height: 40px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-top: 10px;
+    margin: 10px;
+    border: 3px solid #D6D6D6;
+    font-size: 20px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    margin-top: 14px;
+}
+input:focus {
+    border: 3px solid #DAEFF1;
+    outline: none; 
+}
+/*글자 <p>태그 css*/
+.font-text{
+    color: gray;
+}
+/*로그인,회원가입 버튼 css*/
+.button{
+    width: 250px;
+    height: 40px;
+    margin: 10px;
+    margin-top: 35px;
+    background-color: #DAEFF1;
+    border: none;
+    cursor: pointer;
+}
+/*회원가입 창으로 넘어가는 버튼 css*/
+.join-Btn{
+    text-decoration: none;
+    color: #000000;
+}
+.join-Btn:hover{
+    color: #DAEFF1
+}
