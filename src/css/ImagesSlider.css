@@ -12,7 +12,7 @@
 }
 
 .text-container h2 {
-    font-size: 32px;
+    font-size: 25px;
     font-weight: bold;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 2);
 }
@@ -35,8 +35,8 @@
 
 .swiper-pagination-bullet{
     background-color: #FFFFFF;
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 10px;
     opacity: 1;
 }
 .swiper-pagination-bullet-active{

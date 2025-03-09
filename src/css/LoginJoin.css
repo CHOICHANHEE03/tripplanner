@@ -1,20 +1,23 @@
 /*배경 css*/
 .container {
-    height: 100vh; 
+    height: 90vh; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
 }
 /*로고 css*/
 .title-logo{
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+}
+.Login-Join-logo{
+    width: 250px;
 }
 /*로그인,회원가입 전체 폼 css*/
 .Login-Join{
     background-color: #FFFFFF;
     border: 5px solid #DAEFF1;
-    width: 800px;
-    height: 600px;
+    width: 600px;
+    height: 450px;
     display: flex;     
     flex-direction: column;
     justify-content: center; 
@@ -27,18 +30,17 @@
 }
 /*입력창 css*/
 .input{
-    width: 400px;
-    height: 40px;
-    padding: 5px;
+    width: 300px;
+    height: 17px;
     padding-left: 10px;
-    padding-top: 10px;
-    margin: 10px;
+    padding-top: 11px;
+    padding-bottom: 8px;
     border: 3px solid #D6D6D6;
-    font-size: 20px;
+    font-size: 13px;
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    margin-top: 14px;
+    margin-top: 12px;
 }
 input:focus {
     border: 3px solid #DAEFF1;

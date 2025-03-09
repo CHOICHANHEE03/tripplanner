@@ -23,7 +23,7 @@ const Login = () => {
   <div className="container">
   <div className="Login-Join">
     <div className="title-logo">
-      <img src={logo} alt="Logo" />
+      <img src={logo} alt="Logo" className="Login-Join-logo"/>
     </div>
     <div>
       <input type="text" placeholder="아이디를 입력해주세요" className="input"/>
