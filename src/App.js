@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';  // BrowserRouter를 Router로 사용
 
@@ -17,8 +18,15 @@ const App = () => {
 
   // 로그인 페이지에서만 네비게이션 바와 푸터를 숨김
   const isLoginPage = location.pathname === '/login';
+=======
+import React from "react";
+import TouristInfo from "./components/TouristInfo";
+import EventInfo from "./components/EventInfo";
+>>>>>>> gy
 
+const App = () => {
   return (
+<<<<<<< HEAD
     <div className="App">
       {!isLoginPage && <NavigationBar />}
       <Routes>
@@ -42,3 +50,13 @@ export default function WrappedApp() {
     </Router>
   );
 }
+=======
+    <div>
+      <TouristInfo />
+      <EventInfo />
+    </div>
+  );
+};
+
+export default App;
+>>>>>>> gy

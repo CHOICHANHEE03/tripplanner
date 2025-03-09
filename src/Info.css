@@ -1,0 +1,32 @@
+.info-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.info-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.info-box {
+  flex: 1;
+  max-width: 30%;
+  height: 250px;
+  border: 1px solid #DAEFF1;
+}
+
+.info-text {
+  margin: 10px 0;
+}
+
+.info-button {
+  background: #DAEFF1;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
