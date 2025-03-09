@@ -1,14 +1,13 @@
-
 .custom-slide {
     display: flex; 
     align-items: center; 
 }
-/* 텍스트 영역*/
+
 .text-container {
     width: 45%; 
     padding: 20px;
     color: #fff; 
-    position: absolute; 
+    position: absolute;
     left: 5%; 
 }
 
@@ -30,7 +29,7 @@
 
 .slide-img {
     width: 100%;
-    height: 700px;
+    height: 400px;
     object-fit: cover;
 }
 
