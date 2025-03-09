@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';  // BrowserRouter를 Router로 사용
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
-// 대문자로 시작하는 컴포넌트 임포트
 import Home from './components/Main';
 import Tourism from './components/Tourism';
 import Events from './components/Events';
@@ -12,21 +10,14 @@ import Login from './components/Login';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import ImageSlider from './components/ImageSlider';
+import TouristInfo from './components/TouristInfo';
+import EventInfo from './components/EventInfo';
 
-const App = () => {
-  const location = useLocation();  // 현재 URL을 가져옴
-
-  // 로그인 페이지에서만 네비게이션 바와 푸터를 숨김
+const AppContent = () => {
+  const location = useLocation();
   const isLoginPage = location.pathname === '/login';
-=======
-import React from "react";
-import TouristInfo from "./components/TouristInfo";
-import EventInfo from "./components/EventInfo";
->>>>>>> gy
 
-const App = () => {
   return (
-<<<<<<< HEAD
     <div className="App">
       {!isLoginPage && <NavigationBar />}
       <Routes>
@@ -38,25 +29,17 @@ const App = () => {
         <Route path="/login" element={<Login />} />
       </Routes>
       {!isLoginPage && <ImageSlider />}
-      {!isLoginPage && <Footer />}
-    </div>
-  );
-}
-
-export default function WrappedApp() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
-}
-=======
-    <div>
       <TouristInfo />
       <EventInfo />
+      {!isLoginPage && <Footer />}
     </div>
   );
 };
 
-export default App;
->>>>>>> gy
+export default function WrappedApp() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
