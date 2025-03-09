@@ -1,5 +1,5 @@
 import React from "react";
-import "../Info.css";
+import "../css/Info.css";
 
 const EventInfo = () => {
     return (
