@@ -29,8 +29,8 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
       </Routes>
       {!isLoginPage && <ImageSlider />}
-      <TouristInfo />
-      <EventInfo />
+      {!isLoginPage && <TouristInfo />}
+      {!isLoginPage && <EventInfo />}
       {!isLoginPage && <Footer />}
     </div>
   );

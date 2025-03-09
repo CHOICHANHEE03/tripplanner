@@ -11,7 +11,7 @@ const NavigationBar = () => {
             <Link className="navbarMenu" to={"/"}>Home</Link>
             <Link className="navbarMenu" to={"/tourisms"}>관광지</Link>
             <Link className="navbarMenu" to={"/events"}>행사</Link>
-            <Link className="navbarMenu" to={"/reiview"}>리뷰</Link>
+            <Link className="navbarMenu" to={"/review"}>리뷰</Link>
             <Link className="navbarMenu" to={"/schedule"}>일정관리</Link>
             <Link className="navbarMenu" to={"/login"}>로그인/회원가입</Link>
         </div>
