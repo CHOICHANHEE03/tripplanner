@@ -10,7 +10,6 @@ import Login from './components/Login';
 import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
-import ImageSlider from './components/ImageSlider';
 
 
 const AppContent = () => {
@@ -20,7 +19,6 @@ const AppContent = () => {
   return (
     <div className="App">
       {!isLoginPage && <NavigationBar />}
-      {!isLoginPage && <ImageSlider />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/tourism" element={<Tourism />} />
