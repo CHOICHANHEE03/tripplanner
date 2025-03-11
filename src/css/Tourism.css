@@ -1,0 +1,121 @@
+.tourism-list h1 {
+    font-size: 25px; 
+    margin-left: 40px;
+}
+.tourism-container {
+    margin: 30px;
+}
+.tourism-cards{
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    gap: 20px; 
+    padding: 10px;
+
+}
+.tourism-card {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #DAEFF1;
+    width: 30%; /* 카드가 한 줄에 3개씩 배치되도록 설정 */
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box; /* padding이 카드 크기에 영향을 미치지 않도록 설정 */
+    border-radius: 8px;
+}
+
+/* 카드 내용 */
+.card-content {
+    padding: 20px;
+    background: #FFFFFF;
+}
+
+/* 버튼 위치 조정 */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 10px 10px;
+}
+
+/* 정보 버튼 스타일 */
+.info-button {
+    background: #DAEFF1;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.info-button:hover {
+    background-color: #C0E7E9;
+}
+
+/* 좋아요 버튼 스타일 */
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #FF6B6B;
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.like-button:hover {
+    color: #FF3B3B;
+}
+
+/* 페이지 네비게이션 버튼 */
+.page-nav {
+    text-align: center;
+    margin: 20px;
+}
+
+.page-nav-btn {
+    background-color: #D6D6D6;
+    border: 1px solid #D6D6D6;
+    border-radius: 3px;
+    width: 30px;
+    height: 30px;
+    margin: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.page-nav-btn:hover {
+    background-color: #A9A9A9;
+}
+
+.page-nav-btn:disabled {
+    background-color: #E0E0E0;
+    cursor: not-allowed;
+}
+
+
+
+.text-container p {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .tourism-container {
+        max-width: 100%; /* 중간 크기 화면에서 카드 너비를 100%로 */
+    }
+
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2열 레이아웃 */
+    }
+}
+
+@media (max-width: 768px) {
+    .tourism-container {
+        max-width: 100%; /* 작은 화면에서 카드 너비를 100%로 */
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr; /* 1열 레이아웃 */
+    }
+}

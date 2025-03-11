@@ -10,6 +10,7 @@ import Login from './components/Login';
 import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
+import MyPage from './components/MyPage';
 
 
 const AppContent = () => {
@@ -27,6 +28,7 @@ const AppContent = () => {
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Routes>
       {!isLoginPage && <Footer />}
     </div>
