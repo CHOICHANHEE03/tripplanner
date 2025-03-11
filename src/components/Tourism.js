@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/Tourism.css";
-import { FaHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 const Tourism = () => {
   const [data, setData] = useState([]); // 관광지 목록
@@ -66,14 +66,18 @@ const Tourism = () => {
   const handleLike = (tourism) => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
     const isAlreadyFavorite = storedFavorites.some(
-      (fav) => fav.name === tourism.title
+      (fav) => fav.id === tourism.id
     );
 
-    if (!isAlreadyFavorite) {
-      const updatedFavorites = [...storedFavorites, tourism];
-      setFavorites(updatedFavorites);
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    let updatedFavorites;
+    if (isAlreadyFavorite) {
+      updatedFavorites = storedFavorites.filter((fav) => fav.id !== tourism.id);
+    } else {
+      updatedFavorites = [...storedFavorites, tourism];
     }
+
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
   return (
@@ -93,8 +97,9 @@ const Tourism = () => {
                 <button
                   className="like-button"
                   onClick={() => handleLike(tourism)}
+                  style={{ color: favorites.some((fav) => fav.id === tourism.id) ? "#FF6B6B" : "black" }}
                 >
-                  <FaHeart />
+                  {favorites.some((fav) => fav.id === tourism.id) ? <FaHeart /> : <FaRegHeart />}
                 </button>
               </div>
             </div>
