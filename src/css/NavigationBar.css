@@ -1,4 +1,4 @@
-/*로고+메뉴바 전체 css*/
+/* 로고+메뉴바 전체 css */
 .navbar {
     width: 100%;
     min-height: 80px;  
@@ -11,20 +11,28 @@
     justify-content: space-between;  
     flex-wrap: wrap;
 }
-/*사이트 로고 css*/
+
+/* 사이트 로고 css */
 .navbar-logo {
     width: 200px;
     height: 60px;
 }
-/*메뉴바 안 글자 css*/
+
+/* 메뉴바 안 글자 및 버튼 공통 스타일 */
 .navbarMenu {
     text-decoration: none;
     color: #000000;
     font-size: 15px;
     margin-left: 10px;
     margin-right: 25px;  
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
 }
-/*메뉴바 css*/
+
+/* 메뉴바 css */
 .navbar-right {
     display: flex;
     flex-direction: row;

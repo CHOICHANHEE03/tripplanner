@@ -10,8 +10,8 @@ const MyPage = () => {
         setFavorites(storedFavorites);
     }, []);
 
-    const removeFavorite = (name) => {
-        const updatedFavorites = favorites.filter((place) => place.name !== name);
+    const removeFavorite = (id) => {
+        const updatedFavorites = favorites.filter((place) => place.id !== id);
         setFavorites(updatedFavorites);
         localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
     };
@@ -23,12 +23,12 @@ const MyPage = () => {
                 <p>찜한 관광지가 없습니다.</p>
             ) : (
                 <div className="mypage-grid">
-                    {favorites.map((place, index) => (
-                        <div key={index} className="mypage-card">
-                            <img src={place.imageUrl} alt={place.name} className="card-img" />
-                            <h3>{place.name}</h3>
-                            <p>{place.description}</p>
-                            <button className="remove-button" onClick={() => removeFavorite(place.name)}>
+                    {favorites.map((place) => (
+                        <div key={place.id} className="mypage-card">
+                            {place.img && <img src={place.img} alt={place.title} className="card-img" />}
+                            <h3>{place.title}</h3>
+                            <p>{place.completed ? "완료" : "미완료"}</p>
+                            <button className="remove-button" onClick={() => removeFavorite(place.id)}>
                                 <FaHeartBroken /> 삭제
                             </button>
                         </div>

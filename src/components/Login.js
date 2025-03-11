@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoCaretBackCircle } from "react-icons/io5";
 import Swal from "sweetalert2";
@@ -7,8 +7,15 @@ import "../css/LoginJoin.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
+    if (!username || !password) {
+      Swal.fire("로그인 실패", "아이디와 비밀번호를 입력해주세요", "error");
+      return;
+    }
+
     Swal.fire({
       title: "로그인 하시겠습니까?",
       icon: "question",
@@ -17,7 +24,9 @@ const Login = () => {
       cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
+        localStorage.setItem("user", JSON.stringify({ username })); // 임시 로그인 처리
         Swal.fire("로그인 성공!", "환영합니다!", "success");
+        navigate("/");
       }
     });
   };
@@ -32,8 +41,20 @@ const Login = () => {
           <img src={logo} alt="Logo" className="Login-Join-logo" />
         </div>
         <div>
-          <input type="text" placeholder="아이디를 입력해주세요" className="input" />
-          <input type="password" placeholder="비밀번호를 입력해주세요" className="input" />
+          <input 
+            type="text" 
+            placeholder="아이디를 입력해주세요" 
+            className="input" 
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input 
+            type="password" 
+            placeholder="비밀번호를 입력해주세요" 
+            className="input" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <button onClick={handleLogin} className="button">로그인</button>
         <p className="font-text">
