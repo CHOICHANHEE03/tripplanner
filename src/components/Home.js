@@ -49,25 +49,25 @@ const Home = () => {
           ))}
         </Swiper>
       </div>
-      <div class="info-section">
+      <div className="info-section">
         <h2>최신 관광지 정보</h2>
         <div className="info-container">
           <div className="info-box"></div>
           <div className="info-box"></div>
           <div className="info-box"></div>
         </div>
-        <p class="info-text">더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
+        <p className="info-text">더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
           <button className="info-button" onClick={handleTourismClick}>관광지 바로가기</button>
         </p>
       </div>
-      <div class="info-section">
+      <div className="info-section">
         <h2>최신 행사 정보</h2>
         <div className="info-container">
           <div className="info-box"></div>
           <div className="info-box"></div>
           <div className="info-box"></div>
         </div>
-        <p class="info-text">더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
+        <p className="info-text">더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
           <button className="info-button" onClick={handleEventsClick}>행사 바로가기</button>
         </p>
       </div>

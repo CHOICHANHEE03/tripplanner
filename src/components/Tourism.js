@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "../css/Tourism.css";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
+import TourismList from "./TourismList";
+import Pagination from "./Pagination";
+import "../css/TourismList.css";
+import "../css/Pagination.css";
 
 const Tourism = () => {
   const [data, setData] = useState([]); // 관광지 목록
@@ -13,8 +15,9 @@ const Tourism = () => {
 
   // API 호출 함수
   const fetchData = async (page) => {
-    const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+    const response = await fetch("https://880821db-ae00-4642-919d-632e6a038644.mock.pstmn.io/api/tourism");
     const result = await response.json();
+
 
     // 데이터를 페이지별로 나눔
     const startIndex = (page - 1) * pageSize;
@@ -82,58 +85,16 @@ const Tourism = () => {
 
   return (
     <div className="tourism-list">
-      <h1>🚌 여행 관광지 리스트</h1>
-      <div className="tourism-container">
-        <div className="tourism-cards">
-          {data.map((tourism) => (
-            <div key={tourism.id} className="tourism-card">
-              <div className="tourism-card-header">
-                <img>{tourism.img}</img>
-                <h3>{tourism.title}</h3>
-                <p>{tourism.completed ? "완료" : "미완료"}</p>
-              </div>
-              <div className="tourism-card-footer">
-                <button className="info-button">자세히 보기</button>
-                <button
-                  className="like-button"
-                  onClick={() => handleLike(tourism)}
-                  style={{ color: favorites.some((fav) => fav.id === tourism.id) ? "#FF6B6B" : "black" }}
-                >
-                  {favorites.some((fav) => fav.id === tourism.id) ? <FaHeart /> : <FaRegHeart />}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="page-nav">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="page-nav-btn"
-        >
-          &lt;
-        </button>
+      {/* Tourism List Component */}
+      <TourismList data={data} favorites={favorites} handleLike={handleLike} />
 
-        {pageNumbers.map((pageNumber) => (
-          <button
-            key={pageNumber}
-            onClick={() => handlePageChange(pageNumber)}
-            disabled={currentPage === pageNumber}
-            className="page-nav-btn"
-          >
-            {pageNumber}
-          </button>
-        ))}
-
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="page-nav-btn"
-        >
-          &gt;
-        </button>
-      </div>
+      {/* Pagination Component */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+        pageNumbers={pageNumbers}
+      />
     </div>
   );
 };
