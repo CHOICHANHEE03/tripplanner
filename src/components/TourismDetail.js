@@ -69,8 +69,8 @@ const TourismDetail = () => {
             <p><strong>주소:</strong> {tourism.addr1}</p>
             <p><strong>전화번호:</strong> {tourism.tel || "정보 없음"}</p>
             <div className="button-container">
-                <button onClick={() => navigate(-1)} className="back-button">뒤로가기</button>
-                <button className="like-button" onClick={handleLike} style={{ color: isFavorite ? "#FF6B6B" : "black" }}>
+                <button onClick={() => navigate(-1)} className="backTour-button">뒤로가기</button>
+                <button className="likeTour-button" onClick={handleLike} style={{ color: isFavorite ? "#FF6B6B" : "black" }}>
                     {isFavorite ? <FaHeart /> : <FaRegHeart />}
                 </button>
             </div>

@@ -1,21 +1,12 @@
 /* 관광지 상세 페이지 컨테이너 */
 .tourism-detail {
-    max-width: 800px;
+    max-width: 850px;
     margin: 40px auto;
     padding: 20px;
     border: 2px solid #DAEFF1;
     border-radius: 8px;
     background: #FFFFFF;
     text-align: center;
-}
-
-/* 버튼 컨테이너 스타일 */
-.button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
 }
 
 /* 관광지 이미지 스타일 */
@@ -43,8 +34,8 @@
 }
 
 /* 버튼 공통 스타일 */
-.back-button,
-.like-button {
+.backTour-button,
+.likeTour-button {
     padding: 10px 20px;
     border: none;
     cursor: pointer;
@@ -54,24 +45,24 @@
 }
 
 /* 뒤로가기 버튼 스타일 */
-.back-button {
+.backTour-button {
     background: #DAEFF1;
     transition: background-color 0.3s ease;
 }
 
-.back-button:hover {
+.backTour-button:hover {
     background-color: #C0E7E9;
 }
 
 /* 좋아요 버튼 스타일 */
-.like-button {
+.likeTour-button {
     background: none;
     font-size: 24px;
     color: black;
     transition: color 0.3s ease;
 }
 
-.like-button:hover {
+.likeTour-button:hover {
     color: #FF6B6B;
 }
 
