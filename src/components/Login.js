@@ -10,7 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!username || !password) {
       Swal.fire("로그인 실패", "아이디와 비밀번호를 입력해주세요", "error");
       return;
@@ -22,11 +22,29 @@ const Login = () => {
       showCancelButton: true,
       confirmButtonText: "로그인",
       cancelButtonText: "취소",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        localStorage.setItem("user", JSON.stringify({ username })); // 임시 로그인 처리
-        Swal.fire("로그인 성공!", "환영합니다!", "success");
-        navigate("/");
+        try {
+          const response = await fetch("http://localhost:8080/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", // 세션 쿠키 유지
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            Swal.fire("로그인 성공!", "환영합니다!", "success");
+            navigate("/");
+          } else {
+            Swal.fire("로그인 실패", data.message, "error");
+          }
+        } catch (error) {
+          Swal.fire("로그인 오류", "서버와 연결할 수 없습니다.", "error");
+        }
       }
     });
   };
