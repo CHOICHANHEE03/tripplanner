@@ -43,7 +43,8 @@
 }
 
 /* 버튼 공통 스타일 */
-.back-button, .like-button {
+.back-button,
+.like-button {
     padding: 10px 20px;
     border: none;
     cursor: pointer;
@@ -55,10 +56,6 @@
 /* 뒤로가기 버튼 스타일 */
 .back-button {
     background: #DAEFF1;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
