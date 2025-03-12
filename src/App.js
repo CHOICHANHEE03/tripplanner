@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 
 import Home from './components/Home';
 import Tourism from './components/Tourism';
+import TourismDetail from './components/TourismDetail';
 import Events from './components/Events';
 import Review from './components/Review';
 import Schedule from './components/Schedule';
@@ -11,7 +12,6 @@ import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import MyPage from './components/MyPage';
-
 
 const AppContent = () => {
   const location = useLocation();
@@ -23,6 +23,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/tourism" element={<Tourism />} />
+        <Route path="/tourism/:id" element={<TourismDetail />} />
         <Route path="/events" element={<Events />} />
         <Route path="/review" element={<Review />} />
         <Route path="/schedule" element={<Schedule />} />

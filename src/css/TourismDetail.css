@@ -1,0 +1,99 @@
+/* 관광지 상세 페이지 컨테이너 */
+.tourism-detail {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 2px solid #DAEFF1;
+    border-radius: 8px;
+    background: #FFFFFF;
+    text-align: center;
+}
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* 관광지 이미지 스타일 */
+.detail-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    border-bottom: 2px solid #DAEFF1;
+    margin-bottom: 20px;
+}
+
+/* 제목 스타일 */
+.tourism-detail h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+/* 설명 텍스트 스타일 */
+.tourism-detail p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* 버튼 공통 스타일 */
+.back-button, .like-button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* 뒤로가기 버튼 스타일 */
+.back-button {
+    background: #DAEFF1;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #C0E7E9;
+}
+
+/* 좋아요 버튼 스타일 */
+.like-button {
+    background: none;
+    font-size: 24px;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.like-button:hover {
+    color: #FF6B6B;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .tourism-detail {
+        padding: 15px;
+        margin: 20px;
+    }
+
+    .detail-image {
+        height: 250px;
+    }
+
+    .tourism-detail h2 {
+        font-size: 24px;
+    }
+
+    .tourism-detail p {
+        font-size: 16px;
+    }
+}
