@@ -8,14 +8,38 @@ const NavigationBar = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const user = localStorage.getItem('user');
-        setIsLoggedIn(!!user); // user 정보가 있으면 true, 없으면 false
+        const checkSession = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/api/session", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                const data = await response.json();
+                setIsLoggedIn(data.authenticated);
+            } catch (error) {
+                console.error("세션 확인 실패:", error);
+            }
+        };
+
+        checkSession();
     }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        setIsLoggedIn(false);
-        navigate('/');
+    const handleLogout = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/logout", {
+                method: "GET",
+                credentials: "include"
+            });
+
+            if (response.ok) {
+                setIsLoggedIn(false);
+                navigate('/');
+            } else {
+                console.error("로그아웃 실패");
+            }
+        } catch (error) {
+            console.error("로그아웃 오류:", error);
+        }
     };
 
     return (
