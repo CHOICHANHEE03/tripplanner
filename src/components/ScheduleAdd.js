@@ -30,8 +30,9 @@ const ScheduleAdd = () => {
             return;
         }
         Swal.fire("등록 완료", "일정이 성공적으로 등록되었습니다.", "success");
-        navigate("/");
-    };
+        
+        navigate("/schedule", { state: { title, date, type, scheduleList } });
+    };    
 
     return (
         <div className="schedule-container">

@@ -60,6 +60,7 @@ const TourismDetail = () => {
     if (!tourism) return <p>데이터를 찾을 수 없습니다.</p>;
 
     const isFavorite = favorites.some((fav) => fav.id === tourism.id);
+    const validTel = tourism.tel && tourism.tel !== "null";
 
     return (
         <div className="tourism-detail">
@@ -67,7 +68,7 @@ const TourismDetail = () => {
             <h2>{tourism.title}</h2>
             <p>{tourism.overview}</p>
             <p><strong>주소:</strong> {tourism.addr1}</p>
-            <p><strong>전화번호:</strong> {tourism.tel || "정보 없음"}</p>
+            {validTel && <p><strong>전화번호:</strong> {tourism.tel}</p>}
             <div className="button-container">
                 <button onClick={() => navigate(-1)} className="backTour-button">뒤로가기</button>
                 <button className="likeTour-button" onClick={handleLike} style={{ color: isFavorite ? "#FF6B6B" : "black" }}>
