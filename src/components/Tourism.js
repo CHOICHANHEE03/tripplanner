@@ -20,7 +20,7 @@ const Tourism = () => {
 
   // API 호출 함수
   const fetchData = async (page, areacode, contenttypeid, cat2) => {
-    const response = await fetch("https://880821db-ae00-4642-919d-632e6a038644.mock.pstmn.io/api/tourism");
+    const response = await fetch("https://d4046c3d-95c1-42a1-ae9a-4ca7bf1c5570.mock.pstmn.io/api/tourism");
     const result = await response.json();
 
   // 필터링

@@ -15,7 +15,7 @@ const TourismDetail = () => {
         const fetchTourismData = async () => {
             try {
                 const response = await fetch(
-                    "https://880821db-ae00-4642-919d-632e6a038644.mock.pstmn.io/api/tourism"
+                    "https://d4046c3d-95c1-42a1-ae9a-4ca7bf1c5570.mock.pstmn.io/api/tourism"
                 );
                 if (!response.ok) {
                     throw new Error("데이터를 불러오는 데 실패했습니다.");
