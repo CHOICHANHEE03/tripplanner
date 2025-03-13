@@ -1,11 +1,11 @@
 import React from "react";
 import "../css/TourismCategory.css";
 
-const TourismCategory = ({   
+const TourismCategory = ({
   selectedRegion,
   selectedType,
   selectedSubCategory,
-  onFilterChange 
+  onFilterChange,
 }) => {
   const regions = [
     { name: "서울", areacode: "1" },
@@ -58,53 +58,60 @@ const TourismCategory = ({
     <div className="Tourism-category">
       <div className="Area-group">
         <button
-          className={selectedRegion === "" ? "selected" : ""}
-          onClick={() => onFilterChange('region', '')} // 필터 변경 시 호출
+          className="Area-btn"
+          onClick={() => onFilterChange("region", "")} // 필터 변경 시 호출
         >
           전체
         </button>
         {regions.map((region) => (
           <button
             key={region.areacode}
-            className={selectedRegion === region.areacode ? "selected" : ""}
-            onClick={() => onFilterChange('region', region.areacode)} // 지역 필터 변경
+            className="Area-btn"
+            onClick={() => onFilterChange("region", region.areacode)} // 지역 필터 변경
           >
             {region.name}
           </button>
         ))}
       </div>
-        <div className="type-group">
-      <div className="tourismType-cat">
-        <label htmlFor="tourismType">관광지 타입 선택: </label>
-        <select
-          id="tourismType"
-          value={selectedType}
-          onChange={(e) => onFilterChange('tourismType', e.target.value)} // 관광지 타입 필터 변경
-        >
-          <option value="">전체</option>
-          {tourismTypes.map((tourismType) => (
-            <option key={tourismType.contenttypeid} value={tourismType.contenttypeid}>
-              {tourismType.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <div className="type-group">
+        <div className="tourismType-cat">
+          <label htmlFor="tourismType">관광지 타입 선택: </label>
+          <select
+            id="tourismType"
+            value={selectedType}
+            onChange={(e) => onFilterChange("tourismType", e.target.value)} // 관광지 타입 필터 변경
+            className="type-select"
+          >
+            <option value="">전체</option>
+            {tourismTypes.map((tourismType) => (
+              <option
+                key={tourismType.contenttypeid}
+                value={tourismType.contenttypeid}
+              >
+                {tourismType.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="subCategory-cat">
-        <label htmlFor="subCategory">세부 카테고리 선택: </label>
-        <select
-          id="subCategory"
-          value={selectedSubCategory}
-          onChange={(e) => onFilterChange('subCategory', e.target.value)} // 세부 카테고리 필터 변경
-        >
-          <option value="">전체</option>
-          {selectedType && subCategories[selectedType] && subCategories[selectedType].map((subCategory) => (
-            <option key={subCategory.cat2} value={subCategory.cat2}>
-              {subCategory.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="subCategory-cat">
+          <label htmlFor="subCategory">세부 카테고리 선택: </label>
+          <select
+            id="subCategory"
+            value={selectedSubCategory}
+            onChange={(e) => onFilterChange("subCategory", e.target.value)} // 세부 카테고리 필터 변경
+            className="type-select"
+          >
+            <option value="">전체</option>
+            {selectedType &&
+              subCategories[selectedType] &&
+              subCategories[selectedType].map((subCategory) => (
+                <option key={subCategory.cat2} value={subCategory.cat2}>
+                  {subCategory.name}
+                </option>
+              ))}
+          </select>
+        </div>
       </div>
     </div>
   );
