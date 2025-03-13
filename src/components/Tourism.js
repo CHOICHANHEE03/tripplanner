@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TourismList from "./TourismList";
 import Pagination from "./Pagination";
+import TourismCategory from "./TourismCategory"
 import "../css/TourismList.css";
 import "../css/Pagination.css";
 
@@ -12,26 +13,40 @@ const Tourism = () => {
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const pageSize = 9; // 고정된 페이지당 항목 수
   const [favorites, setFavorites] = useState([]);
+  
+  const [selectedArea, setSelectedArea] = useState(""); // 선택된 지역카테고리
+  const [selectedType, setSelectedType] = useState(""); // 선택된 관광지 타입
+  const [selectedSubCategory, setSelectedSubCategory] = useState(""); // 선택된 세부 카테고리
 
   // API 호출 함수
-  const fetchData = async (page) => {
+  const fetchData = async (page, areacode, contenttypeid, cat2) => {
     const response = await fetch("https://880821db-ae00-4642-919d-632e6a038644.mock.pstmn.io/api/tourism");
     const result = await response.json();
 
+  // 필터링
+  const filteredData = result.filter((item) => {
+    const isAreaMatch = areacode ? item.areacode === areacode : true;
+    const isTypeMatch = contenttypeid ? item.contenttypeid === contenttypeid : true;
+    const isSubCategoryMatch = cat2 ? item.cat2 === cat2 : true;
+    return isAreaMatch && isTypeMatch && isSubCategoryMatch; // 모든 조건을 AND로 연결
+  });
 
     // 데이터를 페이지별로 나눔
     const startIndex = (page - 1) * pageSize;
-    const paginatedData = result.slice(startIndex, startIndex + pageSize);
+    const paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
 
     setData(paginatedData);
-    setTotalCount(result.length); // 전체 데이터 개수
+    setTotalCount(filteredData.length); // 전체 데이터 개수
 
     if (page === 1) {
       setLoading(false); // 처음 로딩
     }
   };
 
-  // 페이지 번호 계산 함수
+  useEffect(() => {
+    fetchData(currentPage, selectedArea, selectedType, selectedSubCategory);
+  }, [currentPage, selectedArea, selectedType, selectedSubCategory]);
+
   const getPageNumbers = (currentPage, totalPages) => {
     const pageNumbers = [];
     const startPage = Math.floor((currentPage - 1) / 5) * 5 + 1; // 현재 페이지에 맞춰 시작 페이지 계산
@@ -43,23 +58,31 @@ const Tourism = () => {
     return pageNumbers;
   };
 
-  // 페이지가 바뀔 때마다 데이터 재호출 및 페이지 번호 계산
-  useEffect(() => {
-    fetchData(currentPage); // 페이지 변경 시 데이터 호출
-  }, [currentPage]);
-
   useEffect(() => {
     const totalPages = Math.ceil(totalCount / pageSize);
     const pageNumbers = getPageNumbers(currentPage, totalPages);
     setPageNumbers(pageNumbers); // 페이지 번호 리스트 갱신
   }, [currentPage, totalCount]);
 
-  // 페이지 변경 함수
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const totalPages = Math.ceil(totalCount / pageSize);
+
+  const handleFilterChange = (filterType, value) => {
+    // 필터 종류에 따라 다른 상태를 업데이트
+    if (filterType === 'region') {
+      setSelectedArea(value);
+    } else if (filterType === 'tourismType') {
+      setSelectedType(value);
+    } else if (filterType === 'subCategory') {
+      setSelectedSubCategory(value);
+    }
+    
+    // 페이지 초기화
+    setCurrentPage(1);
+  };
 
   useEffect(() => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -68,9 +91,7 @@ const Tourism = () => {
 
   const handleLike = (tourism) => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    const isAlreadyFavorite = storedFavorites.some(
-      (fav) => fav.id === tourism.id
-    );
+    const isAlreadyFavorite = storedFavorites.some((fav) => fav.id === tourism.id);
 
     let updatedFavorites;
     if (isAlreadyFavorite) {
@@ -85,6 +106,13 @@ const Tourism = () => {
 
   return (
     <div className="tourism-list">
+      {/* 지역, 관광지 타입, 세부 카테고리 필터링 컴포넌트 */}
+      <TourismCategory
+  selectedRegion={selectedArea}
+  selectedType={selectedType}
+  selectedSubCategory={selectedSubCategory}
+  onFilterChange={handleFilterChange} 
+      />
       {/* Tourism List Component */}
       <TourismList data={data} favorites={favorites} handleLike={handleLike} />
 
