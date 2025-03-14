@@ -9,6 +9,7 @@
 /*로고 css*/
 .title-logo {
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
 .Login-Join-logo {

@@ -55,21 +55,21 @@ const Login = () => {
         <div className="back-button" onClick={() => navigate(-1)}>
           <IoCaretBackCircle size={32} />
         </div>
-        <div className="title-logo">
+        <div className="title-logo" onClick={() => navigate("/")}>
           <img src={logo} alt="Logo" className="Login-Join-logo" />
         </div>
         <div>
-          <input 
-            type="text" 
-            placeholder="아이디를 입력해주세요" 
-            className="input" 
+          <input
+            type="text"
+            placeholder="아이디를 입력해주세요"
+            className="input"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input 
-            type="password" 
-            placeholder="비밀번호를 입력해주세요" 
-            className="input" 
+          <input
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            className="input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

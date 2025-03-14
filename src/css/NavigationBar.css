@@ -15,7 +15,8 @@
 /* 사이트 로고 css */
 .navbar-logo {
     width: 200px;
-    height: 60px;
+    height: 100%;
+    cursor: pointer;
 }
 
 /* 메뉴바 안 글자 및 버튼 공통 스타일 */

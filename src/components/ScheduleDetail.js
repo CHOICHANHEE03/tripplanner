@@ -17,14 +17,24 @@ const ScheduleDetail = () => {
                     throw new Error("데이터를 불러오는 데 실패했습니다.");
                 }
                 const data = await response.json();
-                const typeList = data.typeList ? data.typeList.split(',').map(Number) : [];
-                
+
+                const typeLabels = {
+                    "1": "관광지",
+                    "2": "문화시설",
+                    "3": "레포츠"
+                };
+
+                const scheduleItems = [
+                    { place: data.place1, details: data.details1, type: typeLabels[data.type1] || "알 수 없음" },
+                    { place: data.place2, details: data.details2, type: typeLabels[data.type2] || "알 수 없음" },
+                    { place: data.place3, details: data.details3, type: typeLabels[data.type3] || "알 수 없음" }
+                ].filter(item => item.place && item.details);
+
                 setScheduleData({
                     id: data.id,
                     title: data.title,
                     date: data.date,
-                    typeList,
-                    scheduleItems: data.scheduleItems || []
+                    scheduleItems
                 });
             } catch (error) {
                 console.error("데이터를 불러오는 중 오류 발생:", error);
@@ -45,8 +55,6 @@ const ScheduleDetail = () => {
         return <p>해당 일정 정보를 찾을 수 없습니다.</p>;
     }
 
-    const typeLabels = ["알 수 없음", "관광지", "문화시설", "레포츠"];
-
     return (
         <div className="schedule-detail-container">
             <div className="schedule-back-button" onClick={() => navigate(-1)}>
@@ -61,8 +69,8 @@ const ScheduleDetail = () => {
                     <h3>📍 일정 목록</h3>
                     <ul>
                         {scheduleData.scheduleItems.map((item, index) => (
-                            <li key={item.id}>
-                                <p><strong>유형:</strong> {typeLabels[scheduleData.typeList[index]] || "알 수 없음"}</p>
+                            <li key={index}>
+                                <p><strong>유형:</strong> {item.type}</p>
                                 <p><strong>장소:</strong> {item.place}</p>
                                 <p><strong>내용:</strong> {item.details}</p>
                             </li>

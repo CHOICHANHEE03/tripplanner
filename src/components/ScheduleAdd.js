@@ -7,9 +7,12 @@ const ScheduleAdd = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
-    const [typeList, setTypeList] = useState([{ type: "" }]);
-    const [scheduleList, setScheduleList] = useState([{ place: "", details: "" }]);
     const [username, setUsername] = useState("");
+    const [types, setTypes] = useState(["", "", ""]);
+    const [places, setPlaces] = useState(["", "", ""]);
+    const [details, setDetails] = useState(["", "", ""]);
+    const [scheduleCount, setScheduleCount] = useState(1);
+    const typeMapping = { "관광지": "1", "문화시설": "2", "레포츠": "3" };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -37,34 +40,32 @@ const ScheduleAdd = () => {
     }, [navigate]);
 
     const addSchedule = () => {
-        if (scheduleList.length >= 3) {
-            Swal.fire("알림", "최대 3개의 일정을 추가할 수 있습니다.", "warning");
-            return;
+        if (scheduleCount < 3) {
+            setScheduleCount(scheduleCount + 1);
+        } else {
+            Swal.fire("알림", "최대 3개의 일정을 추가할 수 있습니다.", "info");
         }
-        setScheduleList([...scheduleList, { place: "", details: "" }]);
-        setTypeList([...typeList, { type: "" }]);
     };
 
     const updateSchedule = (index, field, value) => {
-        const updatedList = [...scheduleList];
-        updatedList[index][field] = value;
-        setScheduleList(updatedList);
-    };
-
-    const updateType = (index, value) => {
-        const typeMapping = {
-            "관광지": 1,
-            "문화시설": 2,
-            "레포츠": 3
-        };
-
-        const updatedList = [...typeList];
-        updatedList[index].type = typeMapping[value] || "";
-        setTypeList(updatedList);
+        if (field === "type") {
+            const typeMapping = { "관광지": "1", "문화시설": "2", "레포츠": "3" };
+            const updatedTypes = [...types];
+            updatedTypes[index] = typeMapping[value] || "";
+            setTypes(updatedTypes);
+        } else if (field === "place") {
+            const updatedPlaces = [...places];
+            updatedPlaces[index] = value;
+            setPlaces(updatedPlaces);
+        } else if (field === "details") {
+            const updatedDetails = [...details];
+            updatedDetails[index] = value;
+            setDetails(updatedDetails);
+        }
     };
 
     const handleSubmit = async () => {
-        if (!title || !date || typeList.some(t => !t.type) || scheduleList.some(s => !s.place || !s.details)) {
+        if (!title || !date || types.every(t => !t) || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("오류", "모든 항목을 입력해주세요.", "error");
             return;
         }
@@ -73,8 +74,15 @@ const ScheduleAdd = () => {
             title,
             date,
             username,
-            typeList: typeList.map(t => t.type).join(","), // 배열을 쉼표로 구분된 문자열로 변환
-            scheduleList
+            type1: types[0],
+            place1: places[0],
+            details1: details[0],
+            type2: types[1],
+            place2: places[1],
+            details2: details[1],
+            type3: types[2],
+            place3: places[2],
+            details3: details[2]
         };
 
         try {
@@ -103,65 +111,39 @@ const ScheduleAdd = () => {
             <h2 className="add-title">🚎 일정 등록</h2>
             <div className="schedule-input-container">
                 <label htmlFor="title">제목</label>
-                <input
-                    id="title"
-                    type="text"
-                    className="schedule-input"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
+                <input id="title" type="text" className="schedule-input" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
 
             <div className="schedule-input-container">
                 <label htmlFor="date">여행 날짜</label>
-                <input
-                    id="date"
-                    type="date"
-                    className="schedule-input"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                />
+                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
 
-            {scheduleList.map((schedule, index) => (
+            {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
                     <div className="schedule-input-container">
                         <label htmlFor={`type-${index}`}>타입 {index + 1}</label>
                         <select
                             id={`type-${index}`}
                             className="schedule-input"
-                            value={typeList[index].type ?
-                                (typeList[index].type === 1 ? "관광지" : typeList[index].type === 2 ? "문화시설" : "레포츠")
-                                : ""}
-                            onChange={(e) => updateType(index, e.target.value)}
+                            value={types[index] ? Object.keys(typeMapping).find(key => typeMapping[key] === types[index]) : ""}
+                            onChange={(e) => updateSchedule(index, "type", e.target.value)}
                         >
                             <option value="">선택하세요</option>
-                            <option value="관광지">관광지</option>
-                            <option value="문화시설">문화시설</option>
-                            <option value="레포츠">레포츠</option>
+                            {Object.keys(typeMapping).map((key) => (
+                                <option key={key} value={key}>{key}</option>
+                            ))}
                         </select>
                     </div>
 
                     <div className="schedule-input-container">
                         <label htmlFor={`place-${index}`}>찜한 목록 {index + 1}</label>
-                        <input
-                            id={`place-${index}`}
-                            type="text"
-                            className="schedule-input"
-                            value={schedule.place}
-                            onChange={(e) => updateSchedule(index, "place", e.target.value)}
-                        />
+                        <input id={`place-${index}`} type="text" className="schedule-input" value={places[index]} onChange={(e) => updateSchedule(index, "place", e.target.value)} />
                     </div>
 
                     <div className="schedule-input-container">
                         <label htmlFor={`details-${index}`}>내용</label>
-                        <input
-                            id={`details-${index}`}
-                            type="text"
-                            className="schedule-input"
-                            value={schedule.details}
-                            onChange={(e) => updateSchedule(index, "details", e.target.value)}
-                        />
+                        <input id={`details-${index}`} type="text" className="schedule-input" value={details[index]} onChange={(e) => updateSchedule(index, "details", e.target.value)} />
                     </div>
                 </div>
             ))}
