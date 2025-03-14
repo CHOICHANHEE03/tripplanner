@@ -48,7 +48,7 @@
 }
 
 /*입력창 css*/
-.input {
+.input-text {
     width: 300px;
     height: 17px;
     padding-left: 10px;
@@ -62,7 +62,7 @@
     margin-top: 12px;
 }
 
-input:focus {
+.input-text:focus {
     border: 3px solid #DAEFF1;
     outline: none;
 }

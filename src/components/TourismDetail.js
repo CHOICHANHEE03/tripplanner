@@ -10,13 +10,19 @@ const TourismDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [favorites, setFavorites] = useState([]);
-    const [reviews, setReviews] = useState([]);
+    // const [reviews, setReviews] = useState([]); // 리뷰 관련 상태 변수 주석 처리
 
     useEffect(() => {
         const fetchTourismData = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:8080/api/tourism/${id}`);
+                const response = await fetch(`http://localhost:8080/api/tourism/${id}`, {
+                    method: "GET", 
+                    headers: {
+                        "Accept": "application/json", 
+                    },
+                });
+                console.log("응답받은 데이터:", response);
                 if (!response.ok) {
                     throw new Error("데이터를 불러오는 데 실패했습니다.");
                 }
@@ -29,6 +35,8 @@ const TourismDetail = () => {
             }
         };
 
+        // 리뷰 관련 데이터는 아직 구현되지 않았으므로, 주석 처리
+        /*
         const fetchReviewsData = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/api/reviews/tourism/${id}`);
@@ -41,9 +49,11 @@ const TourismDetail = () => {
                 setError(error.message);
             }
         };
+        */
 
         fetchTourismData();
-        fetchReviewsData();
+        // 리뷰 관련 API 호출도 주석 처리
+        // fetchReviewsData();
     }, [id]);
 
     useEffect(() => {

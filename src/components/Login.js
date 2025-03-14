@@ -62,14 +62,15 @@ const Login = () => {
           <input
             type="text"
             placeholder="아이디를 입력해주세요"
-            className="input"
+            className="input-text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            
           />
           <input
             type="password"
             placeholder="비밀번호를 입력해주세요"
-            className="input"
+            className="input-text"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

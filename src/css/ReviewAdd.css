@@ -17,7 +17,7 @@
 }
 .star-lg{
     color: yellow;
-    font-size: 35px; /* 별 크기를 키움 */
+    font-size: 35px; 
     
 }
 .stars,.star-text-container {
@@ -31,7 +31,6 @@
   }
 .reviewform-container{
     display: flex;
-
     align-items: center; 
     border: 2px solid #DAEFF1;
     width: 800px;
