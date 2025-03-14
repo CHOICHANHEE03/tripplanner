@@ -52,7 +52,7 @@ const Login = () => {
   return (
     <div className="container">
       <div className="Login-Join">
-        <div className="back-button" onClick={() => navigate(-1)}>
+        <div className="back-button" onClick={() => navigate("/")}>
           <IoCaretBackCircle size={32} />
         </div>
         <div className="title-logo" onClick={() => navigate("/")}>
