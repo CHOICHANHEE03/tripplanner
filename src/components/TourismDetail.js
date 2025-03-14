@@ -10,6 +10,7 @@ const TourismDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [favorites, setFavorites] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
         const fetchTourismData = async () => {
@@ -29,8 +30,21 @@ const TourismDetail = () => {
                 setLoading(false);
             }
         };
+        const fetchReviewsData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/reviews/tourism/${id}`);
+                if (!response.ok) {
+                    throw new Error("리뷰 데이터를 불러오는 데 실패했습니다.");
+                }
+                const data = await response.json();
+                setReviews(data);
+            } catch (error) {
+                setError(error.message);
+            }
+        };
 
         fetchTourismData();
+        fetchReviewsData();
     }, [id]);
 
     useEffect(() => {
