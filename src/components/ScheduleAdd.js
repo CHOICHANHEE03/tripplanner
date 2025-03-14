@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "../css/ScheduleAdd.css";
@@ -8,11 +8,15 @@ const ScheduleAdd = () => {
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
     const [username, setUsername] = useState("");
+    const [favorites, setFavorites] = useState([]);
     const [types, setTypes] = useState(["", "", ""]);
     const [places, setPlaces] = useState(["", "", ""]);
     const [details, setDetails] = useState(["", "", ""]);
     const [scheduleCount, setScheduleCount] = useState(1);
-    const typeMapping = { "관광지": "1", "문화시설": "2", "레포츠": "3" };
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 9;
+
+    const typeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -39,6 +43,27 @@ const ScheduleAdd = () => {
         fetchUser();
     }, [navigate]);
 
+    const fetchFavorites = useCallback(async () => {
+        if (!username) return;
+        try {
+            const response = await fetch(`http://localhost:8080/favorites/${username}?page=${currentPage}&size=${itemsPerPage}`, {
+                method: "GET",
+                credentials: "include",
+            });
+
+            if (!response.ok) throw new Error("찜 목록 불러오기 실패");
+
+            const data = await response.json();
+            setFavorites(Array.isArray(data.content) ? data.content : []);
+        } catch (error) {
+            console.error("찜 목록 가져오기 오류:", error);
+        }
+    }, [username, currentPage]);
+
+    useEffect(() => {
+        fetchFavorites();
+    }, [fetchFavorites]);
+
     const addSchedule = () => {
         if (scheduleCount < 3) {
             setScheduleCount(scheduleCount + 1);
@@ -49,7 +74,6 @@ const ScheduleAdd = () => {
 
     const updateSchedule = (index, field, value) => {
         if (field === "type") {
-            const typeMapping = { "관광지": "1", "문화시설": "2", "레포츠": "3" };
             const updatedTypes = [...types];
             updatedTypes[index] = typeMapping[value] || "";
             setTypes(updatedTypes);
@@ -88,15 +112,11 @@ const ScheduleAdd = () => {
         try {
             const response = await fetch("http://localhost:8080/api/schedule", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(scheduleData)
             });
 
-            if (!response.ok) {
-                throw new Error("서버 요청에 실패했습니다.");
-            }
+            if (!response.ok) throw new Error("서버 요청에 실패했습니다.");
 
             Swal.fire("등록 완료", "일정이 성공적으로 등록되었습니다.", "success");
             navigate("/schedule");
@@ -122,32 +142,31 @@ const ScheduleAdd = () => {
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
                     <div className="schedule-input-container">
-                        <label htmlFor={`type-${index}`}>타입 {index + 1}</label>
-                        <select
-                            id={`type-${index}`}
-                            className="schedule-input"
-                            value={types[index] ? Object.keys(typeMapping).find(key => typeMapping[key] === types[index]) : ""}
-                            onChange={(e) => updateSchedule(index, "type", e.target.value)}
-                        >
+                        <label>타입 {index + 1}</label>
+                        <select className="schedule-input" onChange={(e) => updateSchedule(index, "type", e.target.value)}>
                             <option value="">선택하세요</option>
-                            {Object.keys(typeMapping).map((key) => (
+                            {Object.keys(typeMapping).map(key => (
                                 <option key={key} value={key}>{key}</option>
                             ))}
                         </select>
                     </div>
 
                     <div className="schedule-input-container">
-                        <label htmlFor={`place-${index}`}>찜한 목록 {index + 1}</label>
-                        <input id={`place-${index}`} type="text" className="schedule-input" value={places[index]} onChange={(e) => updateSchedule(index, "place", e.target.value)} />
+                        <label>찜한 목록 {index + 1}</label>
+                        <select className="schedule-input" onChange={(e) => updateSchedule(index, "place", e.target.value)}>
+                            <option value="">선택하세요</option>
+                            {favorites.map(place => (
+                                <option key={place.id} value={place.tourism?.title}>{place.tourism?.title}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="schedule-input-container">
-                        <label htmlFor={`details-${index}`}>내용</label>
-                        <input id={`details-${index}`} type="text" className="schedule-input" value={details[index]} onChange={(e) => updateSchedule(index, "details", e.target.value)} />
+                        <label>내용</label>
+                        <input type="text" className="schedule-input" value={details[index]} onChange={(e) => updateSchedule(index, "details", e.target.value)} />
                     </div>
-                </div>
+                </div>    
             ))}
-
             <div className="schedule-button-container">
                 <button onClick={addSchedule} className="schedule-button">일정 추가</button>
                 <button onClick={handleSubmit} className="schedule-button">일정 등록하기</button>

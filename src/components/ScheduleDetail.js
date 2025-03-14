@@ -19,9 +19,9 @@ const ScheduleDetail = () => {
                 const data = await response.json();
 
                 const typeLabels = {
-                    "1": "관광지",
-                    "2": "문화시설",
-                    "3": "레포츠"
+                    "12": "관광지",
+                    "14": "문화시설",
+                    "28": "레포츠"
                 };
 
                 const scheduleItems = [
