@@ -32,7 +32,7 @@ const MyPage = () => {
     checkSession();
   }, [navigate]);
 
-  // 찜 목록 불러오기
+  // 목록 불러오기
   const fetchFavorites = useCallback(async () => {
     if (!username) return;
 
