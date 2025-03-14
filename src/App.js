@@ -14,8 +14,7 @@ import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import MyPage from './components/MyPage';
-import ReviewAdd from './components/ReviewAdd';
-import ReviewListPage from "./components/ReviewListPage"; 
+import ReviewAdd from './components/ReviewAdd'; 
 
 const AppContent = () => {
   const location = useLocation();
@@ -31,7 +30,6 @@ const AppContent = () => {
         <Route path="/events" element={<Events />} />
         <Route path="/review" element={<Review />} />
         <Route path="/tourism/review/:id" element={<ReviewAdd/>}/>
-        <Route path="/tourism/review/list/:tourismId" element={<ReviewListPage />}/>
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/schedule/:id" element={<ScheduleDetail />} />
         <Route path="/schedule/add" element={<ScheduleAdd />} />

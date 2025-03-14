@@ -41,6 +41,17 @@
     font-size: 16px;
     transition: all 0.3s ease;
 }
+.writeReview-button{
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #DAEFF1;
+    transition: background-color 0.3s ease;
+    width: 100px;
+    height: 40px;
+    font-size: 16px;
+    margin: 10px;
+}
 
 /* 뒤로가기 버튼 스타일 */
 .backTour-button {
@@ -48,7 +59,7 @@
     transition: background-color 0.3s ease;
 }
 
-.backTour-button:hover {
+.backTour-button:hover,.writeReview-button:hover {
     background-color: #C0E7E9;
 }
 

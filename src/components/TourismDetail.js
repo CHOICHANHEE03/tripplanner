@@ -111,6 +111,10 @@ const TourismDetail = () => {
         </p>
       )}
       <div className="button-container">
+      <button
+        className="writeReview-button"
+        onClick={handleWriteReview}
+      >리뷰쓰기</button>
         <button onClick={() => navigate(-1)} className="backTour-button">
           뒤로가기
         </button>
@@ -122,14 +126,6 @@ const TourismDetail = () => {
           {isFavorite ? <FaHeart /> : <FaRegHeart />}
         </button>
       </div>
-      <button
-        className="writeReview-button"
-        onClick={handleWriteReview}
-      ></button>
-      <button
-        className="writeReview-button"
-        onClick={() => navigate(`/tourism/review/${tourism.id}`)} 
-      ></button>
     </div>
   );
 };

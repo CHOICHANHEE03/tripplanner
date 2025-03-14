@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom"; // useLocation을 추가
+import { useParams, useLocation } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
 import "../css/ReviewAdd.css";
 
 const ReviewAdd = () => {
-  const { id } = useParams(); // URL에서 관광지 ID 가져오기
+  const { id } = useParams(); // URL에서 관광지 ID 
   const location = useLocation(); // useLocation 훅 사용
-  const { productInfo } = location.state || {}; // location.state에서 productInfo 가져오기
+  const { productInfo } = location.state || {}; // location.state에서 productInfo 가져옴
 
   const [username, setUserName] = useState(null); // 사용자 이름 상태
   const [rating, setRating] = useState(0); // 별점 상태
@@ -55,55 +55,60 @@ const ReviewAdd = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/reviews", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+        const tourismId = parseInt(id, 10); // id를 숫자로 변환
+        console.log({
           rating: rating,
           content: content,
           username: username,
           contenttypeid: contenttypeid,
-          tourismId: id, // id 값 추가
-        }),
-      });
-
-      if (response.ok) {
-        alert("리뷰가 성공적으로 등록되었습니다.");
-        setRating(0);
-        setContent("");
-        setContenttypeid("");
-      } else {
-        alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
+          tourism_id: tourismId, 
+        });
+    
+        const response = await fetch("http://localhost:8080/api/reviews", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            rating: rating,
+            content: content,
+            username: username,
+            contenttypeid: contenttypeid,
+            tourism_id: tourismId, 
+          }),
+        });
+    
+        if (response.ok) {
+          alert("리뷰가 성공적으로 등록되었습니다.");
+          setRating(0);
+          setContent("");
+          setContenttypeid("");
+        } else {
+          alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
+        }
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("서버에 연결할 수 없습니다. 다시 시도해 주세요.");
       }
-    } catch (error) {
-      console.error("Error submitting review:", error);
-      alert("서버에 연결할 수 없습니다. 다시 시도해 주세요.");
-    }
-  };
+    };
 
   return (
-    <div>
-      <div>
-        <p>관광지 ID: {id}</p> {/* 여기서 URL에 있는 ID를 표시 */}
-      </div>
-
+    <div className="before-container">
       {productInfo && (
-        <div className="flex min-w-0 gap-x-4">
-          <img className="h-20 w-20 flex-none square-full bg-gray-50" src={productInfo.imageUr} alt="관광지 이미지" />
-          <div className="min-w-0 flex-auto">
-            <p className="text-sm font-semibold leading-6 text-gray-900 mt-4">{productInfo.name}</p>
-            <p className="truncate text-xs leading-5 text-gray-500 mt-4">{productInfo.date}</p>
+        <div className="before-information">
+            <div>
+            <img src={productInfo.firstimage} alt="관광지 이미지" className="before-img"/>
+            </div>
+          <div >
+            <p className="before-title">{productInfo.title} </p>
           </div>
         </div>
       )}
 
       <div className="review-container">
-        <div className="review-header">
+      <div className="review-header">
           <p>여행하신 의견을 남겨주세요!</p>
         </div>
-
         <div className="reviewform-container">
           <div className="form-title">
             <h1>상세리뷰를 작성해주세요.</h1>
