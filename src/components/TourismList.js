@@ -25,6 +25,9 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
     checkSession();
   }, []);
 
+  // favorites가 배열인지 확인하는 코드
+  const isFavoritesArray = Array.isArray(favorites);
+
   return (
     <div className="tourism-container">
       <h1>🚌 여행 관광지 리스트</h1>
@@ -33,8 +36,8 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
           <div>Loading...</div>
         ) : Array.isArray(data) && data.length > 0 ? (
           data.map((tourism) => {
-            const isFavorite = favorites.some((fav) => fav.tourismId === tourism.id);
-            const favoriteItem = favorites.find((fav) => fav.tourismId === tourism.id);
+            const isFavorite = isFavoritesArray && favorites.some((fav) => fav.tourismId === tourism.id);
+            const favoriteItem = isFavoritesArray && favorites.find((fav) => fav.tourismId === tourism.id);
 
             return (
               <div key={tourism.id} className="tourism-card">
