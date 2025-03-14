@@ -1,0 +1,72 @@
+/* 일정 상세 페이지 컨테이너 */
+.schedule-detail-container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 2px solid #DAEFF1;
+    border-radius: 8px;
+    background: #FFFFFF;
+    text-align: center;
+    position: relative;
+}
+
+/* 일정 제목 스타일 */
+.schedule-detail-title {
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 일정 정보 텍스트 스타일 */
+.schedule-detail-container p {
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* 일정 목록 스타일 */
+.schedule-detail-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.schedule-detail-container li {
+    background: #F9F9F9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border-left: 5px solid #DAEFF1;
+    text-align: left;
+}
+
+.schedule-detail-container li p {
+    margin: 5px 0;
+}
+
+.schedule-back-button {
+    color: gray;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .schedule-detail-container {
+        padding: 15px;
+        margin: 20px;
+    }
+
+    .schedule-detail-title {
+        font-size: 22px;
+    }
+
+    .schedule-detail-container p {
+        font-size: 16px;
+    }
+}
