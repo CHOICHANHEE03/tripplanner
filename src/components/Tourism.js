@@ -13,7 +13,7 @@ const Tourism = () => {
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
@@ -21,6 +21,11 @@ const Tourism = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const storedFavorites = localStorage.getItem("favorites");
+    if (storedFavorites) {
+      setFavorites(JSON.parse(storedFavorites));
+    }
+
     const checkSession = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/session", {
@@ -29,11 +34,14 @@ const Tourism = () => {
         });
         const data = await response.json();
 
-        if (data.authenticated) {
-          setUserId(data.userId);
+        if (data.authenticated && data.user) {
+          setUsername(data.user);
+        } else {
+          setUsername(null);
         }
       } catch (error) {
-        console.error("세션 확인 실패:", error);
+        console.error("세션 확인 오류:", error);
+        setUsername(null);
       }
     };
 
@@ -41,20 +49,29 @@ const Tourism = () => {
   }, []);
 
   const fetchFavorites = useCallback(async () => {
-    if (!userId) return;
-
+    if (!username) return;
     try {
-      const response = await fetch(`http://localhost:8080/favorites/${userId}`);
+      const response = await fetch(`http://localhost:8080/favorites/${username}`);
       const result = await response.json();
       setFavorites(result);
+
+      localStorage.setItem("favorites", JSON.stringify(result));
     } catch (error) {
       console.error("찜 목록 가져오기 오류:", error);
     }
-  }, [userId]);
+  }, [username]);
 
   useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
+    if (username) {
+      fetchFavorites();
+    }
+  }, [username, fetchFavorites]);
+
+  useEffect(() => {
+    if (favorites.length > 0) {
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    }
+  }, [favorites]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -72,7 +89,6 @@ const Tourism = () => {
     try {
       const response = await fetch(url);
       const result = await response.json();
-
       setData(result.content);
       setTotalCount(result.totalCount);
       setPageNumbers(getPageNumbers(currentPage, Math.ceil(result.totalCount / 9)));
@@ -85,13 +101,12 @@ const Tourism = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]); // ✅ fetchData를 의존성 배열에 추가
+  }, [fetchData]);
 
   const getPageNumbers = (currentPage, totalPages) => {
     const pageNumbers = [];
     const startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
     const endPage = Math.min(startPage + 4, totalPages);
-
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
     }
@@ -106,9 +121,8 @@ const Tourism = () => {
   };
 
   const handleLike = async (tourism) => {
-    if (!userId) {
-      alert("로그인이 필요합니다.");
-      navigate("/login");
+    if (!username) {
+      console.error("찜 추가 실패: username이 없습니다.");
       return;
     }
 
@@ -119,20 +133,23 @@ const Tourism = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, tourismId: tourism.id }),
+        body: JSON.stringify({ username, tourismId: tourism.id }),
       });
 
       if (!response.ok) {
-        throw new Error("찜 추가 실패");
+        const errorText = await response.text();
+        throw new Error(`찜 추가 실패: ${errorText}`);
       }
 
-      const newFavorite = await response.json();
-      setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
-      fetchFavorites();
-      console.log("찜 추가 성공");
+      const addedFavorite = await response.json();
+      console.log("찜 추가 성공:", addedFavorite);
+
+      setFavorites((prevFavorites) => [
+        ...prevFavorites,
+        { id: addedFavorite.id, tourismId: tourism.id },
+      ]);
     } catch (error) {
       console.error("찜 추가 오류:", error);
-      alert(error.message);
     }
   };
 
@@ -148,8 +165,6 @@ const Tourism = () => {
       }
 
       setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.id !== favoriteId));
-      fetchFavorites();
-      console.log("찜 삭제 성공");
     } catch (error) {
       console.error("찜 삭제 오류:", error);
     }
@@ -163,8 +178,18 @@ const Tourism = () => {
         selectedSubCategory={selectedSubCategory}
         onFilterChange={handleFilterChange}
       />
-      <TourismList data={data} favorites={favorites} handleLike={handleLike} handleUnlike={handleUnlike} />
-      <Pagination currentPage={currentPage} totalPages={Math.ceil(totalCount / 9)} handlePageChange={setCurrentPage} pageNumbers={pageNumbers} />
+      <TourismList
+        data={data}
+        favorites={favorites}
+        handleLike={handleLike}
+        handleUnlike={handleUnlike}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(totalCount / 9)}
+        handlePageChange={setCurrentPage}
+        pageNumbers={pageNumbers}
+      />
     </div>
   );
 };

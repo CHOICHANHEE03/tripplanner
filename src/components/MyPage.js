@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../css/MyPage.css";
 import { FaHeartBroken } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const MyPage = () => {
   const [favorites, setFavorites] = useState([]);
   const [favoriteEvents, setFavoriteEvents] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,12 +14,12 @@ const MyPage = () => {
       try {
         const response = await fetch("http://localhost:8080/api/session", {
           method: "GET",
-          credentials: "include"
+          credentials: "include",
         });
         const data = await response.json();
 
-        if (data.authenticated) {
-          setUserId(data.userId);
+        if (data.authenticated && data.user) {
+          setUsername(data.user);
         } else {
           navigate("/login");
         }
@@ -32,32 +32,36 @@ const MyPage = () => {
     checkSession();
   }, [navigate]);
 
+  const fetchFavorites = useCallback(async () => {
+    if (!username) return;
+
+    try {
+      const response = await fetch(`http://localhost:8080/favorites/${username}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) throw new Error("찜 목록 불러오기 실패");
+
+      const data = await response.json();
+      console.log("찜 목록 데이터:", data); // 응답 데이터 확인
+      setFavorites(data.tourismFavorites || []);
+      setFavoriteEvents(data.eventFavorites || []);
+    } catch (error) {
+      console.error("찜 목록 가져오기 오류:", error);
+      setFavorites([]);
+      setFavoriteEvents([]);
+    }
+  }, [username]);
+
   useEffect(() => {
-    if (!userId) return;
-    
-    const fetchFavorites = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/favorites/${userId}`, {
-          method: "GET",
-          credentials: "include"
-        });
-
-        if (!response.ok) throw new Error("찜 목록 불러오기 실패");
-
-        const data = await response.json();
-        setFavorites(data.tourismFavorites);
-        setFavoriteEvents(data.eventFavorites);
-      } catch (error) {
-        console.error("찜 목록 가져오기 오류:", error);
-      }
-    };
-
+    console.log("현재 로그인한 사용자:", username); // 디버깅용
     fetchFavorites();
-  }, [userId]);
+  }, [fetchFavorites]);
 
   const removeFavorite = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/favorites/${id}`, {
+      const response = await fetch(`http://localhost:8080/favorites/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -79,8 +83,10 @@ const MyPage = () => {
         <div className="mypage-grid">
           {favorites.map((place) => (
             <div key={place.id} className="mypage-card">
-              {place.img && <img src={place.img} alt={place.title} className="card-img" />}
-              <h3>{place.title}</h3>
+              {place.tourism?.firstimage && (
+                <img src={place.tourism.firstimage} alt={place.tourism.title} className="card-img" />
+              )}
+              <h3>{place.tourism?.title}</h3>
               <button className="remove-button" onClick={() => removeFavorite(place.id)}>
                 <FaHeartBroken /> 삭제
               </button>
