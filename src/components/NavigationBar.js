@@ -44,7 +44,7 @@ const NavigationBar = () => {
 
     return (
         <div className='navbar'>
-            <img src={logo} alt='logo' className='navbar-logo' />
+            <img src={logo} alt='logo' className='navbar-logo' onClick={() => navigate("/")} />
             <div className="navbar-right">
                 <Link className="navbarMenu" to={"/"}>Home</Link>
                 <Link className="navbarMenu" to={"/tourism"}>관광지</Link>

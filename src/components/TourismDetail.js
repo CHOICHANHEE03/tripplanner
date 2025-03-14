@@ -14,22 +14,21 @@ const TourismDetail = () => {
 
     useEffect(() => {
         const fetchTourismData = async () => {
+            setLoading(true);
             try {
-                const response = await fetch(
-                    "https://d4046c3d-95c1-42a1-ae9a-4ca7bf1c5570.mock.pstmn.io/api/tourism"
-                );
+                const response = await fetch(`http://localhost:8080/api/tourism/${id}`);
                 if (!response.ok) {
                     throw new Error("데이터를 불러오는 데 실패했습니다.");
                 }
                 const data = await response.json();
-                const selectedTourism = data.find((item) => item.id.toString() === id);
-                setTourism(selectedTourism);
+                setTourism(data);
             } catch (error) {
                 setError(error.message);
             } finally {
                 setLoading(false);
             }
         };
+
         const fetchReviewsData = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/api/reviews/tourism/${id}`);

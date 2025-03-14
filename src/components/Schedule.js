@@ -21,7 +21,7 @@ const Schedule = () => {
 
         if (data.authenticated) {
           setIsAuthenticated(true);
-          setUsername(data.user); // username 저장
+          setUsername(data.user);
           fetchSchedules();
         } else {
           Swal.fire("오류", "로그인이 필요합니다.", "error");
@@ -43,7 +43,7 @@ const Schedule = () => {
       if (!response.ok) throw new Error("서버 오류");
 
       const data = await response.json();
-
+      
       if (Array.isArray(data)) {
         setSchedules(data);
       } else if (Array.isArray(data.schedules)) {
@@ -84,7 +84,9 @@ const Schedule = () => {
           ))}
         </ul>
       )}
-      <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>일정 추가</button>
+      <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
+        일정 추가
+      </button>
     </div>
   );
 };
