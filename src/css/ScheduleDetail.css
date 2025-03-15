@@ -1,21 +1,30 @@
 /* 일정 상세 페이지 컨테이너 */
 .schedule-detail-container {
-    max-width: 850px;
-    margin: 40px auto;
+    max-width: 800px;
+    margin: 30px auto;
     padding: 20px;
-    border: 2px solid #DAEFF1;
-    border-radius: 8px;
-    background: #FFFFFF;
-    text-align: center;
+    background: #F9F9F9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-height: 50vh;
     position: relative;
+}
+
+/* 일정 상세 헤더 스타일 */
+.schedule-detail-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* 일정 제목 스타일 */
 .schedule-detail-title {
-    margin-bottom: 15px;
     font-size: 24px;
     font-weight: bold;
     color: #333;
+    text-align: center;
+    width: 100%;
 }
 
 /* 일정 정보 텍스트 스타일 */
@@ -23,6 +32,7 @@
     line-height: 1.6;
     color: #333;
     margin-bottom: 15px;
+    font-size: 16px;
 }
 
 /* 일정 목록 스타일 */
@@ -32,12 +42,13 @@
 }
 
 .schedule-detail-container li {
-    background: #F9F9F9;
+    background: #FFFFFF;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 10px;
     border-left: 5px solid #DAEFF1;
     text-align: left;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .schedule-detail-container li p {
@@ -55,12 +66,12 @@
     cursor: pointer;
 }
 
+/* 버튼 스타일 */
 .schedule-detail-buttons {
     display: flex;
     justify-content: center;
 }
 
-/* 일정 상세 페이지 버튼 스타일 수정 */
 .schedule-detail-button {
     padding: 10px 20px;
     border: none;
@@ -72,6 +83,7 @@
     width: 150px;
     height: 40px;
     margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .schedule-detail-button:hover {
@@ -87,6 +99,7 @@
 
     .schedule-detail-title {
         font-size: 22px;
+        text-align: center;
     }
 
     .schedule-detail-container p {

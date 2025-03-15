@@ -1,0 +1,77 @@
+.add-container {
+    max-width: 700px;
+    min-height: 50vh;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.add-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.schedule-input-container {
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.schedule-input-container label {
+    font-size: 16px;
+    width: 30%;
+    text-align: right;
+}
+
+.schedule-input {
+    width: 40%;
+    min-width: 150px;
+    padding: 8px;
+    border: 1px solid #D6D6D6;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+select.schedule-input {
+    width: 42.5%;
+}
+
+.add-item {
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.schedule-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.schedule-button {
+    width: 150px;
+    height: 40px;
+    background-color: #DAEFF1;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.2s ease-in-out;
+    margin: 10px;
+}
+
+.schedule-button:hover {
+    background-color: #B8DDE0;
+}

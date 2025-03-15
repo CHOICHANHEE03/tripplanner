@@ -1,9 +1,14 @@
 .mypage-section {
+    max-width: 80%;
+    min-height: 50vh;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    padding: 40px;
 }
 
 .mypage-grid {
@@ -11,22 +16,18 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
     padding: 20px 0;
 }
 
 .mypage-card {
-    display: flex;
-    flex-direction: column;
-    border: 2px solid #DAEFF1;
-    border-radius: 10px;
-    overflow: hidden;
-    max-width: 350px;
-    height: auto;
-    background: #fff;
-    padding: 20px;
+    background: white;
+    padding: 15px;
+    border: 1px solid #D6D6D6;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    transition: transform 0.2s ease-in-out;
 }
 
 .mypage-card img {
@@ -34,7 +35,7 @@
     height: 180px;
     object-fit: cover;
     object-position: center;
-    border-bottom: 2px solid #DAEFF1;
+    border-bottom: 1px solid #D6D6D6;
 }
 
 .remove-button {

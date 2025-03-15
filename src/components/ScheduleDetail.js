@@ -98,7 +98,7 @@ const ScheduleDetail = () => {
 
             {scheduleData.scheduleItems.length > 0 && (
                 <div>
-                    <h3>📍 일정 목록</h3>
+                    <h3>📍 일정 내용</h3>
                     <ul>
                         {scheduleData.scheduleItems.map((item, index) => (
                             <li key={index}>
@@ -112,7 +112,7 @@ const ScheduleDetail = () => {
             )}
 
             <div className="schedule-detail-buttons">
-                <button onClick={() => navigate(`/edit/${id}`)} className="schedule-detail-button">수정하기</button>
+                <button onClick={() => navigate(`/schedule/edit/${scheduleData.id}`)} className="schedule-detail-button">수정하기</button>
                 <button onClick={handleDelete} className="schedule-detail-button">삭제하기</button>
             </div>
         </div>

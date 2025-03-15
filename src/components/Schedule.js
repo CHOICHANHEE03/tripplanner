@@ -137,9 +137,11 @@ const Schedule = () => {
           ))}
         </ul>
       )}
-      <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
-        일정 추가
-      </button>
+      <div className="schedule-button-container">
+        <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
+          일정 추가
+        </button>
+      </div>
     </div>
   );
 };
