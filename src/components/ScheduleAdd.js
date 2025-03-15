@@ -77,6 +77,7 @@ const ScheduleAdd = () => {
             const updatedTypes = [...types];
             updatedTypes[index] = typeMapping[value] || "";
             setTypes(updatedTypes);
+            console.log("업데이트된 types:", updatedTypes);
         } else if (field === "place") {
             const updatedPlaces = [...places];
             updatedPlaces[index] = value;
@@ -88,6 +89,23 @@ const ScheduleAdd = () => {
         }
     };
 
+    const getFilteredFavorites = (index) => {
+        console.log("필터링 전 favorites:", favorites);
+        console.log(`현재 index: ${index}, 선택된 타입: ${types[index]}`);
+
+        if (!types[index]) return [];
+
+        const filtered = favorites.filter(place => {
+            const contentTypeId = place.tourism?.contentTypeId?.toString(); // 문자열 변환
+            return contentTypeId === types[index];
+        });
+
+        console.log("필터링 후:", filtered);
+        return filtered;
+    };
+
+
+
     const handleSubmit = async () => {
         if (!title || !date || types.every(t => !t) || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("오류", "모든 항목을 입력해주세요.", "error");
@@ -97,7 +115,7 @@ const ScheduleAdd = () => {
         const scheduleData = {
             title,
             date,
-            username,
+            author: username, // 작성자 필드 추가
             type1: types[0],
             place1: places[0],
             details1: details[0],
@@ -155,7 +173,7 @@ const ScheduleAdd = () => {
                         <label>찜한 목록 {index + 1}</label>
                         <select className="schedule-input" onChange={(e) => updateSchedule(index, "place", e.target.value)}>
                             <option value="">선택하세요</option>
-                            {favorites.map(place => (
+                            {getFilteredFavorites(index).map(place => (
                                 <option key={place.id} value={place.tourism?.title}>{place.tourism?.title}</option>
                             ))}
                         </select>
@@ -165,7 +183,7 @@ const ScheduleAdd = () => {
                         <label>내용</label>
                         <input type="text" className="schedule-input" value={details[index]} onChange={(e) => updateSchedule(index, "details", e.target.value)} />
                     </div>
-                </div>    
+                </div>
             ))}
             <div className="schedule-button-container">
                 <button onClick={addSchedule} className="schedule-button">일정 추가</button>

@@ -12,7 +12,7 @@ const Tourism = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(null);
   const [username, setUsername] = useState(null);
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedType, setSelectedType] = useState("");
@@ -21,11 +21,6 @@ const Tourism = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
-    }
-
     const checkSession = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/session", {
@@ -48,30 +43,36 @@ const Tourism = () => {
     checkSession();
   }, []);
 
-  const fetchFavorites = useCallback(async () => {
-    if (!username) return;
-    try {
-      const response = await fetch(`http://localhost:8080/favorites/${username}`);
-      const result = await response.json();
-      setFavorites(result);
-
-      localStorage.setItem("favorites", JSON.stringify(result));
-    } catch (error) {
-      console.error("찜 목록 가져오기 오류:", error);
-    }
-  }, [username]);
-
   useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!username) return;
+  
+      try {
+        const response = await fetch(`http://localhost:8080/favorites/${username}`, {
+          method: "GET",
+          credentials: "include",
+        });
+  
+        if (!response.ok) throw new Error("찜 목록 불러오기 실패");
+  
+        const result = await response.json();
+  
+        if (Array.isArray(result.content)) {
+          setFavorites(result.content);
+        } else {
+          console.error("찜 목록 데이터가 올바르지 않습니다.", result);
+          setFavorites([]);
+        }
+      } catch (error) {
+        console.error("찜 목록 가져오기 오류:", error);
+        setFavorites([]);
+      }
+    };
+  
     if (username) {
       fetchFavorites();
     }
-  }, [username, fetchFavorites]);
-
-  useEffect(() => {
-    if (favorites.length > 0) {
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-    }
-  }, [favorites]);
+  }, [username]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -130,24 +131,16 @@ const Tourism = () => {
       const response = await fetch("http://localhost:8080/favorites", {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, tourismId: tourism.id }),
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`찜 추가 실패: ${errorText}`);
-      }
+      if (!response.ok) throw new Error("찜 추가 실패");
 
       const addedFavorite = await response.json();
       console.log("찜 추가 성공:", addedFavorite);
 
-      setFavorites((prevFavorites) => [
-        ...prevFavorites,
-        { id: addedFavorite.id, tourismId: tourism.id },
-      ]);
+      setFavorites((prev) => [...prev, { id: addedFavorite.id, tourismId: tourism.id }]);
     } catch (error) {
       console.error("찜 추가 오류:", error);
     }
@@ -160,11 +153,9 @@ const Tourism = () => {
         credentials: "include",
       });
 
-      if (!response.ok) {
-        throw new Error("찜 삭제 실패");
-      }
+      if (!response.ok) throw new Error("찜 삭제 실패");
 
-      setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.id !== favoriteId));
+      setFavorites((prev) => prev.filter((fav) => fav.id !== favoriteId));
     } catch (error) {
       console.error("찜 삭제 오류:", error);
     }

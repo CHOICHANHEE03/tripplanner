@@ -39,8 +39,8 @@ const Home = () => {
           {images.map((src, index) => (
             <SwiperSlide key={index} className="custom-slide">
               <div className="text-container">
-                <h2>트립 플래너 사이트에 오신걸 환영합니다.</h2>
-                <p>트립플래너에서 당신에게 맞는 여행지를 추천받고, 특별한 여행을 계획하세요!</p>
+                <h2>트립 플래너 사이트에 오신 것을 환영합니다.</h2>
+                <p>트립 플래너에서 당신에게 맞는 여행지를 추천받고, 특별한 여행을 계획하세요!</p>
               </div>
               <div className="image-container">
                 <img src={src} alt={`slide${index + 1}`} className="slide-img" />
