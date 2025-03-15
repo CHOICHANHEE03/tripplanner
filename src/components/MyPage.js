@@ -14,7 +14,7 @@ const MyPage = () => {
   const itemsPerPage = 9;
   const navigate = useNavigate();
 
-  // contentTypeId 옵션
+  // 카테고리(유형) 옵션
   const contentTypes = [
     { id: "12", name: "관광지" },
     { id: "14", name: "문화시설" },
@@ -45,17 +45,14 @@ const MyPage = () => {
     checkSession();
   }, [navigate]);
 
-  // 찜 목록 불러오기 (currentPage 추가)
+  // 찜 목록 가져오기
   const fetchFavorites = useCallback(async () => {
     if (!username) return;
 
     try {
       const response = await fetch(
-        `http://localhost:8080/favorites/${username}?page=${currentPage}&size=${itemsPerPage}`, // ✅ 페이지네이션 적용
-        {
-          method: "GET",
-          credentials: "include",
-        }
+        `http://localhost:8080/favorites/${username}?page=${currentPage}&size=${itemsPerPage}`,
+        { method: "GET", credentials: "include" }
       );
 
       if (!response.ok) throw new Error("찜 목록 불러오기 실패");
@@ -65,10 +62,9 @@ const MyPage = () => {
 
       if (data?.content && Array.isArray(data.content)) {
         setFavorites(data.content);
-        setTotalCount(data.totalElements); // ✅ 전체 찜 개수 유지
-        setPageNumbers(getPageNumbers(currentPage, Math.ceil(data.totalElements / itemsPerPage))); // ✅ 페이지 번호 업데이트
+        setTotalCount(data.totalElements);
+        setPageNumbers(getPageNumbers(1, Math.ceil(data.totalElements / itemsPerPage)));
       } else {
-        console.warn("찜 목록 응답이 올바른 형식이 아닙니다:", data);
         setFavorites([]);
         setTotalCount(0);
         setPageNumbers([]);
@@ -79,13 +75,13 @@ const MyPage = () => {
       setTotalCount(0);
       setPageNumbers([]);
     }
-  }, [username, currentPage]); // ✅ currentPage 추가
+  }, [username, currentPage]);
 
   useEffect(() => {
     if (username) {
       fetchFavorites();
     }
-  }, [username, currentPage, fetchFavorites]); // ✅ currentPage 변경 시 재요청
+  }, [username, currentPage, fetchFavorites]);
 
   // 찜 삭제 함수
   const removeFavorite = async (id) => {
@@ -98,7 +94,10 @@ const MyPage = () => {
       if (!response.ok) throw new Error("찜 삭제 요청 실패");
 
       setFavorites((prev) => prev.filter((place) => place.id !== id));
-      setTotalCount((prev) => prev - 1); // ✅ 삭제 시 전체 개수 감소
+      setTotalCount((prev) => prev - 1);
+      
+      // 삭제 후 데이터 다시 가져오기
+      fetchFavorites();
     } catch (error) {
       console.error("찜 삭제 오류:", error);
     }
@@ -106,27 +105,42 @@ const MyPage = () => {
 
   // 페이지네이션 숫자 배열 생성 함수
   const getPageNumbers = (currentPage, totalPages) => {
+    if (totalPages <= 1) return [1];
+
     const pageNumbers = [];
     const startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
     const endPage = Math.min(startPage + 4, totalPages);
+
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
     }
+
     return pageNumbers;
   };
+
+  // 현재 선택된 카테고리에 따라 필터링
+  const filteredFavorites =
+    selectedType === "all"
+      ? favorites
+      : favorites.filter(
+          (place) => place.tourism?.contentTypeId?.toString() === selectedType
+        );
+
+  // ✅ 총 페이지 수보다 currentPage가 크면 1페이지로 초기화
+  useEffect(() => {
+    if (totalCount === 0) {
+      setCurrentPage(1);
+    } else if (currentPage > Math.ceil(totalCount / itemsPerPage)) {
+      setCurrentPage(1);
+    }
+  }, [totalCount, currentPage]);
 
   return (
     <div className="mypage-section">
       <h2>❤️ 찜한 관광지</h2>
       <div className="filter-section">
         <label>카테고리 선택: </label>
-        <select
-          value={selectedType}
-          onChange={(e) => {
-            setSelectedType(e.target.value);
-            setCurrentPage(1); // ✅ 필터 변경 시 첫 페이지로 이동
-          }}
-        >
+        <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
           <option value="all">전체</option>
           {contentTypes.map((type) => (
             <option key={type.id} value={type.id}>
@@ -136,11 +150,11 @@ const MyPage = () => {
         </select>
       </div>
 
-      {favorites.length === 0 ? (
+      {filteredFavorites.length === 0 ? (
         <p>선택한 카테고리에 찜한 관광지가 없습니다.</p>
       ) : (
         <div className="mypage-grid">
-          {favorites.map((place) => (
+          {filteredFavorites.map((place) => (
             <div key={place.id} className="mypage-card">
               {place.tourism?.firstimage && (
                 <img src={place.tourism.firstimage} alt={place.tourism.title} className="card-img" />

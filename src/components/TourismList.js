@@ -6,6 +6,7 @@ import "../css/TourismList.css";
 const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isFavoritesLoaded, setIsFavoritesLoaded] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -25,8 +26,15 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
     checkSession();
   }, []);
 
-  // favorites가 배열인지 확인하는 코드
-  const isFavoritesArray = Array.isArray(favorites);
+  useEffect(() => {
+    if (favorites !== null) {
+      setIsFavoritesLoaded(true);
+    }
+  }, [favorites]);
+
+  if (!isFavoritesLoaded) {
+    return <div>Loading favorites...</div>;
+  }
 
   return (
     <div className="tourism-container">
@@ -36,8 +44,8 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
           <div>Loading...</div>
         ) : Array.isArray(data) && data.length > 0 ? (
           data.map((tourism) => {
-            const isFavorite = isFavoritesArray && favorites.some((fav) => fav.tourismId === tourism.id);
-            const favoriteItem = isFavoritesArray && favorites.find((fav) => fav.tourismId === tourism.id);
+            const isFavorite = favorites && favorites.some((fav) => fav.tourismId === tourism.id);
+            const favoriteItem = favorites && favorites.find((fav) => fav.tourismId === tourism.id);
 
             return (
               <div key={tourism.id} className="tourism-card">
@@ -56,6 +64,7 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
                       className="like-button"
                       onClick={() => (isFavorite ? handleUnlike(favoriteItem.id) : handleLike(tourism))}
                       style={{ color: isFavorite ? "#FF6B6B" : "black" }}
+                      disabled={!isFavoritesLoaded}
                     >
                       {isFavorite ? <FaHeart /> : <FaRegHeart />}
                     </button>

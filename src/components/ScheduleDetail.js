@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { IoCaretBackCircle } from "react-icons/io5";
+import Swal from "sweetalert2";
 import "../css/ScheduleDetail.css";
 
 const ScheduleDetail = () => {
@@ -34,6 +35,7 @@ const ScheduleDetail = () => {
                     id: data.id,
                     title: data.title,
                     date: data.date,
+                    author: data.author,
                     scheduleItems
                 });
             } catch (error) {
@@ -46,6 +48,35 @@ const ScheduleDetail = () => {
 
         fetchScheduleData();
     }, [id]);
+
+    const handleDelete = async () => {
+        Swal.fire({
+            title: "정말 삭제하시겠습니까?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "삭제",
+            cancelButtonText: "취소",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/schedule/${id}`, {
+                        method: "DELETE",
+                    });
+                    if (!response.ok) {
+                        throw new Error("삭제에 실패했습니다.");
+                    }
+                    Swal.fire("삭제 완료!", "일정이 삭제되었습니다.", "success").then(() => {
+                        navigate("/");
+                    });
+                } catch (error) {
+                    console.error("삭제 중 오류 발생:", error);
+                    Swal.fire("오류", "삭제 중 문제가 발생했습니다.", "error");
+                }
+            }
+        });
+    };
 
     if (loading) {
         return <p>데이터를 불러오는 중...</p>;
@@ -63,6 +94,7 @@ const ScheduleDetail = () => {
 
             <h2 className="schedule-detail-title">{scheduleData.title}</h2>
             <p><strong>날짜:</strong> {scheduleData.date}</p>
+            <p><strong>작성자:</strong> {scheduleData.author}</p>
 
             {scheduleData.scheduleItems.length > 0 && (
                 <div>
@@ -78,6 +110,11 @@ const ScheduleDetail = () => {
                     </ul>
                 </div>
             )}
+
+            <div className="schedule-detail-buttons">
+                <button onClick={() => navigate(`/edit/${id}`)} className="schedule-detail-button">수정하기</button>
+                <button onClick={handleDelete} className="schedule-detail-button">삭제하기</button>
+            </div>
         </div>
     );
 };

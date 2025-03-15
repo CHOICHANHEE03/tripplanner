@@ -51,7 +51,7 @@ const Schedule = () => {
       if (!response.ok) throw new Error("서버 오류");
 
       const data = await response.json();
-      
+
       if (Array.isArray(data)) {
         setSchedules(processSchedules(data));
       } else if (Array.isArray(data.schedules)) {
@@ -128,7 +128,7 @@ const Schedule = () => {
             <li key={schedule.id} className="schedule-item">
               <Link to={`/schedule/${schedule.id}`}>
                 <div className="schedule-info">
-                  <p><strong>작성자:</strong> {username}</p>
+                  <p><strong>작성자:</strong> {schedule.author}</p>
                   <p><strong>제목:</strong> {schedule.title}</p>
                 </div>
                 <p className="schedule-date">{schedule.date}</p>
