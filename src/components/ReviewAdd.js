@@ -3,16 +3,14 @@ import { useParams, useLocation } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
 import "../css/ReviewAdd.css";
 
-const ReviewAdd = () => {
-  const { id } = useParams(); // URL에서 관광지 ID 
+const ReviewAdd = () => { 
   const location = useLocation(); // useLocation 훅 사용
   const { productInfo } = location.state || {}; // location.state에서 productInfo 가져옴
 
   const [username, setUserName] = useState(null); // 사용자 이름 상태
   const [rating, setRating] = useState(0); // 별점 상태
   const [content, setContent] = useState(""); // 리뷰 내용 상태
-  const [title, setTitle] = useState(""); // 리뷰 제목 상태
-  const [contenttypeid, setContenttypeid] = useState(""); // 관광지 유형 상태
+  const [title, setTitle] = useState(productInfo?.title || ""); // 리뷰 제목 상태
 
   useEffect(() => {
     const checkSession = async () => {
@@ -43,25 +41,18 @@ const ReviewAdd = () => {
 
   const handleReviewChange = (e) => setContent(e.target.value);
 
-  const handleContenttypeidChange = (e) => {
-    const selectedValue = e.target.value;
-    setContenttypeid(selectedValue ? parseInt(selectedValue, 10) : null);
-  };
-
   const handleSubmit = async () => {
-    if (rating === 0 || content.length < 15 || contenttypeid === null || contenttypeid === "") {
+    if (rating === 0 || content.length < 15 ) {
       alert("별점과 15자 이상의 리뷰를 작성해 주세요.");
       return;
     }
 
     try {
-        const tourismId = parseInt(id, 10); // id를 숫자로 변환
         console.log({
           rating: rating,
           content: content,
           username: username,
-          contenttypeid: contenttypeid,
-          tourism_id: tourismId, 
+          title: title,
         });
     
         const response = await fetch("http://localhost:8080/api/reviews", {
@@ -73,8 +64,7 @@ const ReviewAdd = () => {
             rating: rating,
             content: content,
             username: username,
-            contenttypeid: contenttypeid,
-            tourism_id: tourismId, 
+            title: title,
           }),
         });
     
@@ -82,7 +72,7 @@ const ReviewAdd = () => {
           alert("리뷰가 성공적으로 등록되었습니다.");
           setRating(0);
           setContent("");
-          setContenttypeid("");
+          setTitle(productInfo?.title || "");
         } else {
           alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
         }
@@ -132,26 +122,11 @@ const ReviewAdd = () => {
             <input
               id="title"
               type="text"
-              value={title}
+              value={productInfo.title} 
+              readOnly 
               onChange={handleTitleChange}
-              placeholder="제목을 입력해주세요"
               className="reviewform-title"
             />
-          </div>
-          <div className="contenttypeid-container">
-            <label htmlFor="contenttypeid">관광지 유형:</label>
-            <select
-              id="contenttypeid"
-              value={contenttypeid}
-              onChange={handleContenttypeidChange}
-              className="contenttypeid-select"
-            >
-              <option value="">===선택하세요===</option>
-              <option value="12">관광지</option>
-              <option value="14">문화시설</option>
-              <option value="15">행사/공연/축제</option>
-              <option value="28">레포츠</option>
-            </select>
           </div>
           <div className="star-text-container">
             <p>내용: </p>
