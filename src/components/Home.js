@@ -1,31 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/autoplay';
-import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/pagination";
 import "../css/Home.css";
 
-import spring from '../image/Main_Spring.jpg';
-import summer from '../image/Main_Summer.jpg';
-import fall from '../image/Main_Fall.jpg';
-import winter from '../image/Main_Winter.jpg';
+import spring from "../image/Main_Spring.jpg";
+import summer from "../image/Main_Summer.jpg";
+import fall from "../image/Main_Fall.jpg";
+import winter from "../image/Main_Winter.jpg";
 
 const images = [spring, summer, fall, winter];
 
 const Home = () => {
   const navigate = useNavigate();
+  const [tourismData, setTourismData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleTourismClick = () => {
-    navigate('/tourism');
-  };
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8080/api/tourism?page=1&pageSize=9");
+      const result = await response.json();
 
-  const handleEventsClick = () => {
-    navigate('/events');
-  };
+      if (result && Array.isArray(result.content)) {
+        const shuffled = [...result.content].sort(() => 0.5 - Math.random()).slice(0, 3);
+        setTourismData(shuffled);
+      }
+    } catch (error) {
+      console.error("Failed to fetch tourism data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <div>
+      {/* 이미지 슬라이더 */}
       <div className="image-slider">
         <Swiper
           modules={[Pagination, Autoplay]}
@@ -49,30 +66,55 @@ const Home = () => {
           ))}
         </Swiper>
       </div>
+
+      {/* 관광지 정보 섹션 */}
       <div className="info-section">
-        <h2>최신 관광지 정보</h2>
+        <h2>관광지 정보</h2>
         <div className="info-container">
-          <div className="info-box"></div>
-          <div className="info-box"></div>
-          <div className="info-box"></div>
+          {loading ? (
+            <p>관광지 정보를 불러오는 중입니다...</p>
+          ) : tourismData.length > 0 ? (
+            tourismData.map((tourism) => (
+              <div key={tourism.id} className="info-box">
+                <img src={tourism.firstimage} alt={tourism.title} className="info-image" />
+                <h3>{tourism.title}</h3>
+                <p className="truncated-text">{tourism.overview}</p>
+                <button
+                  className="info-button"
+                  onClick={() => navigate(`/tourism/${tourism.id}`)}
+                >
+                  자세히 보기
+                </button>
+              </div>
+            ))
+          ) : (
+            <p>관광지 정보가 없습니다.</p>
+          )}
         </div>
-        <p className="info-text">더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
-          <button className="info-button" onClick={handleTourismClick}>관광지 바로가기</button>
+        <p className="info-text">
+          더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
+          <button className="info-button" onClick={() => navigate("/tourism")}>
+            관광지 바로가기
+          </button>
         </p>
       </div>
+
+      {/* 행사 정보 섹션 */}
       <div className="info-section">
-        <h2>최신 행사 정보</h2>
+        <h2>행사 정보</h2>
         <div className="info-container">
           <div className="info-box"></div>
           <div className="info-box"></div>
           <div className="info-box"></div>
         </div>
-        <p className="info-text">더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
-          <button className="info-button" onClick={handleEventsClick}>행사 바로가기</button>
+        <p className="info-text">
+          더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
+          <button className="info-button" onClick={() => navigate("/events")}>
+            행사 바로가기
+          </button>
         </p>
       </div>
     </div>
-
   );
 };
 

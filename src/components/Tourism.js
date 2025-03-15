@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import TourismCategory from "./TourismCategory";
@@ -12,11 +12,12 @@ const Tourism = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState(null);
   const [username, setUsername] = useState(null);
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [favoriteState, setFavoriteState] = useState(0);
+  const favoriteMapRef = useRef(new Map()); // useRef로 찜 상태 관리
 
   const navigate = useNavigate();
 
@@ -46,29 +47,31 @@ const Tourism = () => {
   useEffect(() => {
     const fetchFavorites = async () => {
       if (!username) return;
-  
+
       try {
         const response = await fetch(`http://localhost:8080/favorites/${username}`, {
           method: "GET",
           credentials: "include",
         });
-  
+
         if (!response.ok) throw new Error("찜 목록 불러오기 실패");
-  
+
         const result = await response.json();
-  
+
         if (Array.isArray(result.content)) {
-          setFavorites(result.content);
+          const newFavoriteMap = new Map();
+          result.content.forEach((fav) => newFavoriteMap.set(fav.tourismId, fav.id));
+          favoriteMapRef.current = newFavoriteMap;
         } else {
           console.error("찜 목록 데이터가 올바르지 않습니다.", result);
-          setFavorites([]);
+          favoriteMapRef.current = new Map();
         }
       } catch (error) {
         console.error("찜 목록 가져오기 오류:", error);
-        setFavorites([]);
+        favoriteMapRef.current = new Map();
       }
     };
-  
+
     if (username) {
       fetchFavorites();
     }
@@ -127,6 +130,10 @@ const Tourism = () => {
       return;
     }
 
+    // UI 즉시 반영
+    favoriteMapRef.current.set(tourism.id, true);
+    setFavoriteState((prev) => prev + 1); // 리렌더링 트리거
+
     try {
       const response = await fetch("http://localhost:8080/favorites", {
         method: "POST",
@@ -140,13 +147,20 @@ const Tourism = () => {
       const addedFavorite = await response.json();
       console.log("찜 추가 성공:", addedFavorite);
 
-      setFavorites((prev) => [...prev, { id: addedFavorite.id, tourismId: tourism.id }]);
+      favoriteMapRef.current.set(tourism.id, addedFavorite.id);
+      setFavoriteState((prev) => prev + 1); // 다시 리렌더링 트리거
     } catch (error) {
       console.error("찜 추가 오류:", error);
+      favoriteMapRef.current.delete(tourism.id); // 실패 시 롤백
+      setFavoriteState((prev) => prev + 1); // 다시 리렌더링
     }
   };
 
-  const handleUnlike = async (favoriteId) => {
+  const handleUnlike = async (favoriteId, tourismId) => {
+    // UI 즉시 반영
+    favoriteMapRef.current.delete(tourismId);
+    setFavoriteState((prev) => prev + 1); // 리렌더링 트리거
+
     try {
       const response = await fetch(`http://localhost:8080/favorites/${favoriteId}`, {
         method: "DELETE",
@@ -155,9 +169,12 @@ const Tourism = () => {
 
       if (!response.ok) throw new Error("찜 삭제 실패");
 
-      setFavorites((prev) => prev.filter((fav) => fav.id !== favoriteId));
+      console.log("찜 삭제 성공:", favoriteId);
+      setFavoriteState((prev) => prev + 1); // 다시 리렌더링
     } catch (error) {
       console.error("찜 삭제 오류:", error);
+      favoriteMapRef.current.set(tourismId, favoriteId); // 실패 시 롤백
+      setFavoriteState((prev) => prev + 1); // 다시 리렌더링
     }
   };
 
@@ -171,9 +188,13 @@ const Tourism = () => {
       />
       <TourismList
         data={data}
-        favorites={favorites}
+        favorites={Array.from(favoriteMapRef.current.entries()).map(([tourismId, id]) => ({
+          tourismId,
+          id,
+        }))}
         handleLike={handleLike}
         handleUnlike={handleUnlike}
+        loading={loading}
       />
       <Pagination
         currentPage={currentPage}

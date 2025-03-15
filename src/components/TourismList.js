@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../css/TourismList.css";
@@ -6,7 +6,7 @@ import "../css/TourismList.css";
 const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isFavoritesLoaded, setIsFavoritesLoaded] = useState(false);
+  const favoriteMapRef = useRef(new Map());
 
   useEffect(() => {
     const checkSession = async () => {
@@ -27,14 +27,10 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
   }, []);
 
   useEffect(() => {
-    if (favorites !== null) {
-      setIsFavoritesLoaded(true);
-    }
+    const newFavoriteMap = new Map();
+    (favorites || []).forEach((fav) => newFavoriteMap.set(fav.tourismId, fav.id));
+    favoriteMapRef.current = newFavoriteMap;
   }, [favorites]);
-
-  if (!isFavoritesLoaded) {
-    return <div>Loading favorites...</div>;
-  }
 
   return (
     <div className="tourism-container">
@@ -44,8 +40,8 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
           <div>Loading...</div>
         ) : Array.isArray(data) && data.length > 0 ? (
           data.map((tourism) => {
-            const isFavorite = favorites && favorites.some((fav) => fav.tourismId === tourism.id);
-            const favoriteItem = favorites && favorites.find((fav) => fav.tourismId === tourism.id);
+            const favoriteId = favoriteMapRef.current.get(tourism.id);
+            const isFavorite = favoriteId !== undefined;
 
             return (
               <div key={tourism.id} className="tourism-card">
@@ -62,9 +58,16 @@ const TourismList = ({ data, favorites, handleLike, handleUnlike, loading }) => 
                   {isAuthenticated ? (
                     <button
                       className="like-button"
-                      onClick={() => (isFavorite ? handleUnlike(favoriteItem.id) : handleLike(tourism))}
+                      onClick={() => {
+                        if (isFavorite) {
+                          handleUnlike(favoriteId);
+                          favoriteMapRef.current.delete(tourism.id);
+                        } else {
+                          handleLike(tourism);
+                          favoriteMapRef.current.set(tourism.id, true);
+                        }
+                      }}
                       style={{ color: isFavorite ? "#FF6B6B" : "black" }}
-                      disabled={!isFavoritesLoaded}
                     >
                       {isFavorite ? <FaHeart /> : <FaRegHeart />}
                     </button>
