@@ -52,16 +52,22 @@ const ReviewDetail = () => {
             <div className="review-back-button" onClick={() => navigate(-1)}>
                 <IoCaretBackCircle size={32} />
             </div>
-            <div className="review-header-title"> 
-            <h3>📄 리뷰 목록</h3>
             </div>
-            </div>
-            <div>
-                <h2 className="review-detail-title">{reviewData.title}</h2>
-                <p><strong>작성자:</strong> {reviewData.username}</p> 
-                <p><strong>날짜:</strong> {reviewData.date }</p>
+            <div className="review-detail-form-container">
+            <div className="review-detail-form">
+                <div className="review-detail-form-header">
+                    <h2 className="review-detail-title">{reviewData.title}</h2>
+                    <p><strong>날짜:</strong> {reviewData.date }</p>
+                    <p><strong>작성자:</strong> {reviewData.username}</p>  
+                    <div className="review-detail-title-header">
+                        <h3>📄 리뷰 내용</h3>
+                    </div>
+                </div>
+            <div className="review-detail-text">
                 <p><strong>별점:</strong> {reviewData.rating} / 5</p>
                 <p><strong>내용:</strong> {reviewData.content }</p>
+            </div>
+            </div>
             </div>
         </div>
     );

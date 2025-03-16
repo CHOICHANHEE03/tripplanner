@@ -1,13 +1,16 @@
-/* Pagination.css */
-
-/* 페이지 네비게이션 버튼 */
+.pagination-container{
+    display: flex;
+    justify-content: center;
+    margin: 40px 15px;
+    padding-right: 20px;
+}
 .page-nav {
     text-align: center;
     margin: 20px;
-}
-
-.page-nav-btn {
-    background-color: #D6D6D6;
+  }
+  
+  .page-nav-btn {
+    background-color: #FFFFFF;
     border: 1px solid #D6D6D6;
     border-radius: 3px;
     width: 30px;
@@ -15,13 +18,18 @@
     margin: 1px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.page-nav-btn:hover {
-    background-color: #A9A9A9;
-}
-
-.page-nav-btn:disabled {
-    background-color: #E0E0E0;
+  }
+  
+  .page-nav-btn:hover {
+    background-color: #FFFFFF
+  }
+  
+  .page-nav-btn:disabled {
+    background-color: #FFFFFF;
     cursor: not-allowed;
+  }
+  
+  /* 눌린 상태 스타일 */
+  .page-nav-btn.active {
+    background-color: #DAEFF1;
 }
