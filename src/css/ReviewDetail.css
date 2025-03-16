@@ -34,3 +34,22 @@
 .review-detail-title-header{
     padding-right: 10px;
 }
+/* 버튼 컨테이너 스타일 */
+.review-detail-buttons {
+    display: flex;
+    justify-content: center;
+}
+/* 리뷰 수정/삭제 버튼 스타일 */
+.review-detail-button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    background: #DAEFF1;
+    width: 150px;
+    height: 40px;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
