@@ -46,7 +46,7 @@ const ScheduleAdd = () => {
     const fetchFavorites = useCallback(async () => {
         if (!username) return;
         try {
-            const response = await fetch(`http://localhost:8080/favorites/${username}?page=${currentPage}&size=${itemsPerPage}`, {
+            const response = await fetch(`http://localhost:8080/api/favorites/${username}?page=${currentPage}&size=${itemsPerPage}`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -187,7 +187,9 @@ const ScheduleAdd = () => {
                         <select className="schedule-input" onChange={(e) => updateSchedule(index, "place", e.target.value)}>
                             <option value="">선택하세요</option>
                             {getFilteredFavorites(index).map(place => (
-                                <option key={place.id} value={place.tourism?.title}>{place.tourism?.title}</option>
+                                <option key={place.id} value={place.tourism?.title || '기타'}>
+                                    {place.tourism?.title || '기타'}
+                                </option>
                             ))}
                         </select>
                     </div>

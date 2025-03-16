@@ -4,45 +4,38 @@ import "../css/Pagination.css";
 const Pagination = ({
   currentPage,
   totalPages,
+  pageNumbers,
+  handlePageChange, // 여기서 handlePageChange를 props로 받음
   currentGroup,
-  onPageChange,
   onGroupChange,
 }) => {
-  const generatePageNumbers = () => {
-    const startPage = currentGroup * 5;
-    const endPage = Math.min(startPage + 4, totalPages - 1);
-
-    const pageNumbers = [];
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i + 1); // 페이지 번호는 1부터 시작
-    }
-    return pageNumbers;
-  };
-
   return (
     <div className="pagination-container">
+      {/* 이전 그룹으로 이동 */}
       <button
-        onClick={() => onGroupChange(-1)}
-        disabled={currentGroup === 0}
+        onClick={() => onGroupChange(-1)} // 그룹을 -1 (이전)으로 이동
         className="page-nav-btn"
+        disabled={currentGroup === 0} // 첫 그룹에서는 이전 그룹으로 이동 불가능
       >
         &lt;
       </button>
 
-      {generatePageNumbers().map((pageNum) => (
+      {/* 페이지 번호 버튼 */}
+      {pageNumbers.map((pageNum) => (
         <button
           key={pageNum}
-          onClick={() => onPageChange(pageNum)} // 페이지 번호 클릭 시 onPageChange 호출
+          onClick={() => handlePageChange(pageNum)}  // 페이지 번호 클릭 시 페이지 변경
           className={`page-nav-btn ${currentPage === pageNum ? "active" : ""}`}
         >
           {pageNum}
         </button>
       ))}
 
+      {/* 다음 그룹으로 이동 */}
       <button
-        onClick={() => onGroupChange(1)}
-        disabled={currentGroup === Math.floor((totalPages - 1) / 5)}
+        onClick={() => onGroupChange(1)} // 그룹을 +1 (다음)으로 이동
         className="page-nav-btn"
+        disabled={currentGroup === Math.floor((totalPages - 1) / 5)} // 마지막 그룹에서는 다음 그룹으로 이동 불가능
       >
         &gt;
       </button>

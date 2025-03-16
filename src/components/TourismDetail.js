@@ -69,7 +69,7 @@ const TourismDetail = () => {
     const fetchFavorites = async () => {
       if (!username) return;
       try {
-        const response = await fetch(`http://localhost:8080/favorites/${username}`, {
+        const response = await fetch(`http://localhost:8080/api/favorites/${username}`, {
           method: "GET",
           credentials: "include",
         });
@@ -89,7 +89,7 @@ const TourismDetail = () => {
 
     if (existingFavorite) {
       try {
-        const response = await fetch(`http://localhost:8080/favorites/${existingFavorite.id}`, {
+        const response = await fetch(`http://localhost:8080/api/favorites/${existingFavorite.id}`, {
           method: "DELETE",
           credentials: "include",
         });
@@ -100,7 +100,7 @@ const TourismDetail = () => {
       }
     } else {
       try {
-        const response = await fetch("http://localhost:8080/favorites", {
+        const response = await fetch("http://localhost:8080/api/favorites", {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },

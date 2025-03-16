@@ -62,7 +62,7 @@ const MyPage = () => {
       }
 
       const response = await fetch(
-        `http://localhost:8080/favorites/${username}?${params.toString()}`,
+        `http://localhost:8080/api/favorites/${username}?${params.toString()}`,
         { method: "GET", credentials: "include" }
       );
 
@@ -97,7 +97,7 @@ const MyPage = () => {
   // 찜 삭제 함수
   const removeFavorite = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/favorites/${id}`, {
+      const response = await fetch(`http://localhost:8080/api/favorites/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

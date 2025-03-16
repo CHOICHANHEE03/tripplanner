@@ -11,11 +11,12 @@ const Tourism = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState(null);
+  const [favorites, setFavorites] = useState([]);
   const [username, setUsername] = useState(null);
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [currentGroup, setCurrentGroup] = useState(0); // currentGroup 상태 추가
 
   useEffect(() => {
     const checkSession = async () => {
@@ -45,7 +46,7 @@ const Tourism = () => {
       if (!username) return;
   
       try {
-        const response = await fetch(`http://localhost:8080/favorites/${username}`, {
+        const response = await fetch(`http://localhost:8080/api/favorites/${username}`, {
           method: "GET",
           credentials: "include",
         });
@@ -111,6 +112,18 @@ const Tourism = () => {
     return pageNumbers;
   };
 
+  const handleGroupChange = (direction) => {
+    const totalPages = Math.ceil(totalCount / 9); // 전체 페이지 수 계산
+    const totalGroups = Math.ceil(totalPages / 5); // 전체 그룹 수 계산
+
+    const newGroup = currentGroup + direction;
+
+    if (newGroup >= 0 && newGroup < totalGroups) {
+      setCurrentGroup(newGroup);
+      setCurrentPage(newGroup * 5 + 1);
+    }
+  };
+
   const handleFilterChange = (filterType, value) => {
     if (filterType === "region") setSelectedArea(value);
     else if (filterType === "tourismType") setSelectedType(value);
@@ -158,6 +171,10 @@ const Tourism = () => {
     }
   };
 
+  const getHeartStatus = (tourismId) => {
+    return favorites ? favorites.some(favorite => favorite.tourismId === tourismId) : false;
+  };
+
   return (
     <div className="tourism-list">
       <TourismCategory
@@ -171,12 +188,15 @@ const Tourism = () => {
         favorites={favorites}
         handleLike={handleLike}
         handleUnlike={handleUnlike}
+        getHeartStatus={getHeartStatus} // getHeartStatus 함수 전달
       />
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(totalCount / 9)}
         handlePageChange={setCurrentPage}
         pageNumbers={pageNumbers}
+        currentGroup={currentGroup}
+        onGroupChange={handleGroupChange}
       />
     </div>
   );

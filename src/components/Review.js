@@ -6,14 +6,14 @@ import "../css/Pagination.css";
 import "../css/Review.css";
 
 const Review = () => {
-  const [reviews, setReviews] = useState([]);  // 필터링된 리뷰 데이터
-  const [allReviews, setAllReviews] = useState([]);  // 전체 리뷰 데이터 (누적된 데이터)
+  const [reviews, setReviews] = useState([]); // 필터링된 리뷰 데이터
+  const [allReviews, setAllReviews] = useState([]); // 전체 리뷰 데이터 (누적된 데이터)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState("");  // 세션에서 받아온 사용자 이름
+  const [username, setUsername] = useState(""); // 세션에서 받아온 사용자 이름
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
-  const [currentGroup, setCurrentGroup] = useState(0); // 페이지 그룹 
-  const [view, setView] = useState("all"); // 리뷰 보기 방식 
+  const [currentGroup, setCurrentGroup] = useState(0); // 페이지 그룹
+  const [view, setView] = useState("all"); // 리뷰 보기 방식
   const [size, setSize] = useState(5); // 한 페이지 크기
   const navigate = useNavigate();
 
@@ -72,18 +72,22 @@ const Review = () => {
           }
         } else {
           console.error("리뷰 데이터가 예상과 다릅니다:", data);
-          break; 
+          break;
         }
       } catch (error) {
         console.error("리뷰 데이터 불러오기 오류:", error);
-        Swal.fire("오류", "리뷰 데이터를 불러오는 중 오류가 발생했습니다.", "error");
+        Swal.fire(
+          "오류",
+          "리뷰 데이터를 불러오는 중 오류가 발생했습니다.",
+          "error"
+        );
         break;
       }
       page++; // 다음 페이지로 이동
     }
 
-    setAllReviews(allFetchedReviews);  // 모든 리뷰 데이터를 상태에 저장
-    filterReviews(allFetchedReviews);  // 필터링된 리뷰로 상태 업데이트
+    setAllReviews(allFetchedReviews); // 모든 리뷰 데이터를 상태에 저장
+    filterReviews(allFetchedReviews); // 필터링된 리뷰로 상태 업데이트
   };
 
   // 내 리뷰만 필터링하는 함수
@@ -93,9 +97,10 @@ const Review = () => {
     // 내 리뷰 보기 모드일 때만 필터링
     if (view === "mine") {
       filteredReviews = reviews.filter((review) => {
-        const reviewUsername = review.username && typeof review.username === "object"
-          ? review.username.username // 객체일 경우, username 필드 가져오기
-          : review.username;
+        const reviewUsername =
+          review.username && typeof review.username === "object"
+            ? review.username.username // 객체일 경우, username 필드 가져오기
+            : review.username;
 
         // review.username과 username 값 비교
         return reviewUsername?.trim() === username?.trim();
@@ -132,7 +137,7 @@ const Review = () => {
 
   // 보기 모드 변경 (전체, 내 리뷰 보기)
   const handleViewChange = (event) => {
-    const selectedView = event.target.value;  // 선택된 값
+    const selectedView = event.target.value; // 선택된 값
     setView(selectedView); // view를 all 또는 mine으로 설정
     setCurrentPage(1); // 내 리뷰 보기를 눌렀을 때 첫 페이지로 리셋
     filterReviews(allReviews); // 보기 모드 변경 시 필터링된 리뷰를 바로 반영
@@ -153,17 +158,19 @@ const Review = () => {
     return reviews.slice((currentPage - 1) * size, currentPage * size); // 현재 페이지에 해당하는 리뷰
   };
 
+  // pageNumbers 계산 (페이지 그룹에 맞는 페이지 번호 배열 생성)
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <div className="review-list-container">
       <div>
         <h2>📄 리뷰 목록</h2>
         <div className="review-view-select">
           <label htmlFor="view-selection">리뷰 유형: </label>
-          <select 
-            id="view-selection"
-            onChange={handleViewChange}
-            value={view}
-          >
+          <select id="view-selection" onChange={handleViewChange} value={view}>
             <option value="all">전체 리뷰 보기</option>
             {isAuthenticated && username && (
               <option value="mine">내 리뷰 보기</option>
@@ -187,7 +194,7 @@ const Review = () => {
                       <div className="review-card-content">
                         <div className="review-card-header">
                           <p>
-                            <strong>작성자:</strong> 
+                            <strong>작성자:</strong>
                             {review.username &&
                             typeof review.username === "object"
                               ? review.username.username || "Unknown"
@@ -212,8 +219,9 @@ const Review = () => {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
+            pageNumbers={pageNumbers}
             currentGroup={currentGroup}
-            onPageChange={handlePageChange}
+            onPageChange={handlePageChange} // keep this as onPageChange
             onGroupChange={handleGroupChange}
           />
         </div>
