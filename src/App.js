@@ -9,6 +9,7 @@ import Review from './components/Review';
 import Schedule from './components/Schedule';
 import ScheduleDetail from './components/ScheduleDetail';
 import ScheduleAdd from './components/ScheduleAdd';
+import ScheduleEdit from './components/ScheduleEdit';
 import Login from './components/Login';
 import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
@@ -30,11 +31,12 @@ const AppContent = () => {
         <Route path="/tourism/:id" element={<TourismDetail />} />
         <Route path="/events" element={<Events />} />
         <Route path="/review/" element={<Review />} />
-        <Route path="/tourism/review/:id" element={<ReviewAdd/>}/>
+        <Route path="/tourism/review/:id" element={<ReviewAdd />} />
         <Route path="/review/:id" element={<ReviewDetail />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/schedule/:id" element={<ScheduleDetail />} />
         <Route path="/schedule/add" element={<ScheduleAdd />} />
+        <Route path="/schedule/edit/:scheduleId" element={<ScheduleEdit />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
         <Route path="/mypage" element={<MyPage />} />

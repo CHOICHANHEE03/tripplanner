@@ -1,39 +1,53 @@
+/* 전체 일정 목록을 감싸는 컨테이너 스타일 설정 */
 .schedule-container {
-    max-width: 800px;
+    max-width: 700px;
+    min-height: 50vh;
     margin: 30px auto;
     padding: 20px;
     background: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-height: 50vh;
 }
 
+/* 제목 스타일 (일정 목록 제목 중앙 정렬) */
 .schedule-container h2 {
     text-align: center;
     margin-bottom: 20px;
 }
 
+/* 목록 스타일 (일정 항목 리스트 기본 설정) */
 ul {
     list-style: none;
     padding: 0;
 }
 
+/* 필터 선택 영역 스타일 (카테고리 선택 드롭다운 정렬) */
+.filter-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+/* 개별 일정 항목 스타일 (카드 형태로 디자인) */
 .schedule-item {
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #D6D6D6;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 5px;
     display: flex;
-    min-height: 80px;
-    width: 90%;
+    align-items: center;
+    width: 660px;
     transition: transform 0.2s ease-in-out;
 }
 
+/* 일정 항목 호버 효과 (살짝 떠오르는 느낌) */
 .schedule-item:hover {
     transform: translateY(-5px);
 }
 
+/* 일정 항목 내부 링크 스타일 (내용 전체 클릭 가능하도록 설정) */
 .schedule-item a {
     text-decoration: none;
     color: black;
@@ -43,34 +57,47 @@ ul {
     align-items: center;
 }
 
+/* 일정 정보 스타일 (작성자, 제목 정렬) */
 .schedule-info {
     display: flex;
     flex-direction: column;
-    font-size: 18px;
+    font-size: 16px;
 }
 
+/* 일정 정보 내부 텍스트 스타일 (간격 조정) */
 .schedule-info p {
     margin: 5px 0;
 }
 
+/* 일정 날짜 스타일 (강조 효과 적용) */
 .schedule-date {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     color: #555;
     white-space: nowrap;
 }
 
+/* 전체 일정 컨테이너 정렬 (일정 목록 중앙 정렬) */
+.schedule-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 일정 추가 버튼 스타일 (컬러 및 크기 설정) */
 .add-schedule-button {
     width: 150px;
     height: 40px;
-    margin: 10px 0;
     background-color: #DAEFF1;
     border: none;
     cursor: pointer;
     border-radius: 5px;
     font-size: 14px;
+    display: block;
+    margin: 10px auto;
 }
 
+/* 일정 추가 버튼 호버 효과 (색상 변경) */
 .add-schedule-button:hover {
     background-color: #B8DDE0;
 }

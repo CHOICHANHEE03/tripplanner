@@ -46,12 +46,23 @@ const MyPage = () => {
   }, [navigate]);
 
   // 찜 목록 가져오기
+  // 찜 목록 가져오기
   const fetchFavorites = useCallback(async () => {
     if (!username) return;
 
     try {
+      const params = new URLSearchParams({
+        page: currentPage,
+        size: itemsPerPage,
+      });
+
+      // 선택된 카테고리가 'all'이 아니면 contentTypeId 파라미터 추가
+      if (selectedType !== "all") {
+        params.append("contentTypeId", selectedType);
+      }
+
       const response = await fetch(
-        `http://localhost:8080/favorites/${username}?page=${currentPage}&size=${itemsPerPage}`,
+        `http://localhost:8080/favorites/${username}?${params.toString()}`,
         { method: "GET", credentials: "include" }
       );
 
@@ -75,7 +86,7 @@ const MyPage = () => {
       setTotalCount(0);
       setPageNumbers([]);
     }
-  }, [username, currentPage]);
+  }, [username, currentPage, selectedType]);
 
   useEffect(() => {
     if (username) {
@@ -95,7 +106,7 @@ const MyPage = () => {
 
       setFavorites((prev) => prev.filter((place) => place.id !== id));
       setTotalCount((prev) => prev - 1);
-      
+
       // 삭제 후 데이터 다시 가져오기
       fetchFavorites();
     } catch (error) {
@@ -123,8 +134,8 @@ const MyPage = () => {
     selectedType === "all"
       ? favorites
       : favorites.filter(
-          (place) => place.tourism?.contentTypeId?.toString() === selectedType
-        );
+        (place) => place.tourism?.contentTypeId?.toString() === selectedType
+      );
 
   // ✅ 총 페이지 수보다 currentPage가 크면 1페이지로 초기화
   useEffect(() => {
@@ -139,7 +150,7 @@ const MyPage = () => {
     <div className="mypage-section">
       <h2>❤️ 찜한 관광지</h2>
       <div className="filter-section">
-        <label>카테고리 선택: </label>
+        <label>카테고리 선택:</label>
         <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
           <option value="all">전체</option>
           {contentTypes.map((type) => (
@@ -153,27 +164,35 @@ const MyPage = () => {
       {filteredFavorites.length === 0 ? (
         <p>선택한 카테고리에 찜한 관광지가 없습니다.</p>
       ) : (
-        <div className="mypage-grid">
-          {filteredFavorites.map((place) => (
-            <div key={place.id} className="mypage-card">
-              {place.tourism?.firstimage && (
-                <img src={place.tourism.firstimage} alt={place.tourism.title} className="card-img" />
-              )}
-              <h3>{place.tourism?.title}</h3>
-              <button className="remove-button" onClick={() => removeFavorite(place.id)}>
-                <FaHeartBroken /> 삭제
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+        <>
+          <div className="mypage-grid">
+            {filteredFavorites.map((place) => (
+              <div key={place.id} className="mypage-card">
+                {place.tourism?.firstimage && (
+                  <img
+                    src={place.tourism.firstimage}
+                    alt={place.tourism.title}
+                    className="card-img"
+                  />
+                )}
+                <h3>{place.tourism?.title}</h3>
+                <button className="remove-button" onClick={() => removeFavorite(place.id)}>
+                  <FaHeartBroken /> 삭제
+                </button>
+              </div>
+            ))}
+          </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(totalCount / itemsPerPage)}
-        handlePageChange={setCurrentPage}
-        pageNumbers={pageNumbers}
-      />
+          {totalCount > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(totalCount / itemsPerPage)}
+              handlePageChange={setCurrentPage}
+              pageNumbers={pageNumbers}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import TourismCategory from "./TourismCategory";
 import TourismList from "./TourismList";
@@ -17,8 +16,6 @@ const Tourism = () => {
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const checkSession = async () => {
