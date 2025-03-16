@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/TourismList.css";
 
-const TourismList = ({ data, loading }) => {
+const EventList = ({ data, loading }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -26,22 +26,37 @@ const TourismList = ({ data, loading }) => {
 
   return (
     <div className="tourism-container">
-      <h1>🚌 여행 관광지 리스트</h1>
+      <h1>🚌 여행 행사 리스트</h1>
       <div className="tourism-cards">
         {loading ? (
           <div>Loading...</div>
         ) : Array.isArray(data) && data.length > 0 ? (
-          data.map((tourism) => {
+          data.map((event) => {
+
+            const currentDate = new Date();
+            const rawStartDate = event.eventStartDate;
+            const formattedStartDate = `${rawStartDate.slice(0, 4)}-${rawStartDate.slice(4, 6)}-${rawStartDate.slice(6, 8)}`;
+
+            const eventStartDate = new Date(formattedStartDate);
+
+            let eventStatus;
+            if (currentDate < eventStartDate) {
+              eventStatus = "진행 예정";
+            } else if (currentDate >= eventStartDate) {
+              eventStatus = "진행 중";
+            } else {
+              eventStatus = "진행 완료";
+            }
 
             return (
-              <div key={tourism.id} className="tourism-card">
+              <div key={event.id} className="tourism-card">
                 <div className="tourism-card-header">
-                  <img src={tourism.firstimage} alt={tourism.title} className="tourism-firstimage" />
-                  <h3>{tourism.title}</h3>
-                  <p className="truncated-text">{tourism.overview}</p>
+                  <img src={event.firstimage} alt={event.title} className="tourism-firstimage" />
+                  <h3>{event.title}</h3>
+                  <p className="event-status">{eventStatus}</p>
                 </div>
                 <div className="tourism-card-footer">
-                  <button className="info-button" onClick={() => navigate(`/tourism/${tourism.id}`)}>
+                  <button className="info-button" onClick={() => navigate(`/event/${event.id}`)}>
                     자세히 보기
                   </button>
                 </div>
@@ -56,4 +71,4 @@ const TourismList = ({ data, loading }) => {
   );
 };
 
-export default TourismList;
+export default EventList;

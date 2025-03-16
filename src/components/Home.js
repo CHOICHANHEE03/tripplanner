@@ -17,10 +17,12 @@ const images = [spring, summer, fall, winter];
 const Home = () => {
   const navigate = useNavigate();
   const [tourismData, setTourismData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [eventData, setEventData] = useState([]);
+  const [loadingTourism, setLoadingTourism] = useState(true);
+  const [loadingEvent, setLoadingEvent] = useState(true);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
+  const fetchTourismData = useCallback(async () => {
+    setLoadingTourism(true);
     try {
       const response = await fetch("http://localhost:8080/api/tourism?page=1&pageSize=9");
       const result = await response.json();
@@ -32,13 +34,31 @@ const Home = () => {
     } catch (error) {
       console.error("Failed to fetch tourism data:", error);
     } finally {
-      setLoading(false);
+      setLoadingTourism(false);
+    }
+  }, []);
+
+  const fetchEventData = useCallback(async () => {
+    setLoadingEvent(true);
+    try {
+      const response = await fetch("http://localhost:8080/api/event?page=1&pageSize=9");
+      const result = await response.json();
+
+      if (result && Array.isArray(result.content)) {
+        const shuffled = [...result.content].sort(() => 0.5 - Math.random()).slice(0, 3);
+        setEventData(shuffled);
+      }
+    } catch (error) {
+      console.error("Failed to fetch event data:", error);
+    } finally {
+      setLoadingEvent(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchTourismData();
+    fetchEventData();
+  }, [fetchTourismData, fetchEventData]);
 
   return (
     <div>
@@ -71,7 +91,7 @@ const Home = () => {
       <div className="info-section">
         <h2>관광지 정보</h2>
         <div className="info-container">
-          {loading ? (
+          {loadingTourism ? (
             <p>관광지 정보를 불러오는 중입니다...</p>
           ) : tourismData.length > 0 ? (
             tourismData.map((tourism) => (
@@ -103,9 +123,42 @@ const Home = () => {
       <div className="info-section">
         <h2>행사 정보</h2>
         <div className="info-container">
-          <div className="info-box"></div>
-          <div className="info-box"></div>
-          <div className="info-box"></div>
+          {loadingEvent ? (
+            <p>행사 정보를 불러오는 중입니다...</p>
+          ) : eventData.length > 0 ? (
+            eventData.map((event) => {
+              const currentDate = new Date();
+              const rawStartDate = event.eventStartDate;
+              const formattedStartDate = `${rawStartDate.slice(0, 4)}-${rawStartDate.slice(4, 6)}-${rawStartDate.slice(6, 8)}`;
+
+              const eventStartDate = new Date(formattedStartDate);
+
+              let eventStatus;
+              if (currentDate < eventStartDate) {
+                eventStatus = "진행 예정";
+              } else if (currentDate >= eventStartDate) {
+                eventStatus = "진행 중";
+              } else {
+                eventStatus = "진행 완료";
+              }
+
+              return (
+                <div key={event.id} className="info-box">
+                  <img src={event.firstimage} alt={event.title} className="info-image" />
+                  <h3>{event.title}</h3>
+                  <p className="event-status">{eventStatus}</p>
+                  <button
+                    className="info-button"
+                    onClick={() => navigate(`/events/${event.id}`)}
+                  >
+                    자세히 보기
+                  </button>
+                </div>
+              );
+            })
+          ) : (
+            <p>행사 정보가 없습니다.</p>
+          )}
         </div>
         <p className="info-text">
           더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;

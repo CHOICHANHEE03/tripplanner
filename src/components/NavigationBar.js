@@ -48,7 +48,7 @@ const NavigationBar = () => {
             <div className="navbar-right">
                 <Link className="navbarMenu" to={"/"}>Home</Link>
                 <Link className="navbarMenu" to={"/tourism"}>관광지</Link>
-                <Link className="navbarMenu" to={"/events"}>행사</Link>
+                <Link className="navbarMenu" to={"/event"}>행사</Link>
                 <Link className="navbarMenu" to={"/review"}>리뷰</Link>
                 <Link className="navbarMenu" to={"/schedule"}>일정관리</Link>
                 {isLoggedIn ? (

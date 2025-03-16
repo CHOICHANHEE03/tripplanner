@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Home from './components/Home';
 import Tourism from './components/Tourism';
 import TourismDetail from './components/TourismDetail';
-import Events from './components/Events';
+import Event from './components/Event';
+import EventDetail from './components/EventDetail';
 import Review from './components/Review';
 import Schedule from './components/Schedule';
 import ScheduleDetail from './components/ScheduleDetail';
@@ -15,9 +16,9 @@ import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import MyPage from './components/MyPage';
-import ReviewAdd from './components/ReviewAdd'; 
-import ReviewDetail from './components/ReviewDetail'; 
-import ReviewEdit from "./components/ReviewEdit"; 
+import ReviewAdd from './components/ReviewAdd';
+import ReviewDetail from './components/ReviewDetail';
+import ReviewEdit from "./components/ReviewEdit";
 
 const AppContent = () => {
   const location = useLocation();
@@ -30,8 +31,9 @@ const AppContent = () => {
         <Route path="/" element={<Home />} />
         <Route path="/tourism" element={<Tourism />} />
         <Route path="/tourism/:id" element={<TourismDetail />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/review" element={<Review />} />
+        <Route path="/event" element={<Event />} />  {/* 수정된 부분 */}
+        <Route path="/event/:id" element={<EventDetail />} />  {/* 수정된 부분 */}
+        <Route path="/review" element={<Review />} />  {/* 수정된 부분 */}
         <Route path="/tourism/review/:id" element={<ReviewAdd />} />
         <Route path="/review/:id" element={<ReviewDetail />} />
         <Route path="/review/edit/:id" element={<ReviewEdit />} />
