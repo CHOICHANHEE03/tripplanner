@@ -41,6 +41,7 @@
     padding: 0;
 }
 
+/* 일정 항목 스타일 */
 .schedule-detail-container li {
     background: #FFFFFF;
     padding: 15px;
@@ -51,10 +52,12 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* 일정 항목 내부 텍스트 스타일 */
 .schedule-detail-container li p {
     margin: 5px 0;
 }
 
+/* 뒤로 가기 버튼 스타일 */
 .schedule-back-button {
     color: gray;
     position: absolute;
@@ -66,12 +69,13 @@
     cursor: pointer;
 }
 
-/* 버튼 스타일 */
+/* 버튼 컨테이너 스타일 */
 .schedule-detail-buttons {
     display: flex;
     justify-content: center;
 }
 
+/* 일정 수정/삭제 버튼 스타일 */
 .schedule-detail-button {
     padding: 10px 20px;
     border: none;
@@ -86,6 +90,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* 버튼 호버 효과 */
 .schedule-detail-button:hover {
     background-color: #C0E7E9;
 }
