@@ -11,12 +11,12 @@ const Tourism = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(null);
   const [username, setUsername] = useState(null);
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  const [currentGroup, setCurrentGroup] = useState(0); // currentGroup 상태 추가
+  const [currentGroup, setCurrentGroup] = useState(0);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -112,17 +112,17 @@ const Tourism = () => {
     return pageNumbers;
   };
 
-  const handleGroupChange = (direction) => {
-    const totalPages = Math.ceil(totalCount / 9); // 전체 페이지 수 계산
-    const totalGroups = Math.ceil(totalPages / 5); // 전체 그룹 수 계산
-
-    const newGroup = currentGroup + direction;
-
-    if (newGroup >= 0 && newGroup < totalGroups) {
-      setCurrentGroup(newGroup);
-      setCurrentPage(newGroup * 5 + 1);
-    }
-  };
+    const handleGroupChange = (direction) => {
+      const totalPages = Math.ceil(totalCount / 9); 
+      const totalGroups = Math.ceil(totalPages / 5); 
+  
+      const newGroup = currentGroup + direction;
+  
+      if (newGroup >= 0 && newGroup < totalGroups) {
+        setCurrentGroup(newGroup);
+        setCurrentPage(newGroup * 5 + 1);
+      }
+    };
 
   const handleFilterChange = (filterType, value) => {
     if (filterType === "region") setSelectedArea(value);
@@ -138,7 +138,7 @@ const Tourism = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/favorites", {
+      const response = await fetch("http://localhost:8080/api/favorites", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -158,7 +158,7 @@ const Tourism = () => {
 
   const handleUnlike = async (favoriteId) => {
     try {
-      const response = await fetch(`http://localhost:8080/favorites/${favoriteId}`, {
+      const response = await fetch(`http://localhost:8080/api/favorites/${favoriteId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -169,10 +169,6 @@ const Tourism = () => {
     } catch (error) {
       console.error("찜 삭제 오류:", error);
     }
-  };
-
-  const getHeartStatus = (tourismId) => {
-    return favorites ? favorites.some(favorite => favorite.tourismId === tourismId) : false;
   };
 
   return (
@@ -188,7 +184,6 @@ const Tourism = () => {
         favorites={favorites}
         handleLike={handleLike}
         handleUnlike={handleUnlike}
-        getHeartStatus={getHeartStatus} // getHeartStatus 함수 전달
       />
       <Pagination
         currentPage={currentPage}
@@ -197,6 +192,7 @@ const Tourism = () => {
         pageNumbers={pageNumbers}
         currentGroup={currentGroup}
         onGroupChange={handleGroupChange}
+
       />
     </div>
   );
