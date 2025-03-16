@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Pagination from "./Pagination";
-import TourismCategory from "./TourismCategory";
-import TourismList from "./TourismList";
+import EventCategory from "./EventCategory";
+import EventList from "./EventList";
 import "../css/TourismList.css";
 import "../css/Pagination.css";
 
-const Tourism = () => {
+const Event = () => {
   const [data, setData] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,7 +13,6 @@ const Tourism = () => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
   const [selectedArea, setSelectedArea] = useState("");
-  const [selectedType, setSelectedType] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [currentGroup, setCurrentGroup] = useState(0);
 
@@ -42,11 +41,10 @@ const Tourism = () => {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const url = new URL("http://localhost:8080/api/tourism");
+    const url = new URL("http://localhost:8080/api/event");
     const params = new URLSearchParams();
 
     if (selectedArea) params.append("areaCode", selectedArea);
-    if (selectedType) params.append("contentTypeId", selectedType);
     if (selectedSubCategory) params.append("subCategory", selectedSubCategory);
 
     params.append("page", currentPage);
@@ -64,7 +62,7 @@ const Tourism = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, selectedArea, selectedType, selectedSubCategory]);
+  }, [currentPage, selectedArea, selectedSubCategory]);
 
   useEffect(() => {
     fetchData();
@@ -94,20 +92,18 @@ const Tourism = () => {
 
   const handleFilterChange = (filterType, value) => {
     if (filterType === "region") setSelectedArea(value);
-    else if (filterType === "tourismType") setSelectedType(value);
     else if (filterType === "subCategory") setSelectedSubCategory(value);
     setCurrentPage(1);
   };
 
   return (
     <div className="tourism-list">
-      <TourismCategory
+      <EventCategory
         selectedRegion={selectedArea}
-        selectedType={selectedType}
         selectedSubCategory={selectedSubCategory}
         onFilterChange={handleFilterChange}
       />
-      <TourismList
+      <EventList
         data={data}
       />
       <Pagination
@@ -117,10 +113,9 @@ const Tourism = () => {
         pageNumbers={pageNumbers}
         currentGroup={currentGroup}
         onGroupChange={handleGroupChange}
-
       />
     </div>
   );
 };
 
-export default Tourism;
+export default Event;

@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Home from './components/Home';
 import Tourism from './components/Tourism';
 import TourismDetail from './components/TourismDetail';
-import Events from './components/Events';
+import Event from './components/Event';
+import EventDetail from './components/EventDetail';
 import Review from './components/Review';
 import Schedule from './components/Schedule';
 import ScheduleDetail from './components/ScheduleDetail';
@@ -29,7 +30,8 @@ const AppContent = () => {
         <Route path="/" element={<Home />} />
         <Route path="/tourism" element={<Tourism />} />
         <Route path="/tourism/:id" element={<TourismDetail />} />
-        <Route path="/events" element={<Events />} />
+        <Route path="/event" element={<Event />} />
+        <Route path="/event/:id" element={<EventDetail />} />
         <Route path="/review/" element={<Review />} />
         <Route path="/tourism/review/:id" element={<ReviewAdd />} />
         <Route path="/review/:id" element={<ReviewDetail />} />
