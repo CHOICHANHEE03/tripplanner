@@ -26,17 +26,28 @@ const ScheduleDetail = () => {
                 };
 
                 const scheduleItems = [
-                    { place: data.place1, details: data.details1, type: typeLabels[data.type1] || "알 수 없음" },
-                    { place: data.place2, details: data.details2, type: typeLabels[data.type2] || "알 수 없음" },
-                    { place: data.place3, details: data.details3, type: typeLabels[data.type3] || "알 수 없음" }
+                    { place: data.place1, details: data.details1, type: data.type1 },
+                    { place: data.place2, details: data.details2, type: data.type2 },
+                    { place: data.place3, details: data.details3, type: data.type3 }
                 ].filter(item => item.place && item.details);
+
+                const updatedScheduleItems = await Promise.all(scheduleItems.map(async (item) => {
+                    const tourismData = await fetchTourismData(item.place);
+                    return {
+                        ...item,
+                        type: typeLabels[item.type] || "알 수 없음",
+                        imageUrl: tourismData.imageUrl,
+                        address: tourismData.address,
+                        tel: tourismData.tel
+                    };
+                }));
 
                 setScheduleData({
                     id: data.id,
                     title: data.title,
                     date: data.date,
                     username: data.username,
-                    scheduleItems
+                    scheduleItems: updatedScheduleItems
                 });
             } catch (error) {
                 console.error("데이터를 불러오는 중 오류 발생:", error);
@@ -48,6 +59,25 @@ const ScheduleDetail = () => {
 
         fetchScheduleData();
     }, [id]);
+
+    const fetchTourismData = async (place) => {
+        try {
+            const response = await fetch("http://localhost:8080/api/tourism");
+            if (!response.ok) throw new Error("관광지 데이터 검색 실패");
+
+            const data = await response.json();
+            const match = data.content.find(item => item.title === place);
+
+            return match ? {
+                imageUrl: match.firstimage || "",
+                address: match.addr1 || "정보 없음",
+                tel: match.tel && match.tel !== "null" ? match.tel : "정보 없음"
+            } : { imageUrl: "", address: "정보 없음", phone: "정보 없음" };
+        } catch (error) {
+            console.error("관광지 데이터 검색 오류:", error);
+            return { imageUrl: "", address: "정보 없음", phone: "정보 없음" };
+        }
+    };
 
     const handleDelete = async () => {
         Swal.fire({
@@ -101,10 +131,13 @@ const ScheduleDetail = () => {
                     <h3>📍 일정 내용</h3>
                     <ul>
                         {scheduleData.scheduleItems.map((item, index) => (
-                            <li key={index}>
+                            <li key={index} className="schedule-item">
+                                {item.imageUrl && <img src={item.imageUrl} alt={item.place} className="schedule-image" />}
                                 <p><strong>유형:</strong> {item.type}</p>
                                 <p><strong>장소:</strong> {item.place}</p>
                                 <p><strong>내용:</strong> {item.details}</p>
+                                <p><strong>주소:</strong> {item.address}</p>
+                                {item.tel && item.tel !== "정보 없음" && <p><strong>전화번호:</strong> {item.tel}</p>}
                             </li>
                         ))}
                     </ul>
