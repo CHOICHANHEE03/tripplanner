@@ -49,7 +49,7 @@ const MyPage = () => {
           if (!response.ok) throw new Error("사용자 정보 불러오기 실패");
 
           const data = await response.json();
-          setUserData(data); 
+          setUserData(data);
         } catch (error) {
           console.error("사용자 정보 가져오기 오류:", error);
         }
@@ -65,7 +65,7 @@ const MyPage = () => {
       const fetchUserReviews = async () => {
         try {
           const response = await fetch(
-            `http://localhost:8080/api/reviews/${userId}`, 
+            `http://localhost:8080/api/review/user/${userId}`,
             {
               method: "GET",
               credentials: "include",
@@ -75,7 +75,7 @@ const MyPage = () => {
           if (!response.ok) throw new Error("사용자 리뷰 정보 불러오기 실패");
 
           const data = await response.json();
-          setUserReviewData(data); 
+          setUserReviewData(data); // 리뷰 데이터 설정
         } catch (error) {
           console.error("사용자 리뷰 정보 가져오기 오류:", error);
         }
@@ -84,31 +84,32 @@ const MyPage = () => {
       fetchUserReviews();
     }
   }, [userId]);
-    // 사용자의 리뷰 정보 가져오기
-    useEffect(() => {
-      if (userId) {
-        const fetchUserReviews = async () => {
-          try {
-            const response = await fetch(
-              `http://localhost:8080/api/schedule/${userId}`, 
-              {
-                method: "GET",
-                credentials: "include",
-              }
-            );
-  
-            if (!response.ok) throw new Error("사용자 리뷰 정보 불러오기 실패");
-  
-            const data = await response.json();
-            setUserReviewData(data); 
-          } catch (error) {
-            console.error("사용자 리뷰 정보 가져오기 오류:", error);
-          }
-        };
-  
-        fetchUserReviews();
-      }
-    }, [userId]);
+
+  // 사용자의 일정 정보 가져오기
+  useEffect(() => {
+    if (userId) {
+      const fetchUserSchedules = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/api/schedule/user/${userId}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+
+          if (!response.ok) throw new Error("사용자 일정 정보 불러오기 실패");
+
+          const data = await response.json();
+          setUserScheduleData(data); // 일정 데이터 설정
+        } catch (error) {
+          console.error("사용자 일정 정보 가져오기 오류:", error);
+        }
+      };
+
+      fetchUserSchedules();
+    }
+  }, [userId]);
 
   const handleEdit = () => {
     navigate(`/MyPage/edit/${userData.id}`);
@@ -133,7 +134,7 @@ const MyPage = () => {
     }
   };
 
-  if (userData && userReviewData) {
+  if (userData && userReviewData && userScheduleData) {
     return (
       <div className="mypage-info-container">
         <div>
@@ -156,17 +157,18 @@ const MyPage = () => {
             <p>작성한 리뷰가 없습니다.</p>
           )}
         </div>
+
         <div className="mypage-info">
-          <h2>{userData.username}님의 최근 리뷰 정보</h2>
-          {userReviewData.length > 0 ? (
-            userReviewData.map((review) => (
-              <div key={review.id}>
-                <h3>{review.title}</h3>
-                <p>{review.content}</p>
+          <h2>{userData.username}님의 최근 일정 정보</h2>
+          {userScheduleData.length > 0 ? (
+            userScheduleData.map((schedule) => (
+              <div key={schedule.id}>
+                <h3>{schedule.title}</h3>
+                <p>{schedule.description}</p>
               </div>
             ))
           ) : (
-            <p>작성한 리뷰가 없습니다.</p>
+            <p>작성한 일정이 없습니다.</p>
           )}
         </div>
 

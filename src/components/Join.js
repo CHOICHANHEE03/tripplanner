@@ -9,10 +9,10 @@ const Join = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
+    const [nickname, setNickname] = useState("");
 
     const handleJoin = async () => {
-        if (!username || !password || !email) {
+        if (!username || !password || !nickname) {
             Swal.fire("회원가입 실패", "모든 필드를 입력해주세요", "error");
             return;
         }
@@ -31,7 +31,7 @@ const Join = () => {
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ username, password, email }),
+                        body: JSON.stringify({ username, nickname, password }),
                     });
 
                     const data = await response.json();
@@ -68,18 +68,18 @@ const Join = () => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <input
+                        type="text"
+                        placeholder="닉네임을 입력해주세요"
+                        className="input-text"
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
+                    />
+                                        <input
                         type="password"
                         placeholder="비밀번호를 입력해주세요"
                         className="input-text"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="이메일을 입력해주세요"
-                        className="input-text"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 <button onClick={handleJoin} className="button">회원가입</button>
