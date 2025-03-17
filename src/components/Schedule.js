@@ -139,7 +139,9 @@ const Schedule = () => {
       <div className="schedule-list-form">
         <div className="schedule-list-form-container">
           {schedules.length === 0 ? (
-            <p>등록된 일정이 없습니다.</p>
+            <div className="no-schedule">
+              <p>등록된 일정이 없습니다.</p>
+            </div>
           ) : (
             <div className="schedule-cards-container">
               {schedules.map((schedule) => (

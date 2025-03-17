@@ -35,7 +35,7 @@ const ScheduleDetail = () => {
                     id: data.id,
                     title: data.title,
                     date: data.date,
-                    author: data.author,
+                    username: data.username,
                     scheduleItems
                 });
             } catch (error) {
@@ -94,7 +94,7 @@ const ScheduleDetail = () => {
 
             <h2 className="schedule-detail-title">{scheduleData.title}</h2>
             <p><strong>날짜:</strong> {scheduleData.date}</p>
-            <p><strong>작성자:</strong> {scheduleData.author}</p>
+            <p><strong>작성자:</strong> {scheduleData.username}</p>
 
             {scheduleData.scheduleItems.length > 0 && (
                 <div>

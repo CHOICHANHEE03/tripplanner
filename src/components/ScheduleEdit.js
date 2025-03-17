@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import Search from "./Search"; // Search 컴포넌트 추가
+import Search from "./Search";
 import "../css/ScheduleModify.css";
 
 const ScheduleEdit = () => {
@@ -13,10 +13,10 @@ const ScheduleEdit = () => {
     const [types, setTypes] = useState(["", "", ""]);
     const [places, setPlaces] = useState(["", "", ""]);
     const [details, setDetails] = useState(["", "", ""]);
-    const [searchResults, setSearchResults] = useState([[], [], []]);
     const [scheduleCount, setScheduleCount] = useState(1);
 
-    const typeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
+    const typeMapping = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
+    const reverseTypeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
     useEffect(() => {
         const fetchSchedule = async () => {
@@ -28,15 +28,13 @@ const ScheduleEdit = () => {
                 if (!response.ok) throw new Error("일정 불러오기 실패");
 
                 const data = await response.json();
-                const typeLabels = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
-
                 setTitle(data.title);
                 setDate(data.date);
-                setUsername(data.author);
+                setUsername(data.username);
                 setTypes([
-                    typeLabels[data.type1] || "",
-                    typeLabels[data.type2] || "",
-                    typeLabels[data.type3] || ""
+                    typeMapping[data.type1] || "",
+                    typeMapping[data.type2] || "",
+                    typeMapping[data.type3] || ""
                 ]);
                 setPlaces([data.place1, data.place2, data.place3]);
                 setDetails([data.details1, data.details2, data.details3]);
@@ -56,19 +54,23 @@ const ScheduleEdit = () => {
             if (!response.ok) throw new Error("검색 실패");
 
             const data = await response.json();
-            const filteredResults = data.content.filter(item =>
+            const filteredResults = data.content.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 
-            setSearchResults(prev => {
-                const newResults = [...prev];
-                newResults[index] = filteredResults;
-                return newResults;
-            });
+            if (filteredResults) {
+                const updatedPlaces = [...places];
+                updatedPlaces[index] = filteredResults.title;
+                setPlaces(updatedPlaces);
+
+                const updatedTypes = [...types];
+                updatedTypes[index] = typeMapping[filteredResults.contentTypeId] || "기타";
+                setTypes(updatedTypes);
+            }
         } catch (error) {
             console.error("관광지 검색 오류:", error);
         }
-        };
+    };
 
     const addSchedule = () => {
         if (scheduleCount < 3) {
@@ -90,7 +92,7 @@ const ScheduleEdit = () => {
     };
 
     const handleSubmit = async () => {
-        if (!title || !date || types.every(t => !t) || places.every(p => !p) || details.every(d => !d)) {
+        if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("오류", "모든 항목을 입력해주세요.", "error");
             return;
         }
@@ -98,23 +100,23 @@ const ScheduleEdit = () => {
         const scheduleData = {
             title,
             date,
-            author: username,
-            type1: typeMapping[types[0]] || "",
+            username,
+            type1: reverseTypeMapping[types[0]] || "",
             place1: places[0],
             details1: details[0],
-            type2: typeMapping[types[1]] || "",
+            type2: reverseTypeMapping[types[1]] || "",
             place2: places[1],
             details2: details[1],
-            type3: typeMapping[types[2]] || "",
+            type3: reverseTypeMapping[types[2]] || "",
             place3: places[2],
-            details3: details[2],
+            details3: details[2]
         };
 
         try {
             const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(scheduleData),
+                body: JSON.stringify(scheduleData)
             });
 
             if (!response.ok) throw new Error("서버 요청 실패");
@@ -144,32 +146,13 @@ const ScheduleEdit = () => {
             </div>
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
+                    <Search
+                        isSchedulePage={true}
+                        onSearch={(searchTerm) => fetchTourism(searchTerm, index)}
+                    />
                     <div className="schedule-input-container">
-                        <label>타입 {index + 1}</label>
-                        <select className="schedule-input" onChange={(e) => {
-                            const updatedTypes = [...types];
-                            updatedTypes[index] = e.target.value;
-                            setTypes(updatedTypes);
-                        }}>
-                            <option value="">선택하세요</option>
-                            {Object.keys(typeMapping).map(key => (
-                                <option key={key} value={key}>{key}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <Search isSchedulePage={true} onSearch={(searchTerm) => fetchTourism(searchTerm, index)} />
-                    <div className="schedule-input-container">
-                        <label>검색 결과 {index + 1}</label>
-                        <select className="schedule-input" onChange={(e) => {
-                            const updatedPlaces = [...places];
-                            updatedPlaces[index] = e.target.value;
-                            setPlaces(updatedPlaces);
-                        }}>
-                            <option value="">선택하세요</option>
-                            {searchResults[index]?.map(place => (
-                                <option key={place.id} value={place.title}>{place.title}</option>
-                            ))}
-                        </select>
+                        <label>타입</label>
+                        <input type="text" className="schedule-input" value={types[index]} disabled />
                     </div>
                     <div className="schedule-input-container">
                         <label>내용</label>
