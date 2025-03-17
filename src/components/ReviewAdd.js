@@ -55,7 +55,7 @@ const ReviewAdd = () => {
         title: title,
       });
 
-      const response = await fetch("http://localhost:8080/api/reviews", {
+      const response = await fetch("http://localhost:8080/api/review", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

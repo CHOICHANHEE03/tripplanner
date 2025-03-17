@@ -59,7 +59,7 @@ const Review = () => {
     while (moreDataAvailable) {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/reviews?page=${page}&size=${size}`
+          `http://localhost:8080/api/review?page=${page}&size=${size}`
         );
         if (!response.ok) throw new Error("서버 오류");
 

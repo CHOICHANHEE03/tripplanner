@@ -41,7 +41,7 @@ const ReviewDetail = () => {
     useEffect(() => {
         const fetchReviewData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/reviews/${id}`);
+                const response = await fetch(`http://localhost:8080/api/review/${id}`);
                 if (!response.ok) {
                     throw new Error("데이터를 불러오는 데 실패했습니다.");
                 }
@@ -82,7 +82,7 @@ const ReviewDetail = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`http://localhost:8080/api/reviews/${id}`, {
+                    const response = await fetch(`http://localhost:8080/api/review/${id}`, {
                         method: "DELETE",
                     });
                     if (!response.ok) {

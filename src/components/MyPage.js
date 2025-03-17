@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import defaultProfileImage from "../image/null_image.png";
 
 const MyPage = () => {
   const [userId, setUserId] = useState(null); // 세션에서 가져온 사용자명
   const [userData, setUserData] = useState(null); // 데이터베이스에서 가져온 사용자 정보
   const [userReviewData, setUserReviewData] = useState([]); // 해당 유저 리뷰 정보
   const [userScheduleData, setUserScheduleData] = useState([]); // 해당 유저 일정 정보
+  const [image, setImage] = useState(null); // 이미지 상태 추가
   const navigate = useNavigate();
 
-  // 세션 확인
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -33,7 +34,6 @@ const MyPage = () => {
     checkSession();
   }, [navigate]);
 
-  // 세션에서 가져온 사용자 정보를 기반으로 DB에서 유저 정보 가져옴
   useEffect(() => {
     if (userId) {
       const fetchUserData = async () => {
@@ -50,6 +50,8 @@ const MyPage = () => {
 
           const data = await response.json();
           setUserData(data);
+          // 이미지가 없으면 기본 이미지로 설정
+          setImage(data.profileImage || defaultProfileImage); // 기본 이미지 경로 설정
         } catch (error) {
           console.error("사용자 정보 가져오기 오류:", error);
         }
@@ -59,62 +61,12 @@ const MyPage = () => {
     }
   }, [userId]);
 
-  // 사용자의 리뷰 정보 가져오기
-  useEffect(() => {
-    if (userId) {
-      const fetchUserReviews = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:8080/api/review/user/${userId}`,
-            {
-              method: "GET",
-              credentials: "include",
-            }
-          );
-
-          if (!response.ok) throw new Error("사용자 리뷰 정보 불러오기 실패");
-
-          const data = await response.json();
-          setUserReviewData(data); // 리뷰 데이터 설정
-        } catch (error) {
-          console.error("사용자 리뷰 정보 가져오기 오류:", error);
-        }
-      };
-
-      fetchUserReviews();
-    }
-  }, [userId]);
-
-  // 사용자의 일정 정보 가져오기
-  useEffect(() => {
-    if (userId) {
-      const fetchUserSchedules = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:8080/api/schedule/user/${userId}`,
-            {
-              method: "GET",
-              credentials: "include",
-            }
-          );
-
-          if (!response.ok) throw new Error("사용자 일정 정보 불러오기 실패");
-
-          const data = await response.json();
-          setUserScheduleData(data); // 일정 데이터 설정
-        } catch (error) {
-          console.error("사용자 일정 정보 가져오기 오류:", error);
-        }
-      };
-
-      fetchUserSchedules();
-    }
-  }, [userId]);
-
+  // "수정하기" 버튼 클릭 시 수정 페이지로 이동
   const handleEdit = () => {
     navigate(`/MyPage/edit/${userData.id}`);
   };
 
+  // 삭제하기 처리 함수
   const handleDelete = async () => {
     try {
       const response = await fetch(
@@ -127,8 +79,9 @@ const MyPage = () => {
 
       if (!response.ok) throw new Error("사용자 삭제 실패");
 
+      // 삭제 성공 시
       Swal.fire("사용자가 삭제되었습니다.");
-      navigate("/login");
+      navigate("/login"); // 로그인 페이지로 리다이렉트
     } catch (error) {
       console.error("사용자 삭제 오류:", error);
     }
@@ -139,9 +92,24 @@ const MyPage = () => {
       <div className="mypage-info-container">
         <div>
           <h1>{userData.username}님의 회원 정보</h1>
+          {/* 프로필 이미지 표시 */}
+          <img
+            src={image} // 이미지가 없으면 기본 이미지 사용
+            alt="프로필 사진"
+            className="profile-image"
+          />
           <p>아이디: {userData.username}</p>
+          <p>닉네임: {userData.nickname}</p>
           <p>비밀번호: {userData.password}</p>
-          <p>이메일: {userData.email}</p>
+        </div>
+        
+        <div className="review-detail-buttons">
+          <button onClick={handleEdit} className="review-detail-button">
+            수정하기
+          </button>
+          <button onClick={handleDelete} className="review-detail-button">
+            삭제하기
+          </button>
         </div>
 
         <div className="mypage-info">
@@ -170,15 +138,6 @@ const MyPage = () => {
           ) : (
             <p>작성한 일정이 없습니다.</p>
           )}
-        </div>
-
-        <div className="review-detail-buttons">
-          <button onClick={handleEdit} className="review-detail-button">
-            수정하기
-          </button>
-          <button onClick={handleDelete} className="review-detail-button">
-            삭제하기
-          </button>
         </div>
       </div>
     );
