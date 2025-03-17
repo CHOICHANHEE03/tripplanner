@@ -1,0 +1,119 @@
+.scheduleContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.scheduleBox {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    max-width: 600px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    gap: 10px;
+}
+
+.scheduleInput {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #D6D6D6;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.scheduleButton {
+    border: none;
+    background: #89D2E6;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.scheduleButton:disabled {
+    background: #DAEFF1;
+}
+
+.scheduleButton:hover:not(:disabled) {
+    background: #4DC1DF;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 50px 0;
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    width: 40%;
+    max-width: 500px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 8px 15px;
+    gap: 10px;
+}
+
+.input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 8px;
+    background: transparent;
+}
+
+.button {
+    border: none;
+    background: #89D2E6;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.button:disabled {
+    background: #DAEFF1;
+}
+
+.button:hover:not(:disabled) {
+    background: #4DC1DF;
+}
+
+@media (max-width: 768px) {
+    .box {
+        width: 80%;
+        max-width: 100%;
+    }
+
+    .input {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    .button {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+}

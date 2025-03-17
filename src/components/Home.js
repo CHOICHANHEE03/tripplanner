@@ -144,12 +144,12 @@ const Home = () => {
 
               return (
                 <div key={event.id} className="info-box">
+                  <p className="event-status">{eventStatus}</p>
                   <img src={event.firstimage} alt={event.title} className="info-image" />
                   <h3>{event.title}</h3>
-                  <p className="event-status">{eventStatus}</p>
                   <button
                     className="info-button"
-                    onClick={() => navigate(`/events/${event.id}`)}
+                    onClick={() => navigate(`/event/${event.id}`)}
                   >
                     자세히 보기
                   </button>

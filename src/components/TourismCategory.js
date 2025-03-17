@@ -82,7 +82,7 @@ const TourismCategory = ({
             onChange={(e) => onFilterChange("tourismType", e.target.value)} // 관광지 타입 필터 변경
             className="type-select"
           >
-            <option value="">전체</option>
+            <option value="">======전체======</option>
             {tourismTypes.map((tourismType) => (
               <option
                 key={tourismType.contenttypeid}
@@ -102,7 +102,7 @@ const TourismCategory = ({
             onChange={(e) => onFilterChange("subCategory", e.target.value)} // 세부 카테고리 필터 변경
             className="type-select"
           >
-            <option value="">전체</option>
+            <option value="">======전체======</option>
             {selectedType &&
               subCategories[selectedType] &&
               subCategories[selectedType].map((subCategory) => (

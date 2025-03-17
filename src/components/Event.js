@@ -2,11 +2,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import Pagination from "./Pagination";
 import EventCategory from "./EventCategory";
 import EventList from "./EventList";
+import Search from "./Search";
 import "../css/TourismList.css";
 import "../css/Pagination.css";
 
 const Event = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
@@ -15,6 +17,7 @@ const Event = () => {
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [currentGroup, setCurrentGroup] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const checkSession = async () => {
@@ -45,7 +48,7 @@ const Event = () => {
     const params = new URLSearchParams();
 
     if (selectedArea) params.append("areaCode", selectedArea);
-    if (selectedSubCategory) params.append("subCategory", selectedSubCategory);
+    if (selectedSubCategory) params.append("cat2", selectedSubCategory);
 
     params.append("page", currentPage);
     params.append("size", 9);
@@ -67,6 +70,17 @@ const Event = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = data.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(data);
+    }
+  }, [searchTerm, data]);
 
   const getPageNumbers = (currentPage, totalPages) => {
     const pageNumbers = [];
@@ -96,16 +110,20 @@ const Event = () => {
     setCurrentPage(1);
   };
 
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="tourism-list">
+      <Search onSearch={handleSearch} />
       <EventCategory
         selectedRegion={selectedArea}
         selectedSubCategory={selectedSubCategory}
         onFilterChange={handleFilterChange}
       />
-      <EventList
-        data={data}
-      />
+      <EventList data={filteredData} loading={loading} />
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(totalCount / 9)}
