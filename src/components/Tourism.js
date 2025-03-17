@@ -2,11 +2,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import Pagination from "./Pagination";
 import TourismCategory from "./TourismCategory";
 import TourismList from "./TourismList";
+import Search from "./Search";
 import "../css/TourismList.css";
 import "../css/Pagination.css";
 
 const Tourism = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
@@ -16,6 +18,7 @@ const Tourism = () => {
   const [selectedType, setSelectedType] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [currentGroup, setCurrentGroup] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const checkSession = async () => {
@@ -58,7 +61,6 @@ const Tourism = () => {
       const result = await response.json();
       setData(result.content);
       setTotalCount(result.totalCount);
-      setPageNumbers(getPageNumbers(currentPage, Math.ceil(result.totalCount / 9)));
     } catch (error) {
       console.error("데이터 가져오기 오류:", error);
     } finally {
@@ -69,6 +71,17 @@ const Tourism = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = data.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(data);
+    }
+  }, [searchTerm, data]);
 
   const getPageNumbers = (currentPage, totalPages) => {
     const pageNumbers = [];
@@ -99,17 +112,21 @@ const Tourism = () => {
     setCurrentPage(1);
   };
 
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="tourism-list">
+      <Search onSearch={handleSearch} />
       <TourismCategory
         selectedRegion={selectedArea}
         selectedType={selectedType}
         selectedSubCategory={selectedSubCategory}
         onFilterChange={handleFilterChange}
       />
-      <TourismList
-        data={data}
-      />
+      <TourismList data={filteredData} loading={loading} />
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(totalCount / 9)}
@@ -117,7 +134,6 @@ const Tourism = () => {
         pageNumbers={pageNumbers}
         currentGroup={currentGroup}
         onGroupChange={handleGroupChange}
-
       />
     </div>
   );

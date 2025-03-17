@@ -59,7 +59,7 @@ const EventCategory = ({
             onChange={(e) => onFilterChange("subCategory", e.target.value)}
             className="type-select"
           >
-            <option value="">전체</option>
+            <option value="">======전체======</option>
             {subCategories.map((subCategory) => (
               <option key={subCategory.cat2} value={subCategory.cat2}>
                 {subCategory.name}

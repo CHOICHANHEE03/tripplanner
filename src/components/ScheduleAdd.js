@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Search from "./Search"; // Search 컴포넌트 추가
 import "../css/ScheduleModify.css";
 
 const ScheduleAdd = () => {
@@ -8,13 +9,11 @@ const ScheduleAdd = () => {
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
     const [username, setUsername] = useState("");
-    const [favorites, setFavorites] = useState([]);
     const [types, setTypes] = useState(["", "", ""]);
     const [places, setPlaces] = useState(["", "", ""]);
     const [details, setDetails] = useState(["", "", ""]);
+    const [searchResults, setSearchResults] = useState([[], [], []]);
     const [scheduleCount, setScheduleCount] = useState(1);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 9;
 
     const typeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
@@ -43,26 +42,26 @@ const ScheduleAdd = () => {
         fetchUser();
     }, [navigate]);
 
-    const fetchFavorites = useCallback(async () => {
-        if (!username) return;
+    const fetchTourism = async (searchTerm, index) => {
+        if (!searchTerm) return;
         try {
-            const response = await fetch(`http://localhost:8080/api/favorites/${username}?page=${currentPage}&size=${itemsPerPage}`, {
-                method: "GET",
-                credentials: "include",
-            });
-
-            if (!response.ok) throw new Error("찜 목록 불러오기 실패");
+            const response = await fetch("http://localhost:8080/api/tourism");
+            if (!response.ok) throw new Error("검색 실패");
 
             const data = await response.json();
-            setFavorites(Array.isArray(data.content) ? data.content : []);
-        } catch (error) {
-            console.error("찜 목록 가져오기 오류:", error);
-        }
-    }, [username, currentPage]);
+            const filteredResults = data.content.filter(item =>
+                item.title.toLowerCase() === searchTerm.toLowerCase()
+            );
 
-    useEffect(() => {
-        fetchFavorites();
-    }, [fetchFavorites]);
+            setSearchResults(prev => {
+                const newResults = [...prev];
+                newResults[index] = filteredResults;
+                return newResults;
+            });
+        } catch (error) {
+            console.error("관광지 검색 오류:", error);
+        }
+    };
 
     const addSchedule = () => {
         if (scheduleCount < 3) {
@@ -100,21 +99,6 @@ const ScheduleAdd = () => {
         }
     };
 
-    const getFilteredFavorites = (index) => {
-        console.log("필터링 전 favorites:", favorites);
-        console.log(`현재 index: ${index}, 선택된 타입: ${types[index]}`);
-
-        if (!types[index]) return [];
-
-        const filtered = favorites.filter(place => {
-            const contentTypeId = place.tourism?.contentTypeId?.toString(); // 문자열 변환
-            return contentTypeId === types[index];
-        });
-
-        console.log("필터링 후:", filtered);
-        return filtered;
-    };
-
     const handleSubmit = async () => {
         if (!title || !date || types.every(t => !t) || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("오류", "모든 항목을 입력해주세요.", "error");
@@ -124,7 +108,7 @@ const ScheduleAdd = () => {
         const scheduleData = {
             title,
             date,
-            author: username, // 작성자 필드 추가
+            author: username,
             type1: types[0],
             place1: places[0],
             details1: details[0],
@@ -182,13 +166,15 @@ const ScheduleAdd = () => {
                         </select>
                     </div>
 
+                    <Search isSchedulePage={true} onSearch={(searchTerm) => fetchTourism(searchTerm, index)} />
+
                     <div className="schedule-input-container">
-                        <label>찜한 목록 {index + 1}</label>
+                        <label>검색 결과 {index + 1}</label>
                         <select className="schedule-input" onChange={(e) => updateSchedule(index, "place", e.target.value)}>
                             <option value="">선택하세요</option>
-                            {getFilteredFavorites(index).map(place => (
-                                <option key={place.id} value={place.tourism?.title || '기타'}>
-                                    {place.tourism?.title || '기타'}
+                            {searchResults[index]?.map(place => (
+                                <option key={place.id} value={place.title}>
+                                    {place.title}
                                 </option>
                             ))}
                         </select>
@@ -200,6 +186,7 @@ const ScheduleAdd = () => {
                     </div>
                 </div>
             ))}
+
             <button onClick={handleSubmit} className="schedule-button">일정 등록하기</button>
         </div>
     );

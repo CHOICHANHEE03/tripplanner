@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../css/Schedule.css";
 import Swal from "sweetalert2";
+import "../css/Schedule.css";
 
 const Schedule = () => {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [allSchedules, setAllSchedules] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [selectedType, setSelectedType] = useState("all");
+  const [view, setView] = useState("all");
   const navigate = useNavigate();
 
   // 카테고리(유형) 옵션
@@ -53,9 +55,13 @@ const Schedule = () => {
       const data = await response.json();
 
       if (Array.isArray(data)) {
-        setSchedules(processSchedules(data));
+        const processed = processSchedules(data);
+        setAllSchedules(processed); // 전체 일정 데이터 저장
+        setSchedules(processed);
       } else if (Array.isArray(data.schedules)) {
-        setSchedules(processSchedules(data.schedules));
+        const processed = processSchedules(data.schedules);
+        setAllSchedules(processed); // 전체 일정 데이터 저장
+        setSchedules(processed);
       } else {
         console.error("일정 데이터가 예상과 다릅니다:", data);
         setSchedules([]);
@@ -91,56 +97,72 @@ const Schedule = () => {
     });
   };
 
-  // 선택한 카테고리에 따라 일정 필터링
-  const filteredSchedules = selectedType === "all"
-    ? schedules
-    : schedules.filter(schedule => schedule.types.includes(contentTypes.find(type => type.id === selectedType)?.name));
+  useEffect(() => {
+    let filteredSchedules = allSchedules;
 
-  if (loading) {
-    return <p>일정을 불러오는 중...</p>;
-  }
+    if (view === "mine") {
+      filteredSchedules = filteredSchedules.filter(
+        (schedule) => schedule.author?.trim() === username?.trim()
+      );
+    }
+
+    if (selectedType !== "all") {
+      filteredSchedules = filteredSchedules.filter((schedule) =>
+        schedule.types.includes(
+          contentTypes.find((type) => type.id === selectedType)?.name
+        )
+      );
+    }
+
+    setSchedules(filteredSchedules);
+  }, [view, selectedType, allSchedules, username]);
 
   return (
-    <div className="schedule-container">
+    <div className="schedule-list-container">
       <h2>📅 일정 목록</h2>
-
-      {/* 카테고리 선택 필터 */}
-      <div className="filter-section">
-        <label>카테고리 선택: </label>
-        <select
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)}
-        >
+      <div className="schedule-view-select">
+        <label htmlFor="view-selection">일정 유형: </label>
+        <select id="view-selection" value={view} onChange={(e) => setView(e.target.value)}>
+          <option value="all">전체 일정 보기</option>
+          {isAuthenticated && username && <option value="mine">내 일정 보기</option>}
+        </select>
+      </div>
+      <div className="schedule-view-select">
+        <label htmlFor="category-selection">카테고리 선택: </label>
+        <select id="category-selection" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
           <option value="all">전체</option>
           {contentTypes.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
+            <option key={type.id} value={type.id}>{type.name}</option>
           ))}
         </select>
       </div>
-
-      {filteredSchedules.length === 0 ? (
-        <p>등록된 일정이 없습니다.</p>
-      ) : (
-        <ul>
-          {filteredSchedules.map((schedule) => (
-            <li key={schedule.id} className="schedule-item">
-              <Link to={`/schedule/${schedule.id}`}>
-                <div className="schedule-info">
-                  <p><strong>작성자:</strong> {schedule.author}</p>
-                  <p><strong>제목:</strong> {schedule.title}</p>
+      <div className="schedule-list-form">
+        <div className="schedule-list-form-container">
+          {schedules.length === 0 ? (
+            <p>등록된 일정이 없습니다.</p>
+          ) : (
+            <div className="schedule-cards-container">
+              {schedules.map((schedule) => (
+                <div className="schedule-card" key={schedule.id}>
+                  <Link to={`/schedule/${schedule.id}`} className="schedule-card-btn">
+                    <div className="schedule-card-content">
+                      <div className="schedule-card-header">
+                        <p><strong>작성자:</strong> {schedule.author}</p>
+                        <p className="schedule-date">{schedule.date}</p>
+                      </div>
+                      <p><strong>제목:</strong> {schedule.title}</p>
+                    </div>
+                  </Link>
                 </div>
-                <p className="schedule-date">{schedule.date}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-      <div className="schedule-button-container">
-        <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
-          일정 추가
-        </button>
+              ))}
+            </div>
+          )}
+          <div className="schedule-button-container">
+            <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
+              일정 추가
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

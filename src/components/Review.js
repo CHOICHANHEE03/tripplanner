@@ -180,51 +180,40 @@ const Review = () => {
       </div>
       <div className="review-list-form">
         <div className="review-list-form-container">
-          <div>
-            {reviews.length === 0 ? (
-              <p>등록된 리뷰가 없습니다.</p>
-            ) : (
-              <div className="review-cards-container">
-                {getCurrentPageReviews().map((review) => (
-                  <div className="review-card" key={review.reviews_id}>
-                    <button
-                      onClick={() => handleClick(review.reviews_id)}
-                      className="review-card-btn"
-                    >
-                      <div className="review-card-content">
-                        <div className="review-card-header">
-                          <p>
-                            <strong>작성자:</strong>
-                            {review.username &&
-                            typeof review.username === "object"
-                              ? review.username.username || "Unknown"
-                              : review.username || "Unknown"}
-                          </p>
-                          <p>{review.date}</p>
-                        </div>
+          {reviews.length === 0 ? (
+            <p>등록된 리뷰가 없습니다.</p>
+          ) : (
+            <div className="review-cards-container">
+              {getCurrentPageReviews().map((review) => (
+                <div className="review-card" key={review.reviews_id}>
+                  <button
+                    onClick={() => handleClick(review.reviews_id)}
+                    className="review-card-btn"
+                  >
+                    <div className="review-card-content">
+                      <div className="review-card-header">
                         <p>
-                          <strong>제목:</strong> {review.title}
+                          <strong>작성자:</strong> {review.username && typeof review.username === "object" ? review.username.username || "Unknown" : review.username || "Unknown"}
                         </p>
-                        <p>
-                          <strong>별점:</strong> {review.rating}
-                        </p>
+                        <p className="review-date">{review.date}</p>
                       </div>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageNumbers={pageNumbers}
-            currentGroup={currentGroup}
-            onPageChange={handlePageChange} // keep this as onPageChange
-            onGroupChange={handleGroupChange}
-          />
+                      <p><strong>제목:</strong> {review.title}</p>
+                      <p><strong>별점:</strong> {review.rating}</p>
+                    </div>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageNumbers={pageNumbers}
+          currentGroup={currentGroup}
+          onPageChange={handlePageChange}
+          onGroupChange={handleGroupChange}
+        />
       </div>
     </div>
   );

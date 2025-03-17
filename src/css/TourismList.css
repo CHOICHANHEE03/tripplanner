@@ -12,17 +12,15 @@
 .tourism-cards {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 20px;
-    padding: 10px;
 }
 
 .tourism-card {
     display: flex;
     flex-direction: column;
     border: 2px solid #DAEFF1;
-    width: 30%;
-    /* 카드가 한 줄에 3개씩 배치되도록 설정 */
+    width: calc(33.333% - 20px);
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
@@ -85,11 +83,29 @@
     margin-top: 10px;
 }
 
+.event-status {
+    color: #439EA7;
+    font-weight: bold;
+    padding: 6px 12px;
+    background-color: #FDFCEC;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #439EA7;
+    border-radius: 4px;
+    display: block;
+    text-align: left;
+    align-self: flex-start;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1024px) {
     .tourism-container {
         max-width: 100%;
         /* 중간 크기 화면에서 카드 너비를 100%로 */
+    }
+
+    .tourism-card {
+        width: calc(50% - 10px);
+        /* 2개일 때 균등 배치 */
     }
 
     .info-grid {
@@ -102,6 +118,11 @@
     .tourism-container {
         max-width: 100%;
         /* 작은 화면에서 카드 너비를 100%로 */
+    }
+
+    .tourism-card {
+        width: 100%;
+        /* 1개씩 배치 */
     }
 
     .info-grid {

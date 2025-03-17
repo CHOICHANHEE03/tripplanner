@@ -32,11 +32,9 @@ const EventList = ({ data, loading }) => {
           <div>Loading...</div>
         ) : Array.isArray(data) && data.length > 0 ? (
           data.map((event) => {
-
             const currentDate = new Date();
             const rawStartDate = event.eventStartDate;
             const formattedStartDate = `${rawStartDate.slice(0, 4)}-${rawStartDate.slice(4, 6)}-${rawStartDate.slice(6, 8)}`;
-
             const eventStartDate = new Date(formattedStartDate);
 
             let eventStatus;
@@ -50,10 +48,10 @@ const EventList = ({ data, loading }) => {
 
             return (
               <div key={event.id} className="tourism-card">
+                <p className="event-status">{eventStatus}</p>
                 <div className="tourism-card-header">
                   <img src={event.firstimage} alt={event.title} className="tourism-firstimage" />
                   <h3>{event.title}</h3>
-                  <p className="event-status">{eventStatus}</p>
                 </div>
                 <div className="tourism-card-footer">
                   <button className="info-button" onClick={() => navigate(`/event/${event.id}`)}>
