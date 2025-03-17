@@ -1,25 +1,13 @@
-import React, { useEffect, useState, useCallback } from "react";
-import "../css/MyPage.css";
-import { FaHeartBroken } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Pagination from "./Pagination";
+import Swal from "sweetalert2";
 
 const MyPage = () => {
-  const [favorites, setFavorites] = useState([]);
-  const [username, setUsername] = useState(null);
-  const [selectedType, setSelectedType] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [pageNumbers, setPageNumbers] = useState([]);
-  const itemsPerPage = 9;
+  const [userId, setUserId] = useState(null); // 세션에서 가져온 사용자명
+  const [userData, setUserData] = useState(null); // 데이터베이스에서 가져온 사용자 정보
+  const [userReviewData, setUserReviewData] = useState([]); // 해당 유저 리뷰 정보
+  const [userScheduleData, setUserScheduleData] = useState([]); // 해당 유저 일정 정보
   const navigate = useNavigate();
-
-  // 카테고리(유형) 옵션
-  const contentTypes = [
-    { id: "12", name: "관광지" },
-    { id: "14", name: "문화시설" },
-    { id: "28", name: "레포츠" },
-  ];
 
   // 세션 확인
   useEffect(() => {
@@ -32,169 +20,169 @@ const MyPage = () => {
         const data = await response.json();
 
         if (data.authenticated && data.user) {
-          setUsername(data.user);
+          setUserId(data.user); // 세션에서 사용자 정보 설정
         } else {
-          navigate("/login");
+          navigate("/login"); // 로그인 되어 있지 않으면 로그인 페이지로 리다이렉트
         }
       } catch (error) {
         console.error("세션 확인 실패:", error);
-        navigate("/login");
+        navigate("/login"); // 에러 발생 시 로그인 페이지로 리다이렉트
       }
     };
 
     checkSession();
   }, [navigate]);
 
-  // 찜 목록 가져오기
-  // 찜 목록 가져오기
-  const fetchFavorites = useCallback(async () => {
-    if (!username) return;
+  // 세션에서 가져온 사용자 정보를 기반으로 DB에서 유저 정보 가져옴
+  useEffect(() => {
+    if (userId) {
+      const fetchUserData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/api/user/${userId}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
 
-    try {
-      const params = new URLSearchParams({
-        page: currentPage,
-        size: itemsPerPage,
-      });
+          if (!response.ok) throw new Error("사용자 정보 불러오기 실패");
 
-      // 선택된 카테고리가 'all'이 아니면 contentTypeId 파라미터 추가
-      if (selectedType !== "all") {
-        params.append("contentTypeId", selectedType);
+          const data = await response.json();
+          setUserData(data); 
+        } catch (error) {
+          console.error("사용자 정보 가져오기 오류:", error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [userId]);
+
+  // 사용자의 리뷰 정보 가져오기
+  useEffect(() => {
+    if (userId) {
+      const fetchUserReviews = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/api/reviews/${userId}`, 
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+
+          if (!response.ok) throw new Error("사용자 리뷰 정보 불러오기 실패");
+
+          const data = await response.json();
+          setUserReviewData(data); 
+        } catch (error) {
+          console.error("사용자 리뷰 정보 가져오기 오류:", error);
+        }
+      };
+
+      fetchUserReviews();
+    }
+  }, [userId]);
+    // 사용자의 리뷰 정보 가져오기
+    useEffect(() => {
+      if (userId) {
+        const fetchUserReviews = async () => {
+          try {
+            const response = await fetch(
+              `http://localhost:8080/api/schedule/${userId}`, 
+              {
+                method: "GET",
+                credentials: "include",
+              }
+            );
+  
+            if (!response.ok) throw new Error("사용자 리뷰 정보 불러오기 실패");
+  
+            const data = await response.json();
+            setUserReviewData(data); 
+          } catch (error) {
+            console.error("사용자 리뷰 정보 가져오기 오류:", error);
+          }
+        };
+  
+        fetchUserReviews();
       }
+    }, [userId]);
 
+  const handleEdit = () => {
+    navigate(`/MyPage/edit/${userData.id}`);
+  };
+
+  const handleDelete = async () => {
+    try {
       const response = await fetch(
-        `http://localhost:8080/api/favorites/${username}?${params.toString()}`,
-        { method: "GET", credentials: "include" }
+        `http://localhost:8080/api/user/${userData.id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
       );
 
-      if (!response.ok) throw new Error("찜 목록 불러오기 실패");
+      if (!response.ok) throw new Error("사용자 삭제 실패");
 
-      const data = await response.json();
-      console.log("찜 목록 데이터:", data);
-
-      if (data?.content && Array.isArray(data.content)) {
-        setFavorites(data.content);
-        setTotalCount(data.totalElements);
-        setPageNumbers(getPageNumbers(1, Math.ceil(data.totalElements / itemsPerPage)));
-      } else {
-        setFavorites([]);
-        setTotalCount(0);
-        setPageNumbers([]);
-      }
+      Swal.fire("사용자가 삭제되었습니다.");
+      navigate("/login");
     } catch (error) {
-      console.error("찜 목록 가져오기 오류:", error);
-      setFavorites([]);
-      setTotalCount(0);
-      setPageNumbers([]);
-    }
-  }, [username, currentPage, selectedType]);
-
-  useEffect(() => {
-    if (username) {
-      fetchFavorites();
-    }
-  }, [username, currentPage, fetchFavorites]);
-
-  // 찜 삭제 함수
-  const removeFavorite = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/favorites/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error("찜 삭제 요청 실패");
-
-      setFavorites((prev) => prev.filter((place) => place.id !== id));
-      setTotalCount((prev) => prev - 1);
-
-      // 삭제 후 데이터 다시 가져오기
-      fetchFavorites();
-    } catch (error) {
-      console.error("찜 삭제 오류:", error);
+      console.error("사용자 삭제 오류:", error);
     }
   };
 
-  // 페이지네이션 숫자 배열 생성 함수
-  const getPageNumbers = (currentPage, totalPages) => {
-    if (totalPages <= 1) return [1];
+  if (userData && userReviewData) {
+    return (
+      <div className="mypage-info-container">
+        <div>
+          <h1>{userData.username}님의 회원 정보</h1>
+          <p>아이디: {userData.username}</p>
+          <p>비밀번호: {userData.password}</p>
+          <p>이메일: {userData.email}</p>
+        </div>
 
-    const pageNumbers = [];
-    const startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
-    const endPage = Math.min(startPage + 4, totalPages);
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-
-    return pageNumbers;
-  };
-
-  // 현재 선택된 카테고리에 따라 필터링
-  const filteredFavorites =
-    selectedType === "all"
-      ? favorites
-      : favorites.filter(
-        (place) => place.tourism?.contentTypeId?.toString() === selectedType
-      );
-
-  // ✅ 총 페이지 수보다 currentPage가 크면 1페이지로 초기화
-  useEffect(() => {
-    if (totalCount === 0) {
-      setCurrentPage(1);
-    } else if (currentPage > Math.ceil(totalCount / itemsPerPage)) {
-      setCurrentPage(1);
-    }
-  }, [totalCount, currentPage]);
-
-  return (
-    <div className="mypage-section">
-      <h2>❤️ 찜한 관광지</h2>
-      <div className="filter-section">
-        <label>카테고리 선택:</label>
-        <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
-          <option value="all">전체</option>
-          {contentTypes.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {filteredFavorites.length === 0 ? (
-        <p>선택한 카테고리에 찜한 관광지가 없습니다.</p>
-      ) : (
-        <>
-          <div className="mypage-grid">
-            {filteredFavorites.map((place) => (
-              <div key={place.id} className="mypage-card">
-                {place.tourism?.firstimage && (
-                  <img
-                    src={place.tourism.firstimage}
-                    alt={place.tourism.title}
-                    className="card-img"
-                  />
-                )}
-                <h3>{place.tourism?.title}</h3>
-                <button className="remove-button" onClick={() => removeFavorite(place.id)}>
-                  <FaHeartBroken /> 삭제
-                </button>
+        <div className="mypage-info">
+          <h2>{userData.username}님의 최근 리뷰 정보</h2>
+          {userReviewData.length > 0 ? (
+            userReviewData.map((review) => (
+              <div key={review.id}>
+                <h3>{review.title}</h3>
+                <p>{review.content}</p>
               </div>
-            ))}
-          </div>
-
-          {totalCount > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={Math.ceil(totalCount / itemsPerPage)}
-              handlePageChange={setCurrentPage}
-              pageNumbers={pageNumbers}
-            />
+            ))
+          ) : (
+            <p>작성한 리뷰가 없습니다.</p>
           )}
-        </>
-      )}
-    </div>
-  );
+        </div>
+        <div className="mypage-info">
+          <h2>{userData.username}님의 최근 리뷰 정보</h2>
+          {userReviewData.length > 0 ? (
+            userReviewData.map((review) => (
+              <div key={review.id}>
+                <h3>{review.title}</h3>
+                <p>{review.content}</p>
+              </div>
+            ))
+          ) : (
+            <p>작성한 리뷰가 없습니다.</p>
+          )}
+        </div>
+
+        <div className="review-detail-buttons">
+          <button onClick={handleEdit} className="review-detail-button">
+            수정하기
+          </button>
+          <button onClick={handleDelete} className="review-detail-button">
+            삭제하기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return <div>로딩 중...</div>;
 };
 
 export default MyPage;
