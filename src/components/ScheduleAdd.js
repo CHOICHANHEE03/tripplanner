@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import Search from "./Search"; // Search 컴포넌트 추가
+import Search from "./Search";
 import "../css/ScheduleModify.css";
 
 const ScheduleAdd = () => {
@@ -12,10 +12,10 @@ const ScheduleAdd = () => {
     const [types, setTypes] = useState(["", "", ""]);
     const [places, setPlaces] = useState(["", "", ""]);
     const [details, setDetails] = useState(["", "", ""]);
-    const [searchResults, setSearchResults] = useState([[], [], []]);
     const [scheduleCount, setScheduleCount] = useState(1);
 
-    const typeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
+    const typeMapping = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
+    const reverseTypeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -49,15 +49,19 @@ const ScheduleAdd = () => {
             if (!response.ok) throw new Error("검색 실패");
 
             const data = await response.json();
-            const filteredResults = data.content.filter(item =>
+            const foundItem = data.content.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 
-            setSearchResults(prev => {
-                const newResults = [...prev];
-                newResults[index] = filteredResults;
-                return newResults;
-            });
+            if (foundItem) {
+                const updatedPlaces = [...places];
+                updatedPlaces[index] = foundItem.title;
+                setPlaces(updatedPlaces);
+
+                const updatedTypes = [...types];
+                updatedTypes[index] = typeMapping[foundItem.contentTypeId] || "기타";
+                setTypes(updatedTypes);
+            }
         } catch (error) {
             console.error("관광지 검색 오류:", error);
         }
@@ -82,25 +86,8 @@ const ScheduleAdd = () => {
         }
     };
 
-    const updateSchedule = (index, field, value) => {
-        if (field === "type") {
-            const updatedTypes = [...types];
-            updatedTypes[index] = typeMapping[value] || "";
-            setTypes(updatedTypes);
-            console.log("업데이트된 types:", updatedTypes);
-        } else if (field === "place") {
-            const updatedPlaces = [...places];
-            updatedPlaces[index] = value;
-            setPlaces(updatedPlaces);
-        } else if (field === "details") {
-            const updatedDetails = [...details];
-            updatedDetails[index] = value;
-            setDetails(updatedDetails);
-        }
-    };
-
     const handleSubmit = async () => {
-        if (!title || !date || types.every(t => !t) || places.every(p => !p) || details.every(d => !d)) {
+        if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("오류", "모든 항목을 입력해주세요.", "error");
             return;
         }
@@ -108,14 +95,14 @@ const ScheduleAdd = () => {
         const scheduleData = {
             title,
             date,
-            author: username,
-            type1: types[0],
+            username,
+            type1: reverseTypeMapping[types[0]] || "",
             place1: places[0],
             details1: details[0],
-            type2: types[1],
+            type2: reverseTypeMapping[types[1]] || "",
             place2: places[1],
             details2: details[1],
-            type3: types[2],
+            type3: reverseTypeMapping[types[2]] || "",
             place3: places[2],
             details3: details[2]
         };
@@ -127,12 +114,12 @@ const ScheduleAdd = () => {
                 body: JSON.stringify(scheduleData)
             });
 
-            if (!response.ok) throw new Error("서버 요청에 실패했습니다.");
+            if (!response.ok) throw new Error("서버 요청 실패");
 
             Swal.fire("등록 완료", "일정이 성공적으로 등록되었습니다.", "success");
             navigate("/schedule");
         } catch (error) {
-            Swal.fire("오류", "서버 요청에 실패했습니다.", "error");
+            Swal.fire("오류", "서버 요청 실패", "error");
             console.error("Error submitting schedule:", error);
         }
     };
@@ -148,45 +135,27 @@ const ScheduleAdd = () => {
                 <label htmlFor="title">제목</label>
                 <input id="title" type="text" className="schedule-input" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
-
             <div className="schedule-input-container">
                 <label htmlFor="date">여행 날짜</label>
                 <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
-
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
-                    <div className="schedule-input-container">
-                        <label>타입 {index + 1}</label>
-                        <select className="schedule-input" onChange={(e) => updateSchedule(index, "type", e.target.value)}>
-                            <option value="">선택하세요</option>
-                            {Object.keys(typeMapping).map(key => (
-                                <option key={key} value={key}>{key}</option>
-                            ))}
-                        </select>
-                    </div>
-
                     <Search isSchedulePage={true} onSearch={(searchTerm) => fetchTourism(searchTerm, index)} />
-
                     <div className="schedule-input-container">
-                        <label>검색 결과 {index + 1}</label>
-                        <select className="schedule-input" onChange={(e) => updateSchedule(index, "place", e.target.value)}>
-                            <option value="">선택하세요</option>
-                            {searchResults[index]?.map(place => (
-                                <option key={place.id} value={place.title}>
-                                    {place.title}
-                                </option>
-                            ))}
-                        </select>
+                        <label>타입</label>
+                        <input type="text" className="schedule-input" value={types[index]} disabled />
                     </div>
-
                     <div className="schedule-input-container">
                         <label>내용</label>
-                        <input type="text" className="schedule-input" value={details[index]} onChange={(e) => updateSchedule(index, "details", e.target.value)} />
+                        <input type="text" className="schedule-input" value={details[index]} onChange={(e) => {
+                            const updatedDetails = [...details];
+                            updatedDetails[index] = e.target.value;
+                            setDetails(updatedDetails);
+                        }} />
                     </div>
                 </div>
             ))}
-
             <button onClick={handleSubmit} className="schedule-button">일정 등록하기</button>
         </div>
     );

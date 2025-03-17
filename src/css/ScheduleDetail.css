@@ -95,6 +95,14 @@
     background-color: #C0E7E9;
 }
 
+/* 관광지 이미지 스타일 */
+.schedule-image {
+    width: 75%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .schedule-detail-container {

@@ -127,14 +127,16 @@ const Tourism = () => {
         onFilterChange={handleFilterChange}
       />
       <TourismList data={filteredData} loading={loading} />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(totalCount / 9)}
-        handlePageChange={setCurrentPage}
-        pageNumbers={pageNumbers}
-        currentGroup={currentGroup}
-        onGroupChange={handleGroupChange}
-      />
+      {filteredData.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalCount / 9)}
+          handlePageChange={setCurrentPage}
+          pageNumbers={pageNumbers}
+          currentGroup={currentGroup}
+          onGroupChange={handleGroupChange}
+        />
+      )}
     </div>
   );
 };
