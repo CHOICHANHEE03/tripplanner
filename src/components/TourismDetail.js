@@ -61,7 +61,6 @@ const TourismDetail = () => {
     <div className="tourism-detail">
       <img src={tourism.firstimage} alt={tourism.title} className="detail-image" />
       <h2>{tourism.title}</h2>
-      <p>{tourism.overview}</p>
       <p><strong>주소:</strong> {tourism.addr1}</p>
       {validTel && <p><strong>전화번호:</strong> {tourism.tel}</p>}
       <div className="button-container">

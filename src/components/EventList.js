@@ -62,7 +62,9 @@ const EventList = ({ data, loading }) => {
             );
           })
         ) : (
-          <div>No data available</div>
+          <div className="no-data">
+            <div>등록된 행사가 없습니다.</div>
+          </div>
         )}
       </div>
     </div>

@@ -50,26 +50,48 @@ const ScheduleEdit = () => {
     const fetchTourism = async (searchTerm, index) => {
         if (!searchTerm) return;
         try {
-            const response = await fetch("http://localhost:8080/api/tourism");
-            if (!response.ok) throw new Error("검색 실패");
+            const tourismResponse = await fetch("http://localhost:8080/api/tourism");
+            if (!tourismResponse.ok) throw new Error("관광지 검색 실패");
+            const tourismData = await tourismResponse.json();
 
-            const data = await response.json();
-            const filteredResults = data.content.find(item =>
+            let foundItem = tourismData.content.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 
-            if (filteredResults) {
-                const updatedPlaces = [...places];
-                updatedPlaces[index] = filteredResults.title;
-                setPlaces(updatedPlaces);
-
-                const updatedTypes = [...types];
-                updatedTypes[index] = typeMapping[filteredResults.contentTypeId] || "기타";
-                setTypes(updatedTypes);
+            if (foundItem) {
+                updateScheduleFields(index, foundItem.title, typeMapping[foundItem.contentTypeId] || "기타");
+                return;
             }
+
+            const eventResponse = await fetch("http://localhost:8080/api/event");
+            if (!eventResponse.ok) throw new Error("행사 검색 실패");
+            const eventData = await eventResponse.json();
+
+            foundItem = eventData.content.find(item =>
+                item.title.toLowerCase() === searchTerm.toLowerCase()
+            );
+
+            if (foundItem) {
+                updateScheduleFields(index, foundItem.title, "행사");
+                return;
+            }
+
+            Swal.fire("검색 실패", "일치하는 관광지나 행사가 없습니다.", "warning");
+
         } catch (error) {
-            console.error("관광지 검색 오류:", error);
+            console.error("검색 오류:", error);
+            Swal.fire("오류", "검색 중 문제가 발생했습니다.", "error");
         }
+    };
+
+    const updateScheduleFields = (index, place, type) => {
+        const updatedPlaces = [...places];
+        updatedPlaces[index] = place;
+        setPlaces(updatedPlaces);
+
+        const updatedTypes = [...types];
+        updatedTypes[index] = type;
+        setTypes(updatedTypes);
     };
 
     const addSchedule = () => {
@@ -101,31 +123,31 @@ const ScheduleEdit = () => {
             title,
             date,
             username,
-            type1: reverseTypeMapping[types[0]] || "",
+            type1: types[0] === "행사" ? "0" : reverseTypeMapping[types[0]] || "",
             place1: places[0],
             details1: details[0],
-            type2: reverseTypeMapping[types[1]] || "",
+            type2: types[1] === "행사" ? "0" : reverseTypeMapping[types[1]] || "",
             place2: places[1],
             details2: details[1],
-            type3: reverseTypeMapping[types[2]] || "",
+            type3: types[2] === "행사" ? "0" : reverseTypeMapping[types[2]] || "",
             place3: places[2],
             details3: details[2]
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, {
-                method: "PUT",
+            const response = await fetch("http://localhost:8080/api/schedule", {
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(scheduleData)
             });
 
             if (!response.ok) throw new Error("서버 요청 실패");
 
-            Swal.fire("수정 완료", "일정이 성공적으로 수정되었습니다.", "success");
+            Swal.fire("등록 완료", "일정이 성공적으로 등록되었습니다.", "success");
             navigate("/schedule");
         } catch (error) {
             Swal.fire("오류", "서버 요청 실패", "error");
-            console.error("Error updating schedule:", error);
+            console.error("Error submitting schedule:", error);
         }
     };
 

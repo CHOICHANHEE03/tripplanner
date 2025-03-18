@@ -38,7 +38,6 @@ const TourismList = ({ data, loading }) => {
                 <div className="tourism-card-header">
                   <img src={tourism.firstimage} alt={tourism.title} className="tourism-firstimage" />
                   <h3>{tourism.title}</h3>
-                  <p className="truncated-text">{tourism.overview}</p>
                 </div>
                 <div className="tourism-card-footer">
                   <button className="info-button" onClick={() => navigate(`/tourism/${tourism.id}`)}>
@@ -49,7 +48,9 @@ const TourismList = ({ data, loading }) => {
             );
           })
         ) : (
-          <div>No data available</div>
+          <div className="no-data">
+            <div>등록된 관광지가 없습니다.</div>
+          </div>
         )}
       </div>
     </div>
