@@ -5,6 +5,7 @@
     margin: 40px 15px;
     padding-right: 20px;
 }
+  /*페이지네이션 버튼 컨테이너 css*/
 .page-nav {
     text-align: center;
     margin: 20px;
@@ -24,7 +25,7 @@
   .page-nav-btn:hover {
     background-color: #FFFFFF
   }
-  
+      /*페이지네이션 버튼 효과 css*/
   .page-nav-btn:disabled {
     background-color: #FFFFFF;
     cursor: not-allowed;

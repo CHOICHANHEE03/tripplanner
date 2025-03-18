@@ -99,21 +99,3 @@
 .button:hover:not(:disabled) {
     background: #4DC1DF;
 }
-
-@media (max-width: 768px) {
-    .box {
-        width: 80%;
-        max-width: 100%;
-    }
-
-    .input {
-        font-size: 14px;
-        padding: 6px;
-    }
-
-    .button {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-    }
-}

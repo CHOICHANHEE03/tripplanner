@@ -41,6 +41,7 @@
     font-size: 16px;
     transition: all 0.3s ease;
 }
+/* 리뷰 버튼 스타일 */
 .writeReview-button{
     border: none;
     cursor: pointer;
@@ -58,11 +59,11 @@
     background: #DAEFF1;
     transition: background-color 0.3s ease;
 }
-
+/* 뒤로가기,리뷰쓰기 버튼 스타일 효과 */
 .backTour-button:hover,.writeReview-button:hover {
     background-color: #C0E7E9;
 }
-
+/* 검색창 스타일*/
 .event-status {
     color: #4DC1DF !important;
     font-weight: bold;
@@ -75,24 +76,4 @@
     max-width: fit-content;
     text-align: left;
     margin: 10px auto 10px 0;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .tourism-detail {
-        padding: 15px;
-        margin: 20px;
-    }
-
-    .detail-image {
-        height: 250px;
-    }
-
-    .tourism-detail h2 {
-        font-size: 24px;
-    }
-
-    .tourism-detail p {
-        font-size: 16px;
-    }
 }

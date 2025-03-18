@@ -56,7 +56,7 @@
 .schedule-detail-container li p {
     margin: 5px 0;
 }
-
+/* 일정 항목 내부 카드 스타일 */
 .schedule-item {
     max-width: 600px;
     display: block;
@@ -109,21 +109,4 @@
     border-radius: 8px;
     display: block;
     margin: 0 auto;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .schedule-detail-container {
-        padding: 15px;
-        margin: 20px;
-    }
-
-    .schedule-detail-title {
-        font-size: 22px;
-        text-align: center;
-    }
-
-    .schedule-detail-container p {
-        font-size: 16px;
-    }
 }

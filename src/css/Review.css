@@ -36,12 +36,12 @@
     align-items: center;
     margin-bottom: 15px;
 }
-
+/* 필터 선택 영역 유형 글자 스타일 */
 .review-view-select label {
     font-size: 15px;
     margin-right: 10px;
 }
-
+/* 필터 선택 영역 안 셀렉트 스타일 */
 .review-view-select select {
     font-size: 14px;
     padding: 5px;
@@ -54,7 +54,7 @@
     outline: none;
     cursor: pointer;
 }
-
+/* 필터 선택 영역 안 셀렉트 스타일 */
 .review-view-select select option {
     cursor: pointer;
 }
@@ -80,7 +80,7 @@
     height: auto; /* 높이 자동 조정 */
     transition: transform 0.3s ease-in-out;
 }
-
+/* 개별 리뷰 카드 스타일 효과 */
 .review-card:hover {
     transform: translateY(-5px);
 }
@@ -101,17 +101,17 @@
     flex-direction: column;
     gap: 10px;
 }
-
+/* 리뷰 카드 내용 상단 스타일 */
 .review-card-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-
+/* 리뷰 카드 내용 상단 글자 스타일 */
 .review-card-header p {
     margin: 0;
 }
-
+/* 리뷰 카드 내용 스타일 */
 .review-card-text {
     font-weight: bold;
     color: #555;
@@ -144,7 +144,7 @@
     font-size: 15px;
     transition: background 0.3s ease-in-out;
 }
-
+/* 리뷰 추가 버튼 스타일 효과*/
 .add-review-button:hover {
     background-color: #BBDBE5;
 }
