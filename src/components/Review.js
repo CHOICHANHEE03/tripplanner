@@ -187,6 +187,7 @@ const Review = () => {
   return (
     <>
       <Search onSearch={handleSearch} />
+      <p className="search-review-title">🔍관광지 및 행사명을 검색하세요</p>
       <div className="review-list-container">
         <div>
           <div>

@@ -11,6 +11,14 @@
     flex-direction: column;
     justify-content: space-between;
 }
+/*검색창 안내문 글자 스타일*/
+.search-schedule-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    padding-right: 10px;
+}
 
 /* 제목 스타일 */
 .schedule-list-container h2 {

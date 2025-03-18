@@ -160,6 +160,7 @@ const Schedule = () => {
   return (
     <>
       <Search onSearch={handleSearch} />
+      <p className="search-schedule-title">🔍관광지 및 행사명을 검색하세요</p>
       <div className="schedule-list-container">
         <h2>📅 일정 목록</h2>
         <div className="schedule-view-select">
