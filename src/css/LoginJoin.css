@@ -12,7 +12,7 @@
     margin-bottom: 20px;
     cursor: pointer;
 }
-
+/*로고 css*/
 .Login-Join-logo {
     width: 250px;
 }
@@ -62,7 +62,7 @@
     align-items: center;
     margin-top: 12px;
 }
-
+/*입력창 효과 css*/
 .input-text:focus {
     border: 3px solid #DAEFF1;
     outline: none;
@@ -89,7 +89,7 @@
     text-decoration: none;
     color: #000000;
 }
-
+/*회원가입 창으로 넘어가는 버튼 효과 css*/
 .join-Btn:hover {
     color: #DAEFF1
 }

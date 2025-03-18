@@ -24,7 +24,7 @@ const Home = () => {
   const fetchTourismData = useCallback(async () => {
     setLoadingTourism(true);
     try {
-      const response = await fetch("http://localhost:8080/api/tourism?page=1&pageSize=9");
+      const response = await fetch("http://localhost:8080/api/tourism");
       const result = await response.json();
 
       if (result && Array.isArray(result.content)) {
@@ -41,7 +41,7 @@ const Home = () => {
   const fetchEventData = useCallback(async () => {
     setLoadingEvent(true);
     try {
-      const response = await fetch("http://localhost:8080/api/event?page=1&pageSize=9");
+      const response = await fetch("http://localhost:8080/api/event");
       const result = await response.json();
   
       if (result && Array.isArray(result.content)) {
@@ -81,7 +81,6 @@ const Home = () => {
 
   return (
     <div>
-      {/* 이미지 슬라이더 */}
       <div className="image-slider">
         <Swiper
           modules={[Pagination, Autoplay]}
@@ -106,7 +105,6 @@ const Home = () => {
         </Swiper>
       </div>
 
-      {/* 관광지 정보 섹션 */}
       <div className="info-section">
         <h2>관광지 정보</h2>
         <div className="info-container">
@@ -137,7 +135,6 @@ const Home = () => {
         </p>
       </div>
 
-      {/* 행사 정보 섹션 */}
       <div className="info-section">
         <h2>곧 개최될 행사 정보</h2>
         <div className="info-container">

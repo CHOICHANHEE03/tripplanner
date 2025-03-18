@@ -1,3 +1,4 @@
+/*페이지네이션 컨테이너 css*/
 .pagination-container{
     display: flex;
     justify-content: center;
@@ -8,7 +9,7 @@
     text-align: center;
     margin: 20px;
   }
-  
+  /*페이지네이션 버튼 css*/
   .page-nav-btn {
     background-color: #FFFFFF;
     border: 1px solid #D6D6D6;
@@ -19,7 +20,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  
+    /*페이지네이션 버튼 효과 css*/
   .page-nav-btn:hover {
     background-color: #FFFFFF
   }

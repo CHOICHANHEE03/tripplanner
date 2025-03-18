@@ -1,10 +1,11 @@
+/*이미지슬라이드 css*/
 .custom-slide {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
-
+/*이미지슬라이드 안 텍스트 컨테이너 css*/
 .text-container {
   width: 50%;
   padding: 20px;
@@ -12,41 +13,41 @@
   position: absolute;
   left: 5%;
 }
-
+/*이미지슬라이드 안 텍스트 css*/
 .text-container h2 {
   font-size: 25px;
   font-weight: bold;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
-
+/*이미지슬라이드 안 텍스트 css*/
 .text-container p {
   font-size: 18px;
   margin-top: 10px;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
-
+/*이미지슬라이드 안 이미지 컨테이너 css*/
 .image-container {
   width: 100%;
   overflow: hidden;
 }
-
+/*이미지슬라이드 안 이미지 요소 css*/
 .slide-img {
   width: 100%;
   height: 400px;
   object-fit: cover;
 }
-
+/*페이지네이션 버튼 css*/
 .swiper-pagination-bullet {
   background-color: #FFFFFF;
   width: 10px;
   height: 10px;
   opacity: 1;
 }
-
+/*페이지네이션 버튼 누를 때 css*/
 .swiper-pagination-bullet-active {
   background-color: #DAEFF1;
 }
-
+/*관광지 전체 정보 컨테이너 css*/
 .info-section {
   display: flex;
   flex-direction: column;
@@ -54,7 +55,7 @@
   text-align: center;
   padding: 30px;
 }
-
+/*관광지 전체 정보 안 컨테이너 css*/
 .info-container {
   display: flex;
   flex-wrap: wrap;
@@ -63,7 +64,7 @@
   width: 100%;
   padding: 20px 0;
 }
-
+/*관광지 정보 카드 컨테이너 css*/
 .info-box {
   display: flex;
   flex-direction: column;
@@ -76,7 +77,7 @@
   border-radius: 8px;
   background: #FFFFFF;
 }
-
+/*관광지 정보 카드 이미지 css*/
 .info-box img {
   width: 100%;
   height: 180px;
@@ -84,11 +85,11 @@
   object-position: center;
   border-bottom: 2px solid #DAEFF1;
 }
-
+/*관광지 정보 카드 텍스트 css*/
 .info-text {
   margin: 10px 0;
 }
-
+/*관광지 정보 바로가기 버튼 css*/
 .info-button {
   background: #DAEFF1;
   border: none;
@@ -97,11 +98,11 @@
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
-
+/*관광지 정보 바로가기 버튼 효과 css*/
 .info-button:hover {
   background-color: #BBDBE5;
 }
-
+/*행사 진행중 컨테이너 css*/
 .event-status {
   color: #4DC1DF;
   font-weight: bold;
@@ -113,28 +114,4 @@
   display: block;
   text-align: left;
   align-self: flex-start;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 1024px) {
-  .info-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .info-box {
-    width: 80%;
-  }
-}
-
-@media (max-width: 768px) {
-  .text-container {
-    width: 80%;
-    text-align: center;
-    left: 10%;
-  }
-
-  .info-box {
-    width: 100%;
-  }
 }
