@@ -7,7 +7,9 @@ import "../css/ScheduleModify.css";
 
 const ScheduleEdit = () => {
     const navigate = useNavigate();
-    const { scheduleId } = useParams();
+    const { scheduleId } = useParams(); // URL에서 scheduleId를 가져옴
+
+    // 상태 변수 선언
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
     const [username, setUsername] = useState("");
@@ -16,9 +18,11 @@ const ScheduleEdit = () => {
     const [details, setDetails] = useState(["", "", ""]);
     const [scheduleCount, setScheduleCount] = useState(1);
 
+    // 유형 매핑 객체
     const typeMapping = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
     const reverseTypeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
+    // 일정 정보를 불러오는 useEffect
     useEffect(() => {
         const fetchSchedule = async () => {
             try {
@@ -41,13 +45,13 @@ const ScheduleEdit = () => {
                 setDetails([data.details1, data.details2, data.details3]);
                 setScheduleCount(data.type3 ? 3 : data.type2 ? 2 : 1);
             } catch (error) {
-                console.error("일정 가져오기 오류:", error);
                 Swal.fire("오류", "일정 정보를 불러오는 중 오류가 발생했습니다.", "error");
             }
         };
         fetchSchedule();
     }, [scheduleId]);
 
+    // 관광지 검색 함수
     const fetchTourism = async (searchTerm, index) => {
         if (!searchTerm) return;
         try {
@@ -80,11 +84,11 @@ const ScheduleEdit = () => {
             Swal.fire("검색 실패", "일치하는 관광지나 행사가 없습니다.", "warning");
 
         } catch (error) {
-            console.error("검색 오류:", error);
             Swal.fire("오류", "검색 중 문제가 발생했습니다.", "error");
         }
     };
 
+    // 일정 항목 업데이트 함수
     const updateScheduleFields = (index, place, type) => {
         const updatedPlaces = [...places];
         updatedPlaces[index] = place;
@@ -95,6 +99,7 @@ const ScheduleEdit = () => {
         setTypes(updatedTypes);
     };
 
+    // 일정 추가 함수
     const addSchedule = () => {
         if (scheduleCount < 3) {
             setScheduleCount(scheduleCount + 1);
@@ -103,6 +108,7 @@ const ScheduleEdit = () => {
         }
     };
 
+    // 일정 삭제 함수
     const removeSchedule = () => {
         if (scheduleCount > 1) {
             setScheduleCount(scheduleCount - 1);

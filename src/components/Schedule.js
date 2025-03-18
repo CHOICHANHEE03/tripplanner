@@ -40,7 +40,6 @@ const Schedule = () => {
           navigate("/login");
         }
       } catch (error) {
-        console.error("세션 확인 실패:", error);
         Swal.fire("오류", "로그인 확인 중 오류가 발생했습니다.", "error");
         navigate("/login");
       }
@@ -65,11 +64,9 @@ const Schedule = () => {
         setAllSchedule(processed); // 전체 일정 데이터 저장
         setSchedule(processed);
       } else {
-        console.error("일정 데이터가 예상과 다릅니다:", data);
         setSchedule([]);
       }
     } catch (error) {
-      console.error("일정 데이터 불러오기 오류:", error);
       Swal.fire("오류", "일정 데이터를 불러오는 중 오류가 발생했습니다.", "error");
     } finally {
       setLoading(false);

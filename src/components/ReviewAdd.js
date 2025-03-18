@@ -5,15 +5,17 @@ import { IoCaretBackCircle } from "react-icons/io5";
 import "../css/ReviewAdd.css";
 
 const ReviewAdd = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { productInfo } = location.state || {};
+  const navigate = useNavigate(); // 페이지 이동을 위한 hook
+  const location = useLocation(); // 현재 위치의 state 가져오기
+  const { productInfo } = location.state || {}; // 전달된 상품 정보
 
-  const [username, setUserName] = useState(null);
-  const [rating, setRating] = useState(0);
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState(productInfo?.title || "");
+  // 상태 변수 선언
+  const [username, setUserName] = useState(null); // 사용자 이름
+  const [rating, setRating] = useState(0); // 평점 (별점)
+  const [content, setContent] = useState(""); // 리뷰 내용
+  const [title, setTitle] = useState(productInfo?.title || ""); // 리뷰 제목
 
+  // 사용자 로그인 상태 확인
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -24,12 +26,11 @@ const ReviewAdd = () => {
         const data = await response.json();
 
         if (data.authenticated && data.user) {
-          setUserName(data.user);
+          setUserName(data.user); // 로그인된 사용자 설정
         } else {
           setUserName(null);
         }
       } catch (error) {
-        console.error("세션 확인 실패:", error);
         setUserName(null);
       }
     };
@@ -37,10 +38,16 @@ const ReviewAdd = () => {
     checkSession();
   }, []);
 
+  // 제목 입력 핸들러
   const handleTitleChange = (e) => setTitle(e.target.value);
+
+  // 별점 클릭 핸들러
   const handleClickStar = (index) => setRating(index + 1);
+
+  // 리뷰 내용 입력 핸들러
   const handleReviewChange = (e) => setContent(e.target.value);
 
+  // 리뷰 제출 핸들러
   const handleSubmit = async () => {
     if (rating === 0 || content.length < 15) {
       alert("평점과 15자 이상의 리뷰를 작성해 주세요.");
@@ -48,8 +55,6 @@ const ReviewAdd = () => {
     }
 
     try {
-      console.log({ rating, content, username, title });
-
       const response = await fetch("http://localhost:8080/api/review", {
         method: "POST",
         headers: {
@@ -64,7 +69,7 @@ const ReviewAdd = () => {
         setContent("");
         setTitle(productInfo?.title || "");
 
-        navigate("/review");
+        navigate("/review"); // 리뷰 목록 페이지로 이동
       } else {
         alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
       }
@@ -76,9 +81,12 @@ const ReviewAdd = () => {
   return (
     <div className="review-add-container">
       <div className="review-add-detail-container">
+        {/* 뒤로 가기 버튼 */}
         <div className="review-back-button" onClick={() => navigate(-1)}>
           <IoCaretBackCircle size={32} />
         </div>
+
+        {/* 상품 정보 표시 */}
         {productInfo && (
           <div className="before-information">
             <div>
@@ -100,8 +108,10 @@ const ReviewAdd = () => {
           </div>
           <div className="reviewform-container">
             <div className="form-title">
-              <h1>상세리뷰를 작성해주세요.</h1>
+              <h1>상세 리뷰를 작성해주세요.</h1>
             </div>
+
+            {/* 별점 입력 */}
             <div className="star-text-container">
               <p>평점을 남겨주세요:</p>
               <div className="stars">
@@ -116,6 +126,8 @@ const ReviewAdd = () => {
                 ))}
               </div>
             </div>
+
+            {/* 리뷰 제목 입력 */}
             <div className="review-title">
               <label htmlFor="title">제목:</label>
               <input
@@ -127,6 +139,8 @@ const ReviewAdd = () => {
                 className="reviewform-title"
               />
             </div>
+
+            {/* 리뷰 내용 입력 */}
             <div className="star-text-container">
               <p>내용: </p>
               <textarea
@@ -139,6 +153,8 @@ const ReviewAdd = () => {
                 cols="50"
               />
             </div>
+
+            {/* 리뷰 등록 버튼 */}
             <button onClick={handleSubmit} className="reviewform-btn">
               등록하기
             </button>
