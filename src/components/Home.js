@@ -43,17 +43,36 @@ const Home = () => {
     try {
       const response = await fetch("http://localhost:8080/api/event?page=1&pageSize=9");
       const result = await response.json();
-
+  
       if (result && Array.isArray(result.content)) {
-        const shuffled = [...result.content].sort(() => 0.5 - Math.random()).slice(0, 3);
-        setEventData(shuffled);
+        const currentDate = new Date();
+        
+        const upcomingEvents = result.content.filter(event => {
+          const rawStartDate = event.eventStartDate;
+          const formattedStartDate = new Date(
+            `${rawStartDate.slice(0, 4)}-${rawStartDate.slice(4, 6)}-${rawStartDate.slice(6, 8)}`
+          );
+          return formattedStartDate >= currentDate;
+        });
+  
+        upcomingEvents.sort((a, b) => {
+          const dateA = new Date(
+            `${a.eventStartDate.slice(0, 4)}-${a.eventStartDate.slice(4, 6)}-${a.eventStartDate.slice(6, 8)}`
+          );
+          const dateB = new Date(
+            `${b.eventStartDate.slice(0, 4)}-${b.eventStartDate.slice(4, 6)}-${b.eventStartDate.slice(6, 8)}`
+          );
+          return dateA - dateB;
+        });
+  
+        setEventData(upcomingEvents.slice(0, 3));
       }
     } catch (error) {
       console.error("Failed to fetch event data:", error);
     } finally {
       setLoadingEvent(false);
     }
-  }, []);
+  }, []);  
 
   useEffect(() => {
     fetchTourismData();

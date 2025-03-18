@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Search from "./Search";
 import "../css/Schedule.css";
 
 const Schedule = () => {
@@ -11,6 +12,7 @@ const Schedule = () => {
   const [username, setUsername] = useState("");
   const [selectedType, setSelectedType] = useState("all");
   const [view, setView] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   // 카테고리(유형) 옵션
@@ -114,59 +116,67 @@ const Schedule = () => {
       );
     }
 
+    // 검색 기능 추가 (place1, place2, place3 중 하나라도 일치하는 경우)
+    if (searchTerm.trim() !== "") {
+      filteredSchedules = filteredSchedules.filter(
+        (schedule) =>
+          schedule.place1?.includes(searchTerm) ||
+          schedule.place2?.includes(searchTerm) ||
+          schedule.place3?.includes(searchTerm)
+      );
+    }
+
     setSchedules(filteredSchedules);
-  }, [view, selectedType, allSchedules, username]);
+  }, [view, selectedType, allSchedules, username, searchTerm]);
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
 
   return (
-    <div className="schedule-list-container">
-      <h2>📅 일정 목록</h2>
-      <div className="schedule-view-select">
-        <label htmlFor="view-selection">일정 유형: </label>
-        <select id="view-selection" value={view} onChange={(e) => setView(e.target.value)}>
-          <option value="all">전체 일정 보기</option>
-          {isAuthenticated && username && <option value="mine">내 일정 보기</option>}
-        </select>
-      </div>
-      <div className="schedule-view-select">
-        <label htmlFor="category-selection">카테고리 선택: </label>
-        <select id="category-selection" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
-          <option value="all">전체</option>
-          {contentTypes.map((type) => (
-            <option key={type.id} value={type.id}>{type.name}</option>
-          ))}
-        </select>
-      </div>
-      <div className="schedule-list-form">
-        <div className="schedule-list-form-container">
-          {schedules.length === 0 ? (
-            <div className="no-schedule">
-              <p>등록된 일정이 없습니다.</p>
-            </div>
-          ) : (
-            <div className="schedule-cards-container">
-              {schedules.map((schedule) => (
-                <div className="schedule-card" key={schedule.id}>
-                  <Link to={`/schedule/${schedule.id}`} className="schedule-card-btn">
-                    <div className="schedule-card-content">
-                      <div className="schedule-card-header">
-                        <p><strong>작성자:</strong> {schedule.username}</p>
-                        <p className="schedule-date">{schedule.date}</p>
+    <>
+      <Search onSearch={handleSearch} />
+      <div className="schedule-list-container">
+        <h2>📅 일정 목록</h2>
+        <div className="schedule-view-select">
+          <label htmlFor="view-selection">일정 유형: </label>
+          <select id="view-selection" value={view} onChange={(e) => setView(e.target.value)}>
+            <option value="all">전체 일정 보기</option>
+            {isAuthenticated && username && <option value="mine">내 일정 보기</option>}
+          </select>
+        </div>
+        <div className="schedule-list-form">
+          <div className="schedule-list-form-container">
+            {schedules.length === 0 ? (
+              <div className="no-schedule">
+                <p>등록된 일정이 없습니다.</p>
+              </div>
+            ) : (
+              <div className="schedule-cards-container">
+                {schedules.map((schedule) => (
+                  <div className="schedule-card" key={schedule.id}>
+                    <Link to={`/schedule/${schedule.id}`} className="schedule-card-btn">
+                      <div className="schedule-card-content">
+                        <div className="schedule-card-header">
+                          <p><strong>작성자:</strong> {schedule.username}</p>
+                          <p className="schedule-date">{schedule.date}</p>
+                        </div>
+                        <p><strong>제목:</strong> {schedule.title}</p>
                       </div>
-                      <p><strong>제목:</strong> {schedule.title}</p>
-                    </div>
-                  </Link>
-                </div>
-              ))}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="schedule-button-container">
+              <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
+                일정 추가
+              </button>
             </div>
-          )}
-          <div className="schedule-button-container">
-            <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
-              일정 추가
-            </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -35,6 +35,7 @@ const AppContent = () => {
         <Route path="/event/:id" element={<EventDetail />} />  {/* 수정된 부분 */}
         <Route path="/review" element={<Review />} />  {/* 수정된 부분 */}
         <Route path="/tourism/review/:id" element={<ReviewAdd />} />
+        <Route path="/event/review/:id" element={<ReviewAdd />} />
         <Route path="/review/:id" element={<ReviewDetail />} />
         <Route path="/review/edit/:id" element={<ReviewEdit />} />
         <Route path="/schedule" element={<Schedule />} />
