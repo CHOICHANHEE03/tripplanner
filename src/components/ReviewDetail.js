@@ -50,7 +50,7 @@ const ReviewDetail = () => {
 
                 if (data) {
                     setReviewData({
-                        id: data.reviews_id,
+                        id: data.review_id,
                         title: data.title,
                         date: data.date,
                         username: data.username,

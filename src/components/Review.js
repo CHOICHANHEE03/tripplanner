@@ -7,8 +7,8 @@ import "../css/Pagination.css";
 import "../css/Review.css";
 
 const Review = () => {
-  const [reviews, setReviews] = useState([]); // 필터링된 리뷰 데이터
-  const [allReviews, setAllReviews] = useState([]); // 전체 리뷰 데이터 (누적된 데이터)
+  const [review, setReview] = useState([]); // 필터링된 리뷰 데이터
+  const [allReview, setAllReview] = useState([]); // 전체 리뷰 데이터 (누적된 데이터)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState(""); // 세션에서 받아온 사용자 이름
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
@@ -36,7 +36,7 @@ const Review = () => {
         if (data.authenticated) {
           setIsAuthenticated(true);
           setUsername(data.user); // 세션에서 사용자 이름을 가져옴
-          fetchReviews(); // 첫 페이지 리뷰 데이터 불러옴
+          fetchReview(); // 첫 페이지 리뷰 데이터 불러옴
         } else {
           Swal.fire("오류", "로그인이 필요합니다.", "error");
           navigate("/login");
@@ -52,8 +52,8 @@ const Review = () => {
   }, [navigate]);
 
   // 페이지네이션된 리뷰 데이터 불러옴
-  const fetchReviews = async () => {
-    let allFetchedReviews = [];
+  const fetchReview = async () => {
+    let allFetchedReview = [];
     let page = 0;
     let moreDataAvailable = true;
 
@@ -68,7 +68,7 @@ const Review = () => {
         const data = await response.json();
 
         if (data.content && Array.isArray(data.content)) {
-          allFetchedReviews = [...allFetchedReviews, ...data.content]; // 데이터 누적
+          allFetchedReview = [...allFetchedReview, ...data.content]; // 데이터 누적
           if (data.content.length < size) {
             moreDataAvailable = false; // 더 이상 데이터가 없으면 종료
           }
@@ -88,16 +88,16 @@ const Review = () => {
       page++; // 다음 페이지로 이동
     }
 
-    setAllReviews(allFetchedReviews); // 모든 리뷰 데이터를 상태에 저장
-    filterReviews(allFetchedReviews); // 필터링된 리뷰로 상태 업데이트
+    setAllReview(allFetchedReview); // 모든 리뷰 데이터를 상태에 저장
+    filterReview(allFetchedReview); // 필터링된 리뷰로 상태 업데이트
   };
 
   // 내 리뷰만 필터링하는 함수
-  const filterReviews = (reviews) => {
-    let filteredReviews = reviews;
+  const filterReview = (review) => {
+    let filteredReview = review;
 
     if (view === "mine") {
-      filteredReviews = filteredReviews.filter((review) => {
+      filteredReview = filteredReview.filter((review) => {
         const reviewUsername =
           review.username && typeof review.username === "object"
             ? review.username.username
@@ -109,13 +109,13 @@ const Review = () => {
 
     // 검색어가 입력된 경우 정확히 일치하는 제목만 필터링
     if (searchTerm.trim() !== "") {
-      filteredReviews = filteredReviews.filter(
+      filteredReview = filteredReview.filter(
         (review) => review.title.trim() === searchTerm.trim()
       );
     }
 
-    setReviews(filteredReviews);
-    const newTotalPages = Math.ceil(filteredReviews.length / size);
+    setReview(filteredReview);
+    const newTotalPages = Math.ceil(filteredReview.length / size);
     setTotalPages(newTotalPages);
 
     // 페이지 번호와 그룹 동기화 처리
@@ -147,22 +147,22 @@ const Review = () => {
     const selectedView = event.target.value; // 선택된 값
     setView(selectedView); // view를 all 또는 mine으로 설정
     setCurrentPage(1); // 내 리뷰 보기를 눌렀을 때 첫 페이지로 리셋
-    filterReviews(allReviews); // 보기 모드 변경 시 필터링된 리뷰를 바로 반영
+    filterReview(allReview); // 보기 모드 변경 시 필터링된 리뷰를 바로 반영
   };
 
   // 페이지 변경 시 데이터 재로드
   useEffect(() => {
-    filterReviews(allReviews); // 필터링 리뷰를 표시
+    filterReview(allReview); // 필터링 리뷰를 표시
   }, [currentPage]); // 번호 누를 떄 재실행
 
   // 모드 필터링된 리뷰를 업데이트
   useEffect(() => {
-    filterReviews(allReviews);
-  }, [searchTerm, view, allReviews]);
+    filterReview(allReview);
+  }, [searchTerm, view, allReview]);
 
   // 페이지네이션된 데이터 추출
-  const getCurrentPageReviews = () => {
-    return reviews.slice((currentPage - 1) * size, currentPage * size); // 현재 페이지에 해당하는 리뷰
+  const getCurrentPageReview = () => {
+    return review.slice((currentPage - 1) * size, currentPage * size); // 현재 페이지에 해당하는 리뷰
   };
 
   // pageNumbers 계산 (페이지 그룹에 맞는 페이지 번호 배열 생성)
@@ -196,14 +196,14 @@ const Review = () => {
         </div>
         <div className="review-list-form">
           <div className="review-list-form-container">
-            {reviews.length === 0 ? (
+            {review.length === 0 ? (
               <div className="no-review">
                 <p>등록된 리뷰가 없습니다.</p>
               </div>
             ) : (
               <>
                 <div className="review-cards-container">
-                  {getCurrentPageReviews().map((review) => (
+                  {getCurrentPageReview().map((review) => (
                     <div className="review-card" key={review.review_id}>
                       <button
                         onClick={() => handleClick(review.review_id)}
@@ -223,7 +223,7 @@ const Review = () => {
                     </div>
                   ))}
                 </div>
-                {reviews.length > 0 && (
+                {review.length > 0 && (
                   <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

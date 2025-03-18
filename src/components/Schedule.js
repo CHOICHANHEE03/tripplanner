@@ -5,9 +5,9 @@ import Search from "./Search";
 import "../css/Schedule.css";
 
 const Schedule = () => {
-  const [schedules, setSchedules] = useState([]);
+  const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [allSchedules, setAllSchedules] = useState([]);
+  const [allSchedule, setAllSchedule] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [selectedType, setSelectedType] = useState("all");
@@ -34,7 +34,7 @@ const Schedule = () => {
         if (data.authenticated) {
           setIsAuthenticated(true);
           setUsername(data.user);
-          fetchSchedules();
+          fetchSchedule();
         } else {
           Swal.fire("오류", "로그인이 필요합니다.", "error");
           navigate("/login");
@@ -49,7 +49,7 @@ const Schedule = () => {
     checkSession();
   }, [navigate]);
 
-  const fetchSchedules = async () => {
+  const fetchSchedule = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/schedule");
       if (!response.ok) throw new Error("서버 오류");
@@ -57,16 +57,16 @@ const Schedule = () => {
       const data = await response.json();
 
       if (Array.isArray(data)) {
-        const processed = processSchedules(data);
-        setAllSchedules(processed); // 전체 일정 데이터 저장
-        setSchedules(processed);
-      } else if (Array.isArray(data.schedules)) {
-        const processed = processSchedules(data.schedules);
-        setAllSchedules(processed); // 전체 일정 데이터 저장
-        setSchedules(processed);
+        const processed = processSchedule(data);
+        setAllSchedule(processed); // 전체 일정 데이터 저장
+        setSchedule(processed);
+      } else if (Array.isArray(data.schedule)) {
+        const processed = processSchedule(data.schedule);
+        setAllSchedule(processed); // 전체 일정 데이터 저장
+        setSchedule(processed);
       } else {
         console.error("일정 데이터가 예상과 다릅니다:", data);
-        setSchedules([]);
+        setSchedule([]);
       }
     } catch (error) {
       console.error("일정 데이터 불러오기 오류:", error);
@@ -77,8 +77,8 @@ const Schedule = () => {
   };
 
   // 일정 데이터에서 카테고리 추출
-  const processSchedules = (schedules) => {
-    return schedules.map(schedule => {
+  const processSchedule = (schedule) => {
+    return schedule.map(schedule => {
       const typeLabels = {
         "12": "관광지",
         "14": "문화시설",
@@ -100,16 +100,16 @@ const Schedule = () => {
   };
 
   useEffect(() => {
-    let filteredSchedules = allSchedules;
+    let filteredSchedule = allSchedule;
 
     if (view === "mine") {
-      filteredSchedules = filteredSchedules.filter(
+      filteredSchedule = filteredSchedule.filter(
         (schedule) => schedule.author?.trim() === username?.trim()
       );
     }
 
     if (selectedType !== "all") {
-      filteredSchedules = filteredSchedules.filter((schedule) =>
+      filteredSchedule = filteredSchedule.filter((schedule) =>
         schedule.types.includes(
           contentTypes.find((type) => type.id === selectedType)?.name
         )
@@ -118,7 +118,7 @@ const Schedule = () => {
 
     // 검색 기능 추가 (place1, place2, place3 중 하나라도 일치하는 경우)
     if (searchTerm.trim() !== "") {
-      filteredSchedules = filteredSchedules.filter(
+      filteredSchedule = filteredSchedule.filter(
         (schedule) =>
           schedule.place1?.includes(searchTerm) ||
           schedule.place2?.includes(searchTerm) ||
@@ -126,8 +126,8 @@ const Schedule = () => {
       );
     }
 
-    setSchedules(filteredSchedules);
-  }, [view, selectedType, allSchedules, username, searchTerm]);
+    setSchedule(filteredSchedule);
+  }, [view, selectedType, allSchedule, username, searchTerm]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -147,13 +147,13 @@ const Schedule = () => {
         </div>
         <div className="schedule-list-form">
           <div className="schedule-list-form-container">
-            {schedules.length === 0 ? (
+            {schedule.length === 0 ? (
               <div className="no-schedule">
                 <p>등록된 일정이 없습니다.</p>
               </div>
             ) : (
               <div className="schedule-cards-container">
-                {schedules.map((schedule) => (
+                {schedule.map((schedule) => (
                   <div className="schedule-card" key={schedule.id}>
                     <Link to={`/schedule/${schedule.id}`} className="schedule-card-btn">
                       <div className="schedule-card-content">

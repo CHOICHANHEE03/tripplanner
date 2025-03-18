@@ -87,14 +87,14 @@ const ReviewEdit = () => {
 
     try {
       const response = isEdit
-        ? await fetch(`http://localhost:8080/api/reviews/${id}`, {
+        ? await fetch(`http://localhost:8080/api/review/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(reviewData),
           })
-        : await fetch("http://localhost:8080/api/reviews", {
+        : await fetch("http://localhost:8080/api/review", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -111,12 +111,11 @@ const ReviewEdit = () => {
         setRating(0);
         setContent("");
         setTitle(productInfo?.title || "");
-        navigate("/review/:id");
+        navigate(`/review/${id}`);
       } else {
         alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
       }
     } catch (error) {
-      console.error("Error submitting review:", error);
       alert("서버에 연결할 수 없습니다. 다시 시도해 주세요.");
     }
   };

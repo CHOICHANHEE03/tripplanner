@@ -69,7 +69,6 @@ const ReviewAdd = () => {
         alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
       }
     } catch (error) {
-      console.error("Error submitting review:", error);
       alert("서버에 연결할 수 없습니다. 다시 시도해 주세요.");
     }
   };
