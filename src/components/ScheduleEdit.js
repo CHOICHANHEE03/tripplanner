@@ -160,7 +160,12 @@ const ScheduleEdit = () => {
 
     const today = new Date();
     const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    document.querySelector("input[type='date']").min = formattedDate;
+
+    useEffect(() => {
+        if (date && date < formattedDate) {
+            setDate(formattedDate); // 과거 날짜 선택 방지
+        }
+    }, [date, formattedDate]);
 
     return (
         <div className="add-container">
@@ -178,7 +183,7 @@ const ScheduleEdit = () => {
             </div>
             <div className="schedule-input-container">
                 <label htmlFor="date">여행 날짜</label>
-                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} />
+                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} min={formattedDate} />
             </div>
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
