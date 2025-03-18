@@ -22,8 +22,8 @@ const Search = ({ onSearch, isSchedulePage = false }) => {
                 onSearch(trimmedTerm); // 검색어가 비어 있지 않으면 검색 실행
             }
         } else {
-            if (trimmedTerm.length >= 2) {
-                onSearch(trimmedTerm); // 일반 페이지에서는 최소 2자 이상 입력해야 검색 실행
+            if (trimmedTerm.length != 1) {
+                onSearch(trimmedTerm); // 일반 페이지에서는 1자가 아니면 검색 실행
             }
         }
     };

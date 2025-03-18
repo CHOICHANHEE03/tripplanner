@@ -168,9 +168,20 @@ const Review = () => {
     pageNumbers.push(i);
   }
 
+  // 검색 핸들러
   const handleSearch = (term) => {
     setSearchTerm(term);
-    setCurrentPage(1); // 검색 시 첫 페이지로 리셋
+    setCurrentPage(1);
+
+    if (term.trim() === "") {
+      filterReview(allReview); // 기존 리뷰 데이터를 복원
+    } else {
+      const filtered = allReview.filter((review) =>
+        review.title.trim() === term.trim()
+      );
+      setReview(filtered);
+      setTotalPages(Math.ceil(filtered.length / size));
+    }
   };
 
   return (

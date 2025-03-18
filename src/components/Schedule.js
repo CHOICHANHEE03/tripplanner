@@ -97,6 +97,10 @@ const Schedule = () => {
   };
 
   useEffect(() => {
+    filterSchedule();
+  }, [view, allSchedule, searchTerm]);
+
+  const filterSchedule = () => {
     let filteredSchedule = allSchedule;
 
     if (view === "mine") {
@@ -117,17 +121,23 @@ const Schedule = () => {
     if (searchTerm.trim() !== "") {
       filteredSchedule = filteredSchedule.filter(
         (schedule) =>
-          schedule.place1?.includes(searchTerm) ||
-          schedule.place2?.includes(searchTerm) ||
-          schedule.place3?.includes(searchTerm)
+          schedule.place1?.trim() === searchTerm.trim() ||
+          schedule.place2?.trim() === searchTerm.trim() ||
+          schedule.place3?.trim() === searchTerm.trim()
       );
     }
 
     setSchedule(filteredSchedule);
-  }, [view, selectedType, allSchedule, username, searchTerm]);
+  };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+
+    if (term.trim() === "") {
+      setSchedule(allSchedule); // 검색어 없을 때 모든 데이터 복원
+    } else {
+      filterSchedule(); // 필터링 적용
+    }
   };
 
   return (

@@ -126,9 +126,16 @@ const Tourism = () => {
   // 검색 핸들러
   const handleSearch = (term) => {
     setSearchTerm(term);
+
     if (term === "") {
-      setFilteredData(data);
+      setFilteredData(data); // 기존 필터 조건에 맞는 데이터를 복원
+    } else {
+      const filtered = data.filter((item) =>
+        item.title.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredData(filtered);
     }
+
     setCurrentPage(1);
   };
 
