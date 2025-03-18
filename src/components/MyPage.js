@@ -9,8 +9,10 @@ const MyPage = () => {
   const [userReviewData, setUserReviewData] = useState([]); // 해당 유저 리뷰 정보
   const [userScheduleData, setUserScheduleData] = useState([]); // 해당 유저 일정 정보
   const [image, setImage] = useState(null); // 이미지 상태 추가
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const navigate = useNavigate();
 
+  // 세션 확인
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -34,6 +36,7 @@ const MyPage = () => {
     checkSession();
   }, [navigate]);
 
+  // 사용자 데이터 가져오기
   useEffect(() => {
     if (userId) {
       const fetchUserData = async () => {
@@ -50,7 +53,6 @@ const MyPage = () => {
 
           const data = await response.json();
           setUserData(data);
-          // 이미지가 없으면 기본 이미지로 설정
           setImage(data.profileImage || defaultProfileImage); // 기본 이미지 경로 설정
         } catch (error) {
           console.error("사용자 정보 가져오기 오류:", error);
@@ -61,89 +63,168 @@ const MyPage = () => {
     }
   }, [userId]);
 
-  // "수정하기" 버튼 클릭 시 수정 페이지로 이동
+  // 리뷰 데이터 가져오기
+  useEffect(() => {
+    if (userId) {
+      const fetchUserReview = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/api/review/user/${userId}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+
+          if (!response.ok) throw new Error("리뷰 정보 불러오기 실패");
+
+          const data = await response.json();
+
+          // data가 배열인지 확인 후 상태 업데이트
+          if (Array.isArray(data)) {
+            setUserReviewData(data); // 배열을 상태에 저장
+          } else {
+            console.error("리뷰 배열이 아니거나 잘못된 데이터:", data);
+            setUserReviewData([]); // 잘못된 데이터일 경우 빈 배열로 처리
+          }
+        } catch (error) {
+          console.error("리뷰 데이터 가져오기 오류:", error);
+          setUserReviewData([]); // 오류 발생 시 빈 배열로 처리
+        }
+      };
+
+      fetchUserReview();
+    }
+  }, [userId]);
+
+  // 일정 데이터 가져오기
+  useEffect(() => {
+    if (userId) {
+      const fetchUserSchedules = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/api/schedule/user/${userId}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+
+          if (!response.ok) throw new Error("일정 정보 불러오기 실패");
+
+          const data = await response.json();
+
+          // data가 배열인지 확인 후 상태 업데이트
+          if (Array.isArray(data)) {
+            setUserScheduleData(data); // 배열을 상태에 저장
+          } else {
+            console.error("일정 배열이 아니거나 잘못된 데이터:", data);
+            setUserScheduleData([]); // 잘못된 데이터일 경우 빈 배열로 처리
+          }
+        } catch (error) {
+          console.error("일정 데이터 가져오기 오류:", error);
+          setUserScheduleData([]); // 오류 발생 시 빈 배열로 처리
+        }
+      };
+
+      fetchUserSchedules();
+    }
+  }, [userId]);
+
+  // 모든 데이터가 로드되었을 때 로딩 상태 종료
+  useEffect(() => {
+    if (userData && userReviewData && userScheduleData) {
+      setIsLoading(false); // 모든 데이터 로드 후 로딩 상태 변경
+    }
+  }, [userData, userReviewData, userScheduleData]);
+
+  // 로딩 중 상태 처리
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
   const handleEdit = () => {
     navigate(`/MyPage/edit/${userData.id}`);
   };
 
-  // 삭제하기 처리 함수
+  // "삭제하기" 버튼 클릭 시
   const handleDelete = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/user/${userData.id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`http://localhost:8080/api/user/${userData.id}`, {
+        method: "DELETE",
+        credentials: "include",  
+      });
 
       if (!response.ok) throw new Error("사용자 삭제 실패");
 
       // 삭제 성공 시
-      Swal.fire("사용자가 삭제되었습니다.");
+      Swal.fire("사용자와 관련된 모든 데이터가 삭제되었습니다.");
       navigate("/login"); // 로그인 페이지로 리다이렉트
     } catch (error) {
       console.error("사용자 삭제 오류:", error);
     }
   };
 
-  if (userData && userReviewData && userScheduleData) {
-    return (
-      <div className="mypage-info-container">
-        <div>
-          <h1>{userData.username}님의 회원 정보</h1>
-          {/* 프로필 이미지 표시 */}
-          <img
-            src={image} // 이미지가 없으면 기본 이미지 사용
-            alt="프로필 사진"
-            className="profile-image"
-          />
-          <p>아이디: {userData.username}</p>
-          <p>닉네임: {userData.nickname}</p>
-          <p>비밀번호: {userData.password}</p>
-        </div>
-        
-        <div className="review-detail-buttons">
-          <button onClick={handleEdit} className="review-detail-button">
-            수정하기
-          </button>
-          <button onClick={handleDelete} className="review-detail-button">
-            삭제하기
-          </button>
-        </div>
-
-        <div className="mypage-info">
-          <h2>{userData.username}님의 최근 리뷰 정보</h2>
-          {userReviewData.length > 0 ? (
-            userReviewData.map((review) => (
-              <div key={review.id}>
-                <h3>{review.title}</h3>
-                <p>{review.content}</p>
-              </div>
-            ))
-          ) : (
-            <p>작성한 리뷰가 없습니다.</p>
-          )}
-        </div>
-
-        <div className="mypage-info">
-          <h2>{userData.username}님의 최근 일정 정보</h2>
-          {userScheduleData.length > 0 ? (
-            userScheduleData.map((schedule) => (
-              <div key={schedule.id}>
-                <h3>{schedule.title}</h3>
-                <p>{schedule.description}</p>
-              </div>
-            ))
-          ) : (
-            <p>작성한 일정이 없습니다.</p>
-          )}
-        </div>
+  return (
+    <div className="mypage-info-container">
+      <div>
+        <h1>{userData.username}님의 회원 정보</h1>
+        <img
+          src={image} // 이미지가 없으면 기본 이미지 사용
+          alt="프로필 사진"
+          className="profile-image"
+        />
+        <p>아이디: {userData.username}</p>
+        <p>닉네임: {userData.nickname}</p>
+        <p>비밀번호: {userData.password}</p>
       </div>
-    );
-  }
 
-  return <div>로딩 중...</div>;
+      <div className="review-detail-buttons">
+        <button onClick={handleEdit} className="review-detail-button">
+          수정하기
+        </button>
+        <button onClick={handleDelete} className="review-detail-button">
+          삭제하기
+        </button>
+      </div>
+      
+      <div className="mypage-info">
+  <h2>{userData.username}님의 최근 리뷰 정보</h2>
+  {userReviewData.length > 0 ? (
+    userReviewData.map((review) => { 
+      return (
+        <div key={review.review_id}> 
+          <h3>제목: {review.title}</h3>
+          <p>별점: {review.rating}점</p>
+          <p>내용: {review.content}</p>
+
+        </div>
+      );
+    })
+  ) : (
+    <p>작성한 리뷰가 없습니다.</p>
+  )}
+</div>
+
+<div className="mypage-info">
+  <h2>{userData.username}님의 최근 일정 정보</h2>
+  {userScheduleData.length > 0 ? (
+    userScheduleData.map((schedule) => {  
+      return (
+        <div key={schedule.id}>
+          <p>{schedule.date}</p>
+          <h3>{schedule.title}</h3>
+          <p>{schedule.date}</p>
+        </div>
+      );
+    })
+  ) : (
+    <p>작성한 일정이 없습니다.</p>
+  )}
+</div>
+</div>
+  );
 };
+
 
 export default MyPage;

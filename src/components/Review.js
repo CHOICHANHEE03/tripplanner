@@ -188,9 +188,9 @@ const Review = () => {
             <>
               <div className="review-cards-container">
                 {getCurrentPageReviews().map((review) => (
-                  <div className="review-card" key={review.reviews_id}>
+                  <div className="review-card" key={review.review_id}>
                     <button
-                      onClick={() => handleClick(review.reviews_id)}
+                      onClick={() => handleClick(review.review_id)}
                       className="review-card-btn"
                     >
                       <div className="review-card-content">
@@ -198,7 +198,7 @@ const Review = () => {
                           <p>
                             <strong>작성자:</strong> {review.username && typeof review.username === "object" ? review.username.username || "Unknown" : review.username || "Unknown"}
                           </p>
-                          <p className="review-date">{review.date}</p>
+                          <p className="review-date">{review.createdAt}</p>
                         </div>
                         <p><strong>제목:</strong> {review.title}</p>
                         <p><strong>별점:</strong> {review.rating}</p>

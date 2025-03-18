@@ -16,9 +16,11 @@ import Join from './components/Join';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import MyPage from './components/MyPage';
+import MyPageEdit from "./components/MyPageEdit";
 import ReviewAdd from './components/ReviewAdd';
 import ReviewDetail from './components/ReviewDetail';
 import ReviewEdit from "./components/ReviewEdit";
+
 
 const AppContent = () => {
   const location = useLocation();
@@ -44,6 +46,7 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/MyPage/edit/:id" element={<MyPageEdit/>}/>
       </Routes>
       {!isLoginPage && <Footer />}
     </div>

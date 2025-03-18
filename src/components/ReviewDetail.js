@@ -139,8 +139,6 @@ const ReviewDetail = () => {
                     </div>
                 </div>
             </div>
-
-            {/* 수정 및 삭제 버튼은 작성자만 보이게 */}
             {isOwner && (
                 <div className="review-detail-buttons">
                     <button onClick={handleEdit} className="review-detail-button">수정하기</button>
