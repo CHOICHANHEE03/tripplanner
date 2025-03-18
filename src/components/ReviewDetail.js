@@ -46,13 +46,12 @@ const ReviewDetail = () => {
                     throw new Error("데이터를 불러오는 데 실패했습니다.");
                 }
                 const data = await response.json();
-                console.log(data);
 
                 if (data) {
                     setReviewData({
                         id: data.review_id,
                         title: data.title,
-                        date: data.date,
+                        createdAt: data.createdAt,
                         username: data.username,
                         content: data.content,
                         rating: data.rating,
@@ -126,7 +125,7 @@ const ReviewDetail = () => {
                 <div className="review-detail-form">
                     <div className="review-detail-form-header">
                         <h2 className="review-detail-title">{reviewData.title}</h2>
-                        <p><strong>날짜:</strong> {reviewData.date}</p>
+                        <p><strong>작성날짜:</strong> {reviewData.createdAt}</p>
                         <p><strong>작성자:</strong> {reviewData.username}</p>
                         <div className="review-detail-title-header">
                             <h3>📄 리뷰 내용</h3>
@@ -134,7 +133,7 @@ const ReviewDetail = () => {
                     </div>
 
                     <div className="review-detail-text">
-                        <p><strong>별점:</strong> {reviewData.rating} / 5</p>
+                        <p><strong>평점:</strong> {reviewData.rating}점</p>
                         <p><strong>내용:</strong> {reviewData.content}</p>
                     </div>
                 </div>

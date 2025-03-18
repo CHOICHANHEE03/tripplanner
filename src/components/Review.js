@@ -42,7 +42,6 @@ const Review = () => {
           navigate("/login");
         }
       } catch (error) {
-        console.error("세션 확인 실패:", error);
         Swal.fire("오류", "로그인 확인 중 오류가 발생했습니다.", "error");
         navigate("/login");
       }
@@ -73,11 +72,9 @@ const Review = () => {
             moreDataAvailable = false; // 더 이상 데이터가 없으면 종료
           }
         } else {
-          console.error("리뷰 데이터가 예상과 다릅니다:", data);
           break;
         }
       } catch (error) {
-        console.error("리뷰 데이터 불러오기 오류:", error);
         Swal.fire(
           "오류",
           "리뷰 데이터를 불러오는 중 오류가 발생했습니다.",
@@ -211,13 +208,14 @@ const Review = () => {
                       >
                         <div className="review-card-content">
                           <div className="review-card-header">
-                            <p>
-                              <strong>작성자:</strong> {review.username && typeof review.username === "object" ? review.username.username || "Unknown" : review.username || "Unknown"}
+                            <p className="review-card-text">
+                              작성자: {review.username && typeof review.username === "object" ? review.username.username || "Unknown" : review.username || "Unknown"}
                             </p>
-                            <p className="review-date">{review.createdAt}</p>
+                            <p className="review-card-text">{review.createdAt}</p>
                           </div>
-                          <p><strong>제목:</strong> {review.title}</p>
-                          <p><strong>별점:</strong> {review.rating}</p>
+                          <p className="review-card-text">제목: {review.title}</p>
+                          <p className="review-card-text">평점: {review.rating}점</p>
+                          <p className="review-card-text">내용: {review.content}</p>
                         </div>
                       </button>
                     </div>

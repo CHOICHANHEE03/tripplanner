@@ -6,6 +6,7 @@
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     min-height: 50vh;
+    height: 500px;
 }
 .review-detail-form-container{
     display: flex;
@@ -15,7 +16,11 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start; 
-    align-items: center;
+}
+.review-back-button{
+    margin-right: 700px;
+    color: gray;
+    cursor: pointer;
 }
 .review-detail-form-header{
     display: flex;

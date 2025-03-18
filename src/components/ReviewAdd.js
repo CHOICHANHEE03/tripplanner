@@ -4,7 +4,7 @@ import { PiStarFill, PiStarLight } from "react-icons/pi";
 import "../css/ReviewAdd.css";
 
 const ReviewAdd = () => {
-  const navigate = useNavigate(); // 🔹 최상단에서 useNavigate 호출
+  const navigate = useNavigate(); 
   const location = useLocation(); 
   const { productInfo } = location.state || {}; 
 
@@ -40,10 +40,9 @@ const ReviewAdd = () => {
   const handleClickStar = (index) => setRating(index + 1);
   const handleReviewChange = (e) => setContent(e.target.value);
 
-  // 🔹 useNavigate를 사용하는 handleSubmit 함수 수정
   const handleSubmit = async () => {
     if (rating === 0 || content.length < 15) {
-      alert("별점과 15자 이상의 리뷰를 작성해 주세요.");
+      alert("평점과 15자 이상의 리뷰를 작성해 주세요.");
       return;
     }
 
@@ -64,7 +63,7 @@ const ReviewAdd = () => {
         setContent("");
         setTitle(productInfo?.title || "");
 
-        navigate("/review"); // 🔹 정상적으로 페이지 이동
+        navigate("/review"); 
       } else {
         alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
       }
@@ -75,7 +74,7 @@ const ReviewAdd = () => {
 
   return (
     <div className="review-add-container">
-      <div className="before-container">
+      <div className="review-add-detail-container">
         {productInfo && (
           <div className="before-information">
             <div>

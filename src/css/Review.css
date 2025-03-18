@@ -112,10 +112,19 @@
     margin: 0;
 }
 
-.review-date {
+.review-card-text {
     font-weight: bold;
     color: #555;
     white-space: nowrap;
+    font-size: 15px;
+    margin: 0;
+    display: -webkit-box;          
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 2;         
+    line-clamp: 2;                 
+    overflow: hidden;              
+    text-overflow: ellipsis;
+    white-space: normal;
 }
 
 /* 리뷰 추가 버튼 컨테이너 */
