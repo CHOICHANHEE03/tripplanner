@@ -150,7 +150,7 @@ const Review = () => {
   // 페이지 변경 시 데이터 재로드
   useEffect(() => {
     filterReview(allReview); // 필터링 리뷰를 표시
-  }, [currentPage]); // 번호 누를 떄 재실행
+  }, [currentPage]); // 번호 누를 때 재실행
 
   // 모드 필터링된 리뷰를 업데이트
   useEffect(() => {

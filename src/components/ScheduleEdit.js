@@ -158,6 +158,10 @@ const ScheduleEdit = () => {
         }
     };
 
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    document.querySelector("input[type='date']").min = formattedDate;
+
     return (
         <div className="add-container">
             <div className="schedule-back-button" onClick={() => navigate(-1)}>
@@ -174,7 +178,7 @@ const ScheduleEdit = () => {
             </div>
             <div className="schedule-input-container">
                 <label htmlFor="date">여행 날짜</label>
-                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} min={new Date().toISOString().split("T")[0]} />
+                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">

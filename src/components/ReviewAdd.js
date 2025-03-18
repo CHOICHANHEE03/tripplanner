@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
 import { IoCaretBackCircle } from "react-icons/io5";
+import Swal from "sweetalert2";
 import "../css/ReviewAdd.css";
 
 const ReviewAdd = () => {
@@ -26,17 +27,21 @@ const ReviewAdd = () => {
         const data = await response.json();
 
         if (data.authenticated && data.user) {
-          setUserName(data.user); // 로그인된 사용자 설정
+          setUserName(data.user);
         } else {
-          setUserName(null);
+          Swal.fire("오류", "로그인이 필요합니다.", "error").then(() => {
+            navigate("/login");
+          });
         }
       } catch (error) {
-        setUserName(null);
+        Swal.fire("오류", "로그인 확인 중 오류가 발생했습니다.", "error").then(() => {
+          navigate("/login");
+        });
       }
     };
 
     checkSession();
-  }, []);
+  }, [navigate]);
 
   // 제목 입력 핸들러
   const handleTitleChange = (e) => setTitle(e.target.value);
@@ -108,7 +113,7 @@ const ReviewAdd = () => {
           </div>
           <div className="reviewform-container">
             <div className="form-title">
-              <h1>상세 리뷰를 작성해주세요.</h1>
+            <h1>상세 리뷰를 작성해주세요.</h1>
             </div>
 
             {/* 별점 입력 */}
