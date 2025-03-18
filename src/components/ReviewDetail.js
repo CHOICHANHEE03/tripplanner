@@ -89,7 +89,7 @@ const ReviewDetail = () => {
                         throw new Error("삭제에 실패했습니다.");
                     }
                     Swal.fire("삭제 완료!", "리뷰가 삭제되었습니다.", "success").then(() => {
-                        navigate("/reviews"); // 리뷰 목록 페이지로 이동
+                        navigate("/review"); // 리뷰 목록 페이지로 이동
                     });
                 } catch (error) {
                     console.error("삭제 중 오류 발생:", error);

@@ -4,27 +4,27 @@ import { PiStarFill, PiStarLight } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import "../css/ReviewAdd.css";
 
-const ReviewAdd = () => {
-const location = useLocation();
-const { productInfo } = location.state || {}; // productInfo를 location.state에서 가져옴
-const { id } = useParams(); // 수정하려는 리뷰 ID를 URL 파라미터로 받음
+const ReviewEdit = () => {
+  const location = useLocation();
+  const { productInfo } = location.state || {}; // productInfo를 location.state에서 가져옴
+  const { id } = useParams(); // 수정하려는 리뷰 ID를 URL 파라미터로 받음
 
-const [username, setUserName] = useState(null); // 사용자 이름 상태
-const [rating, setRating] = useState(0); // 별점 상태
-const [content, setContent] = useState(""); // 리뷰 내용 상태
-const [title, setTitle] = useState(productInfo?.title || ""); // 리뷰 제목 상태
-const [isEdit, setIsEdit] = useState(false); // 수정 모드인지 확인하는 상태
-const navigate = useNavigate();
+  const [username, setUserName] = useState(null); // 사용자 이름 상태
+  const [rating, setRating] = useState(0); // 별점 상태
+  const [content, setContent] = useState(""); // 리뷰 내용 상태
+  const [title, setTitle] = useState(productInfo?.title || ""); // 리뷰 제목 상태
+  const [isEdit, setIsEdit] = useState(false); // 수정 모드인지 확인하는 상태
+  const navigate = useNavigate();
 
   // 수정하려는 리뷰 데이터를 가져오기 위한 useEffect
-useEffect(() => {
+  useEffect(() => {
     if (id) {
       // 수정 모드일 경우, 해당 리뷰 데이터 가져오기
       const fetchReview = async () => {
         console.log("Review ID:", id);
         try {
           const response = await fetch(
-            `http://localhost:8080/api/reviews/${id}`
+            `http://localhost:8080/api/review/${id}`
           );
           if (!response.ok) throw new Error("리뷰를 불러오는 데 실패했습니다.");
           const data = await response.json();
@@ -41,7 +41,7 @@ useEffect(() => {
     }
   }, [id]);
 
-  // 세션 확인 (로그인 상태)
+  // 세션 확인
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -171,6 +171,7 @@ useEffect(() => {
                 value={title}
                 onChange={handleTitleChange}
                 className="reviewform-title"
+                readOnly // 제목 수정 불가
               />
             </div>
             <div className="star-text-container">
@@ -195,4 +196,4 @@ useEffect(() => {
   );
 };
 
-export default ReviewAdd;
+export default ReviewEdit;
