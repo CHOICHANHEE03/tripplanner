@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
 import "../css/ReviewAdd.css";
 
 const ReviewAdd = () => {
-  const location = useLocation(); // useLocation 훅 사용
-  const { productInfo } = location.state || {}; // location.state에서 productInfo 가져옴
+  const navigate = useNavigate(); // 🔹 최상단에서 useNavigate 호출
+  const location = useLocation(); 
+  const { productInfo } = location.state || {}; 
 
-  const [username, setUserName] = useState(null); // 사용자 이름 상태
-  const [rating, setRating] = useState(0); // 별점 상태
-  const [content, setContent] = useState(""); // 리뷰 내용 상태
-  const [title, setTitle] = useState(productInfo?.title || ""); // 리뷰 제목 상태
+  const [username, setUserName] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(productInfo?.title || "");
 
   useEffect(() => {
     const checkSession = async () => {
@@ -36,11 +37,10 @@ const ReviewAdd = () => {
   }, []);
 
   const handleTitleChange = (e) => setTitle(e.target.value);
-
   const handleClickStar = (index) => setRating(index + 1);
-
   const handleReviewChange = (e) => setContent(e.target.value);
 
+  // 🔹 useNavigate를 사용하는 handleSubmit 함수 수정
   const handleSubmit = async () => {
     if (rating === 0 || content.length < 15) {
       alert("별점과 15자 이상의 리뷰를 작성해 주세요.");
@@ -48,24 +48,14 @@ const ReviewAdd = () => {
     }
 
     try {
-      console.log({
-        rating: rating,
-        content: content,
-        username: username,
-        title: title,
-      });
+      console.log({ rating, content, username, title });
 
       const response = await fetch("http://localhost:8080/api/review", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          rating: rating,
-          content: content,
-          username: username,
-          title: title,
-        }),
+        body: JSON.stringify({ rating, content, username, title }),
       });
 
       if (response.ok) {
@@ -73,6 +63,8 @@ const ReviewAdd = () => {
         setRating(0);
         setContent("");
         setTitle(productInfo?.title || "");
+
+        navigate("/review"); // 🔹 정상적으로 페이지 이동
       } else {
         alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
       }
@@ -141,8 +133,8 @@ const ReviewAdd = () => {
                 onChange={handleReviewChange}
                 placeholder="내용 15자 이상 기입해주세요."
                 className="reviewform-text"
-                rows="5" 
-                cols="50" 
+                rows="5"
+                cols="50"
               />
             </div>
             <button onClick={handleSubmit} className="reviewform-btn">

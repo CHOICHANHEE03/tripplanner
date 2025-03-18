@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Pagination from "./Pagination";
+import Search from "./Search";
 import "../css/Pagination.css";
 import "../css/Review.css";
 
@@ -15,6 +16,7 @@ const Review = () => {
   const [currentGroup, setCurrentGroup] = useState(0); // 페이지 그룹
   const [view, setView] = useState("all"); // 리뷰 보기 방식
   const [size, setSize] = useState(5); // 한 페이지 크기
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const handleClick = (id) => {
@@ -94,21 +96,26 @@ const Review = () => {
   const filterReviews = (reviews) => {
     let filteredReviews = reviews;
 
-    // 내 리뷰 보기 모드일 때만 필터링
     if (view === "mine") {
-      filteredReviews = reviews.filter((review) => {
+      filteredReviews = filteredReviews.filter((review) => {
         const reviewUsername =
           review.username && typeof review.username === "object"
-            ? review.username.username // 객체일 경우, username 필드 가져오기
+            ? review.username.username
             : review.username;
 
-        // review.username과 username 값 비교
         return reviewUsername?.trim() === username?.trim();
       });
     }
 
-    setReviews(filteredReviews); // 필터링된 리뷰로 상태 업데이트
-    const newTotalPages = Math.ceil(filteredReviews.length / size); // 필터링된 리뷰에 따른 총 페이지 수 계산
+    // 검색어가 입력된 경우 정확히 일치하는 제목만 필터링
+    if (searchTerm.trim() !== "") {
+      filteredReviews = filteredReviews.filter(
+        (review) => review.title.trim() === searchTerm.trim()
+      );
+    }
+
+    setReviews(filteredReviews);
+    const newTotalPages = Math.ceil(filteredReviews.length / size);
     setTotalPages(newTotalPages);
 
     // 페이지 번호와 그룹 동기화 처리
@@ -150,8 +157,8 @@ const Review = () => {
 
   // 모드 필터링된 리뷰를 업데이트
   useEffect(() => {
-    filterReviews(allReviews); // allReviews 상태가 바뀔 때마다 필터링
-  }, [view, allReviews]); // view 또는 allReviews 상태가 바뀔 때마다
+    filterReviews(allReviews);
+  }, [searchTerm, view, allReviews]);
 
   // 페이지네이션된 데이터 추출
   const getCurrentPageReviews = () => {
@@ -164,64 +171,74 @@ const Review = () => {
     pageNumbers.push(i);
   }
 
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1); // 검색 시 첫 페이지로 리셋
+  };
+
   return (
-    <div className="review-list-container">
-      <div>
-        <h2>📄 리뷰 목록</h2>
-        <div className="review-view-select">
-          <label htmlFor="view-selection">리뷰 유형: </label>
-          <select id="view-selection" onChange={handleViewChange} value={view}>
-            <option value="all">전체 리뷰 보기</option>
-            {isAuthenticated && username && (
-              <option value="mine">내 리뷰 보기</option>
-            )}
-          </select>
-        </div>
-      </div>
-      <div className="review-list-form">
-        <div className="review-list-form-container">
-          {reviews.length === 0 ? (
-            <div className="no-review">
-              <p>등록된 리뷰가 없습니다.</p>
+    <>
+      <Search onSearch={handleSearch} />
+      <div className="review-list-container">
+        <div>
+          <div>
+            <h2>📄 리뷰 목록</h2>
+            <div className="review-view-select">
+              <label htmlFor="view-selection">리뷰 유형: </label>
+              <select id="view-selection" onChange={handleViewChange} value={view}>
+                <option value="all">전체 리뷰 보기</option>
+                {isAuthenticated && username && (
+                  <option value="mine">내 리뷰 보기</option>
+                )}
+              </select>
             </div>
-          ) : (
-            <>
-              <div className="review-cards-container">
-                {getCurrentPageReviews().map((review) => (
-                  <div className="review-card" key={review.review_id}>
-                    <button
-                      onClick={() => handleClick(review.review_id)}
-                      className="review-card-btn"
-                    >
-                      <div className="review-card-content">
-                        <div className="review-card-header">
-                          <p>
-                            <strong>작성자:</strong> {review.username && typeof review.username === "object" ? review.username.username || "Unknown" : review.username || "Unknown"}
-                          </p>
-                          <p className="review-date">{review.createdAt}</p>
-                        </div>
-                        <p><strong>제목:</strong> {review.title}</p>
-                        <p><strong>별점:</strong> {review.rating}</p>
-                      </div>
-                    </button>
-                  </div>
-                ))}
+          </div>
+        </div>
+        <div className="review-list-form">
+          <div className="review-list-form-container">
+            {reviews.length === 0 ? (
+              <div className="no-review">
+                <p>등록된 리뷰가 없습니다.</p>
               </div>
-              {reviews.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  pageNumbers={pageNumbers}
-                  currentGroup={currentGroup}
-                  onPageChange={handlePageChange}
-                  onGroupChange={handleGroupChange}
-                />
-              )}
-            </>
-          )}
+            ) : (
+              <>
+                <div className="review-cards-container">
+                  {getCurrentPageReviews().map((review) => (
+                    <div className="review-card" key={review.review_id}>
+                      <button
+                        onClick={() => handleClick(review.review_id)}
+                        className="review-card-btn"
+                      >
+                        <div className="review-card-content">
+                          <div className="review-card-header">
+                            <p>
+                              <strong>작성자:</strong> {review.username && typeof review.username === "object" ? review.username.username || "Unknown" : review.username || "Unknown"}
+                            </p>
+                            <p className="review-date">{review.createdAt}</p>
+                          </div>
+                          <p><strong>제목:</strong> {review.title}</p>
+                          <p><strong>별점:</strong> {review.rating}</p>
+                        </div>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {reviews.length > 0 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    pageNumbers={pageNumbers}
+                    currentGroup={currentGroup}
+                    handlePageChange={handlePageChange}
+                    onGroupChange={handleGroupChange}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

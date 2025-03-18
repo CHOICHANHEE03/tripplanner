@@ -37,7 +37,7 @@ const Search = ({ onSearch, isSchedulePage = false }) => {
                 <input
                     type="text"
                     className={isSchedulePage ? styles.scheduleInput : styles.input}
-                    placeholder={isSchedulePage ? "검색어를 정확히 입력하세요..." : "검색어를 두 글자 이상 입력하세요..."}
+                    placeholder={isSchedulePage ? "검색어를 정확히 입력하세요..." : "검색어를 입력하세요..."}
                     value={searchTerm}
                     onChange={handleSearchChange}
                     onKeyPress={handleKeyPress}
