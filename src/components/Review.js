@@ -209,7 +209,7 @@ const Review = () => {
                         <div className="review-card-content">
                           <div className="review-card-header">
                             <p className="review-card-text">
-                              작성자: {review.username && typeof review.username === "object" ? review.username.username || "Unknown" : review.username || "Unknown"}
+                              작성자: {review.username}
                             </p>
                             <p className="review-card-text">{review.createdAt}</p>
                           </div>
