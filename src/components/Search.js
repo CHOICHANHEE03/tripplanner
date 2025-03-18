@@ -9,7 +9,20 @@ const Search = ({ onSearch, isSchedulePage = false }) => {
 
     // 입력값 변경 시 상태 업데이트
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
+        const newTerm = e.target.value;
+        setSearchTerm(newTerm);
+
+        // 입력값이 변경될 때마다 검색 실행 (지워질 때도 반영됨)
+        const trimmedTerm = newTerm.trim();
+        if (isSchedulePage) {
+            if (trimmedTerm.length > 0 || searchTerm.length > 0) {
+                onSearch(trimmedTerm);
+            }
+        } else {
+            if (trimmedTerm.length !== 1 || searchTerm.length > 1) {
+                onSearch(trimmedTerm);
+            }
+        }
     };
 
     // 검색 버튼 클릭 시 실행되는 함수
@@ -28,13 +41,6 @@ const Search = ({ onSearch, isSchedulePage = false }) => {
         }
     };
 
-    // Enter 키 입력 시 검색 실행
-    const handleKeyPress = (e) => {
-        if (e.key === "Enter") {
-            handleSearch();
-        }
-    };
-
     return (
         // 페이지 유형에 따라 다른 스타일 적용
         <div className={isSchedulePage ? styles.scheduleContainer : styles.container}>
@@ -45,7 +51,6 @@ const Search = ({ onSearch, isSchedulePage = false }) => {
                     placeholder={isSchedulePage ? "검색어를 정확히 입력하세요..." : "검색어를 입력하세요..."} // 페이지 유형에 따라 다른 placeholder 표시
                     value={searchTerm}
                     onChange={handleSearchChange} // 입력값 변경 핸들러
-                    onKeyPress={handleKeyPress} // Enter 키 입력 핸들러
                 />
                 <button
                     className={isSchedulePage ? styles.scheduleButton : styles.button}

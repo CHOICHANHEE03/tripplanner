@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Search from "./Search";
+import Pagination from "./Pagination";
 import "../css/Schedule.css";
 
 const Schedule = () => {
@@ -13,6 +14,10 @@ const Schedule = () => {
   const [selectedType, setSelectedType] = useState("all");
   const [view, setView] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentGroup, setCurrentGroup] = useState(0);
+  const [size, setSize] = useState(5);
   const navigate = useNavigate();
 
   // 카테고리(유형) 옵션
@@ -140,6 +145,18 @@ const Schedule = () => {
     }
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleGroupChange = (direction) => {
+    const newGroup = currentGroup + direction;
+    if (newGroup >= 0 && newGroup < Math.ceil(totalPages / 5)) {
+      setCurrentGroup(newGroup);
+      setCurrentPage(newGroup * 5 + 1);
+    }
+  };
+
   return (
     <>
       <Search onSearch={handleSearch} />
@@ -174,6 +191,16 @@ const Schedule = () => {
                   </div>
                 ))}
               </div>
+            )}
+            {schedule.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageNumbers={Array.from({ length: totalPages }, (_, i) => i + 1)}
+                currentGroup={currentGroup}
+                handlePageChange={handlePageChange}
+                onGroupChange={handleGroupChange}
+              />
             )}
             <div className="schedule-button-container">
               <button className="add-schedule-button" onClick={() => navigate("/schedule/add")}>
