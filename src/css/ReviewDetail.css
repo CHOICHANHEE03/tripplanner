@@ -41,6 +41,8 @@
     border-left: 5px solid #DAEFF1;
     text-align: left;
     width: 600px;
+    white-space: normal;
+    word-break: break-word;
 }
 
 .review-detail-title-header {

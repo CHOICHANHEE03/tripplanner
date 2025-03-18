@@ -50,7 +50,7 @@ const Tourism = () => {
 
     if (selectedArea) params.append("areaCode", selectedArea);
     if (selectedType) params.append("contentTypeId", selectedType);
-    if (selectedSubCategory) params.append("subCategory", selectedSubCategory);
+    if (selectedSubCategory) params.append("cat2", selectedSubCategory);
 
     params.append("page", currentPage);
     params.append("size", 9);
