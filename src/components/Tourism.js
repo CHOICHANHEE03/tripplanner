@@ -61,6 +61,10 @@ const Tourism = () => {
       const result = await response.json();
       setData(result.content);
       setTotalCount(result.totalCount);
+
+      // 페이지네이션 번호 업데이트 추가
+      setPageNumbers(getPageNumbers(currentPage, Math.ceil(result.totalCount / 9)));
+
     } catch (error) {
       console.error("데이터 가져오기 오류:", error);
     } finally {
