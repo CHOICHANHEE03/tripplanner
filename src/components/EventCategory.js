@@ -1,11 +1,13 @@
 import React from "react";
 import "../css/TourismCategory.css";
 
+// 이벤트 카테고리 컴포넌트
 const EventCategory = ({
-  selectedRegion,
-  selectedSubCategory,
-  onFilterChange,
+  selectedRegion, // 선택된 지역
+  selectedSubCategory, // 선택된 하위 카테고리
+  onFilterChange, // 필터 변경 핸들러
 }) => {
+  // 지역 목록
   const regions = [
     { name: "서울", areacode: "1" },
     { name: "인천", areacode: "2" },
@@ -26,6 +28,7 @@ const EventCategory = ({
     { name: "제주", areacode: "39" },
   ];
 
+  // 하위 카테고리 목록
   const subCategories = [
     { name: "축제", cat2: "A0207" },
     { name: "공연행사", cat2: "A0208" },
@@ -33,10 +36,11 @@ const EventCategory = ({
 
   return (
     <div className="Tourism-category">
+      {/* 지역 필터 버튼 그룹 */}
       <div className="Area-group">
         <button
           className="Area-btn"
-          onClick={() => onFilterChange("region", "")}
+          onClick={() => onFilterChange("region", "")} // 전체 선택 버튼
         >
           전체
         </button>
@@ -44,12 +48,14 @@ const EventCategory = ({
           <button
             key={region.areacode}
             className="Area-btn"
-            onClick={() => onFilterChange("region", region.areacode)}
+            onClick={() => onFilterChange("region", region.areacode)} // 지역 선택 버튼
           >
             {region.name}
           </button>
         ))}
       </div>
+
+      {/* 하위 카테고리 선택 드롭다운 */}
       <div className="type-group">
         <div className="subCategory-cat">
           <label htmlFor="subCategory">카테고리 선택: </label>

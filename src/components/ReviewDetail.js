@@ -5,14 +5,14 @@ import Swal from "sweetalert2"; // SweetAlert2를 사용하여 경고 창 처리
 import "../css/ReviewDetail.css";
 
 const ReviewDetail = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [reviewData, setReviewData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { id } = useParams(); // URL에서 리뷰 ID를 가져옴
+    const navigate = useNavigate(); // 페이지 이동을 위한 navigate 함수
+    const [reviewData, setReviewData] = useState(null); // 리뷰 데이터를 저장하는 상태
+    const [loading, setLoading] = useState(true); // 데이터 로딩 상태
     const [currentUser, setCurrentUser] = useState(null); // 로그인한 사용자 정보를 저장
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false); // 로그인 상태 체크
 
-    // 세션 정보를 가져오기
+    // 현재 로그인한 사용자 정보 가져오기
     useEffect(() => {
         const fetchSession = async () => {
             try {
@@ -25,12 +25,10 @@ const ReviewDetail = () => {
                 if (data.authenticated) {
                     setCurrentUser(data.user);
                     setIsUserLoggedIn(true);
-                    console.log("현재 로그인한 사용자 정보:", data.user);
                 } else {
                     setIsUserLoggedIn(false);
                 }
             } catch (error) {
-                console.error("세션 확인 오류:", error);
                 setIsUserLoggedIn(false);
             }
         };
@@ -38,6 +36,7 @@ const ReviewDetail = () => {
         fetchSession();
     }, []);
 
+    // 특정 리뷰 데이터 가져오기
     useEffect(() => {
         const fetchReviewData = async () => {
             try {
@@ -58,7 +57,6 @@ const ReviewDetail = () => {
                     });
                 }
             } catch (error) {
-                console.error("데이터를 불러오는 중 오류 발생:", error);
                 setReviewData(null);
                 Swal.fire("오류", "리뷰 정보를 불러오는 데 실패했습니다.", "error");
             } finally {
@@ -69,6 +67,7 @@ const ReviewDetail = () => {
         fetchReviewData();
     }, [id]);
 
+    // 리뷰 삭제 기능
     const handleDelete = async () => {
         Swal.fire({
             title: "정말 삭제하시겠습니까?",
@@ -91,13 +90,13 @@ const ReviewDetail = () => {
                         navigate("/review"); // 리뷰 목록 페이지로 이동
                     });
                 } catch (error) {
-                    console.error("삭제 중 오류 발생:", error);
                     Swal.fire("오류", "삭제 중 문제가 발생했습니다.", "error");
                 }
             }
         });
     };
 
+    // 리뷰 수정 페이지로 이동
     const handleEdit = () => {
         navigate(`/review/edit/${reviewData.id}`);
     };
@@ -110,7 +109,7 @@ const ReviewDetail = () => {
         return <p>해당 리뷰 정보를 찾을 수 없습니다.</p>;
     }
 
-    // currentUser와 reviewData가 모두 로딩된 후에 비교
+    // 현재 로그인한 사용자와 리뷰 작성자가 같은지 확인
     const isOwner = currentUser && reviewData && currentUser === reviewData.username;
 
     return (

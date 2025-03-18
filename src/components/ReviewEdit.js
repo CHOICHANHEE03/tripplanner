@@ -7,54 +7,52 @@ import "../css/ReviewEdit.css";
 import Swal from "sweetalert2";
 
 const ReviewEdit = () => {
-  const { id } = useParams(); // 수정하려는 리뷰 ID를 URL 파라미터로 받음
+  const { id } = useParams(); // URL에서 수정하려는 리뷰 ID 가져오기
 
+  // 상태(state) 설정
   const [username, setUserName] = useState(null); // 사용자 이름 상태
   const [rating, setRating] = useState(0); // 평점 상태
   const [content, setContent] = useState(""); // 리뷰 내용 상태
   const [title, setTitle] = useState(""); // 리뷰 제목 상태
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // 페이지 이동을 위한 네비게이트 함수
 
-  // 수정하려는 리뷰 데이터
+  // 수정하려는 리뷰 데이터를 불러오는 useEffect
   useEffect(() => {
     if (id) {
       const fetchReview = async () => {
-        console.log("Review ID:", id);
         try {
-          const response = await fetch(
-            `http://localhost:8080/api/review/${id}`
-          );
+          const response = await fetch(`http://localhost:8080/api/review/${id}`); // API 호출
           if (!response.ok) throw new Error("리뷰를 불러오는 데 실패했습니다.");
-          const data = await response.json();
+          const data = await response.json(); // JSON 데이터 변환
 
-          setRating(data.rating); // 기존 평점
-          setContent(data.content); // 기존 내용
-          setTitle(data.title); // 기존 제목
+          // 기존 리뷰 데이터 설정
+          setRating(data.rating);
+          setContent(data.content);
+          setTitle(data.title);
         } catch (error) {
-          console.error("리뷰 데이터 가져오기 실패:", error);
+          console.error(error);
         }
       };
       fetchReview();
     }
   }, [id]);
 
-  // 세션 확인
+  // 세션 정보를 확인하는 useEffect
   useEffect(() => {
     const checkSession = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/session", {
           method: "GET",
-          credentials: "include",
+          credentials: "include", // 쿠키를 포함하여 요청
         });
         const data = await response.json();
 
         if (data.authenticated && data.user) {
-          setUserName(data.user);
+          setUserName(data.user); // 로그인된 사용자 이름 설정
         } else {
-          setUserName(null);
+          setUserName(null); // 로그인되지 않은 경우 null로 설정
         }
       } catch (error) {
-        console.error("세션 확인 실패:", error);
         setUserName(null);
       }
     };
@@ -62,13 +60,18 @@ const ReviewEdit = () => {
     checkSession();
   }, []);
 
+  // 제목 입력 변경 핸들러 (읽기 전용)
   const handleTitleChange = (e) => setTitle(e.target.value);
 
+  // 별점 클릭 핸들러
   const handleClickStar = (index) => setRating(index + 1);
 
+  // 리뷰 내용 변경 핸들러
   const handleReviewChange = (e) => setContent(e.target.value);
 
+  // 리뷰 수정 요청 핸들러
   const handleSubmit = async () => {
+    // 평점이 없거나, 리뷰 내용이 15자 미만이면 경고 표시
     if (rating === 0 || content.length < 15) {
       Swal.fire({
         icon: "error",
@@ -78,6 +81,7 @@ const ReviewEdit = () => {
       return;
     }
 
+    // 수정할 리뷰 데이터 객체
     const reviewData = {
       review_id: id,
       rating: rating,
@@ -87,6 +91,7 @@ const ReviewEdit = () => {
     };
 
     try {
+      // API 호출하여 리뷰 수정 요청
       const response = await fetch(`http://localhost:8080/api/review/${id}`, {
         method: "PUT",
         headers: {
@@ -97,7 +102,7 @@ const ReviewEdit = () => {
 
       if (response.ok) {
         alert("리뷰가 수정되었습니다.");
-        navigate(`/review/${id}`);
+        navigate(`/review/${id}`); // 수정된 리뷰 페이지로 이동
       } else {
         alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
       }
@@ -110,6 +115,7 @@ const ReviewEdit = () => {
     <div className="review-whole">
       <div className="review-Edit-container">
         <div className="review-edit-detail-container">
+          {/* 뒤로 가기 버튼 */}
           <div className="review-back-button" onClick={() => navigate(-1)}>
             <IoCaretBackCircle size={32} />
           </div>
@@ -120,6 +126,8 @@ const ReviewEdit = () => {
             <div className="form-title">
               <h1>리뷰를 수정해주세요.</h1>
             </div>
+
+            {/* 평점 입력 */}
             <div className="star-text-container">
               <p>평점을 남겨주세요:</p>
               <div className="stars">
@@ -134,6 +142,8 @@ const ReviewEdit = () => {
                 ))}
               </div>
             </div>
+
+            {/* 제목 입력 (읽기 전용) */}
             <div className="review-title">
               <label htmlFor="title">제목:</label>
               <input
@@ -145,6 +155,8 @@ const ReviewEdit = () => {
                 readOnly // 제목 수정 불가
               />
             </div>
+
+            {/* 리뷰 내용 입력 */}
             <div className="star-text-container">
               <p>내용: </p>
               <textarea
@@ -157,6 +169,8 @@ const ReviewEdit = () => {
                 cols="50"
               />
             </div>
+
+            {/* 수정하기 버튼 */}
             <button onClick={handleSubmit} className="reviewform-btn">
               수정하기
             </button>

@@ -6,18 +6,23 @@ import Search from "./Search";
 import "../css/ScheduleModify.css";
 
 const ScheduleAdd = () => {
-    const navigate = useNavigate();
-    const [title, setTitle] = useState("");
-    const [date, setDate] = useState("");
-    const [username, setUsername] = useState("");
-    const [types, setTypes] = useState(["", "", ""]);
-    const [places, setPlaces] = useState(["", "", ""]);
-    const [details, setDetails] = useState(["", "", ""]);
-    const [scheduleCount, setScheduleCount] = useState(1);
+    const navigate = useNavigate(); // 페이지 이동을 위한 hook
+    
+    // 일정 관련 상태 변수
+    const [title, setTitle] = useState(""); // 일정 제목
+    const [date, setDate] = useState(""); // 일정 날짜
+    const [username, setUsername] = useState(""); // 사용자 이름
+    const [types, setTypes] = useState(["", "", ""]); // 장소 타입
+    const [places, setPlaces] = useState(["", "", ""]); // 장소명
+    const [details, setDetails] = useState(["", "", ""]); // 상세 설명
+    const [scheduleCount, setScheduleCount] = useState(1); // 일정 개수
 
+    // 타입 매핑 (코드 → 명칭)
     const typeMapping = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
+    // 타입 매핑 (명칭 → 코드)
     const reverseTypeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
+    // 사용자 로그인 확인
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -34,7 +39,6 @@ const ScheduleAdd = () => {
                     navigate("/login");
                 }
             } catch (error) {
-                console.error("세션 확인 실패:", error);
                 Swal.fire("오류", "로그인 확인 중 오류가 발생했습니다.", "error");
                 navigate("/login");
             }
@@ -43,6 +47,7 @@ const ScheduleAdd = () => {
         fetchUser();
     }, [navigate]);
 
+    // 관광지 및 행사 검색 함수
     const fetchTourism = async (searchTerm, index) => {
         if (!searchTerm) return;
         try {
@@ -75,13 +80,12 @@ const ScheduleAdd = () => {
             }
 
             Swal.fire("검색 실패", "일치하는 관광지나 행사가 없습니다.", "warning");
-
         } catch (error) {
-            console.error("검색 오류:", error);
             Swal.fire("오류", "검색 중 문제가 발생했습니다.", "error");
         }
     };
 
+    // 일정 필드 업데이트 함수
     const updateScheduleFields = (index, place, type) => {
         const updatedPlaces = [...places];
         updatedPlaces[index] = place;
@@ -92,6 +96,7 @@ const ScheduleAdd = () => {
         setTypes(updatedTypes);
     };
 
+    // 일정 추가
     const addSchedule = () => {
         if (scheduleCount < 3) {
             setScheduleCount(scheduleCount + 1);
@@ -100,6 +105,7 @@ const ScheduleAdd = () => {
         }
     };
 
+    // 일정 삭제
     const removeSchedule = () => {
         if (scheduleCount > 1) {
             setScheduleCount(scheduleCount - 1);
@@ -111,6 +117,7 @@ const ScheduleAdd = () => {
         }
     };
 
+    // 일정 등록 함수
     const handleSubmit = async () => {
         if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("오류", "모든 항목을 입력해주세요.", "error");
@@ -145,7 +152,6 @@ const ScheduleAdd = () => {
             navigate("/schedule");
         } catch (error) {
             Swal.fire("오류", "서버 요청 실패", "error");
-            console.error("Error submitting schedule:", error);
         }
     };
 

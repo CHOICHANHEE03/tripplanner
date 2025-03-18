@@ -1,12 +1,14 @@
 import React from "react";
 import "../css/TourismCategory.css";
 
+// 관광 카테고리를 선택하는 컴포넌트
 const TourismCategory = ({
-  selectedRegion,
-  selectedType,
-  selectedSubCategory,
-  onFilterChange,
+  selectedRegion, // 선택된 지역 코드
+  selectedType, // 선택된 관광지 타입 코드
+  selectedSubCategory, // 선택된 세부 카테고리 코드
+  onFilterChange, // 필터 변경 시 호출되는 함수
 }) => {
+  // 지역 목록
   const regions = [
     { name: "서울", areacode: "1" },
     { name: "인천", areacode: "2" },
@@ -27,12 +29,14 @@ const TourismCategory = ({
     { name: "제주", areacode: "39" },
   ];
 
+  // 관광지 타입 목록
   const tourismTypes = [
     { contenttypeid: "12", name: "관광지" },
     { contenttypeid: "14", name: "문화시설" },
     { contenttypeid: "28", name: "레포츠" },
   ];
 
+  // 관광지 타입에 따른 세부 카테고리 목록
   const subCategories = {
     12: [
       { name: "자연관광지", cat2: "A0101" },
@@ -56,10 +60,11 @@ const TourismCategory = ({
 
   return (
     <div className="Tourism-category">
+      {/* 지역 필터 버튼 그룹 */}
       <div className="Area-group">
         <button
           className="Area-btn"
-          onClick={() => onFilterChange("region", "")} // 필터 변경 시 호출
+          onClick={() => onFilterChange("region", "")} // 전체 선택 시 지역 필터 해제
         >
           전체
         </button>
@@ -67,13 +72,16 @@ const TourismCategory = ({
           <button
             key={region.areacode}
             className="Area-btn"
-            onClick={() => onFilterChange("region", region.areacode)} // 지역 필터 변경
+            onClick={() => onFilterChange("region", region.areacode)} // 지역 선택 시 필터 변경
           >
             {region.name}
           </button>
         ))}
       </div>
+
+      {/* 관광 타입 및 세부 카테고리 필터 */}
       <div className="type-group">
+        {/* 관광 타입 선택 드롭다운 */}
         <div className="tourismType-cat">
           <label htmlFor="tourismType">관광지 타입 선택: </label>
           <select
@@ -94,6 +102,7 @@ const TourismCategory = ({
           </select>
         </div>
 
+        {/* 세부 카테고리 선택 드롭다운 */}
         <div className="subCategory-cat">
           <label htmlFor="subCategory">세부 카테고리 선택: </label>
           <select
