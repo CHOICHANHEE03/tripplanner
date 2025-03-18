@@ -149,7 +149,7 @@ const Schedule = () => {
                   <Link to={`/schedule/${schedule.id}`} className="schedule-card-btn">
                     <div className="schedule-card-content">
                       <div className="schedule-card-header">
-                        <p><strong>작성자:</strong> {schedule.author}</p>
+                        <p><strong>작성자:</strong> {schedule.username}</p>
                         <p className="schedule-date">{schedule.date}</p>
                       </div>
                       <p><strong>제목:</strong> {schedule.title}</p>
