@@ -101,7 +101,7 @@ const Schedule = () => {
 
     if (view === "mine") {
       filteredSchedule = filteredSchedule.filter(
-        (schedule) => schedule.author?.trim() === username?.trim()
+        (schedule) => schedule.username?.trim() === username?.trim()
       );
     }
 

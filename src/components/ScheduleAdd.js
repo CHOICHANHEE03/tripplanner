@@ -7,7 +7,7 @@ import "../css/ScheduleModify.css";
 
 const ScheduleAdd = () => {
     const navigate = useNavigate(); // 페이지 이동을 위한 hook
-    
+
     // 일정 관련 상태 변수
     const [title, setTitle] = useState(""); // 일정 제목
     const [date, setDate] = useState(""); // 일정 날짜
@@ -171,7 +171,7 @@ const ScheduleAdd = () => {
             </div>
             <div className="schedule-input-container">
                 <label htmlFor="date">여행 날짜</label>
-                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} />
+                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} min={new Date().toISOString().split("T")[0]} />
             </div>
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">

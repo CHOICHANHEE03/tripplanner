@@ -1,3 +1,6 @@
+/* isSchedulePage 적용 시 */
+
+/* 검색창을 감싸는 컨테이너 */
 .scheduleContainer {
     display: flex;
     justify-content: center;
@@ -6,6 +9,7 @@
     margin-bottom: 10px;
 }
 
+/* 검색창 레이아웃 박스 */
 .scheduleBox {
     display: flex;
     align-items: center;
@@ -16,6 +20,7 @@
     gap: 10px;
 }
 
+/* 검색창 */
 .scheduleInput {
     flex: 1;
     padding: 8px;
@@ -25,6 +30,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
+/* 검색 버튼 */
 .scheduleButton {
     border: none;
     background: #89D2E6;
@@ -40,14 +46,19 @@
     transition: background 0.3s ease;
 }
 
+/* 검색 버튼 비활성화 */
 .scheduleButton:disabled {
     background: #DAEFF1;
 }
 
+/* 검색 버튼 호버 (활성화일 때) */
 .scheduleButton:hover:not(:disabled) {
     background: #4DC1DF;
 }
 
+/* isSchedulePage 미적용 시 */
+
+/* 검색창을 감싸는 컨테이너 */
 .container {
     display: flex;
     justify-content: center;
@@ -56,6 +67,7 @@
     margin: 50px 0;
 }
 
+/* 검색창 레이아웃 박스 */
 .box {
     display: flex;
     align-items: center;
@@ -68,6 +80,7 @@
     gap: 10px;
 }
 
+/* 검색창 */
 .input {
     flex: 1;
     border: none;
@@ -77,6 +90,7 @@
     background: transparent;
 }
 
+/* 검색 버튼 */
 .button {
     border: none;
     background: #89D2E6;
@@ -92,10 +106,12 @@
     transition: background 0.3s ease;
 }
 
+/* 검색 버튼 비활성화 */
 .button:disabled {
     background: #DAEFF1;
 }
 
+/* 검색 버튼 호버 (활성화일 때) */
 .button:hover:not(:disabled) {
     background: #4DC1DF;
 }

@@ -174,7 +174,7 @@ const ScheduleEdit = () => {
             </div>
             <div className="schedule-input-container">
                 <label htmlFor="date">여행 날짜</label>
-                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} />
+                <input id="date" type="date" className="schedule-input" value={date} onChange={(e) => setDate(e.target.value)} min={new Date().toISOString().split("T")[0]} />
             </div>
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
