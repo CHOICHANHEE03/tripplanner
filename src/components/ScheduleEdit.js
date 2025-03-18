@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { IoCaretBackCircle } from "react-icons/io5";
 import Swal from "sweetalert2";
 import Search from "./Search";
 import "../css/ScheduleModify.css";
@@ -153,6 +154,9 @@ const ScheduleEdit = () => {
 
     return (
         <div className="add-container">
+            <div className="schedule-back-button" onClick={() => navigate(-1)}>
+                <IoCaretBackCircle size={32} />
+            </div>
             <h2 className="add-title">✏️ 일정 수정</h2>
             <div className="schedule-button-container">
                 <button onClick={addSchedule} className="schedule-button">일정 추가</button>

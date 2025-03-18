@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
+import { IoCaretBackCircle } from "react-icons/io5";
 import "../css/ReviewAdd.css";
 
 const ReviewAdd = () => {
-  const navigate = useNavigate(); 
-  const location = useLocation(); 
-  const { productInfo } = location.state || {}; 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { productInfo } = location.state || {};
 
   const [username, setUserName] = useState(null);
   const [rating, setRating] = useState(0);
@@ -63,7 +64,7 @@ const ReviewAdd = () => {
         setContent("");
         setTitle(productInfo?.title || "");
 
-        navigate("/review"); 
+        navigate("/review");
       } else {
         alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
       }
@@ -75,6 +76,9 @@ const ReviewAdd = () => {
   return (
     <div className="review-add-container">
       <div className="review-add-detail-container">
+        <div className="review-back-button" onClick={() => navigate(-1)}>
+          <IoCaretBackCircle size={32} />
+        </div>
         {productInfo && (
           <div className="before-information">
             <div>

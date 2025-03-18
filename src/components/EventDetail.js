@@ -25,24 +25,7 @@ const EventDetail = () => {
         setLoading(false);
       }
     };
-    // 리뷰 관련 데이터는 아직 구현되지 않았으므로, 주석 처리
-    /*
-        const fetchReviewsData = async () => {
-            try {
-                const response = await fetch(`http://localhost:8080/api/reviews/event/${id}`);
-                if (!response.ok) {
-                    throw new Error("리뷰 데이터를 불러오는 데 실패했습니다.");
-                }
-                const data = await response.json();
-                setReviews(data);
-            } catch (error) {
-                setError(error.message);
-            }
-        };
-        */
     fetchEventData();
-    // 리뷰 관련 API 호출도 주석 처리
-    // fetchReviewsData();
   }, [id]);
 
   useEffect(() => {

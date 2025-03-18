@@ -139,7 +139,7 @@ const Home = () => {
 
       {/* 행사 정보 섹션 */}
       <div className="info-section">
-        <h2>행사 정보</h2>
+        <h2>곧 개최될 행사 정보</h2>
         <div className="info-container">
           {loadingEvent ? (
             <p>행사 정보를 불러오는 중입니다...</p>
@@ -180,7 +180,7 @@ const Home = () => {
         </div>
         <p className="info-text">
           더 많은 정보를 보시겠습니까?&nbsp;&nbsp;&nbsp;
-          <button className="info-button" onClick={() => navigate("/events")}>
+          <button className="info-button" onClick={() => navigate("/event")}>
             행사 바로가기
           </button>
         </p>

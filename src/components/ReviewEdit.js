@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
+import { IoCaretBackCircle } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import "../css/ReviewEdit.css";
 import Swal from "sweetalert2";
@@ -109,6 +110,9 @@ const ReviewEdit = () => {
     <div className="review-whole">
       <div className="review-Edit-container">
         <div className="review-edit-detail-container">
+          <div className="review-back-button" onClick={() => navigate(-1)}>
+            <IoCaretBackCircle size={32} />
+          </div>
           <div className="review-header">
             <p>리뷰 수정</p>
           </div>
