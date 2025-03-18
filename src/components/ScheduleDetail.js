@@ -32,15 +32,15 @@ const ScheduleDetail = () => {
                 ].filter(item => item.place && item.details);
 
                 const updatedScheduleItems = await Promise.all(scheduleItems.map(async (item) => {
-                    const tourismData = await fetchTourismData(item.place);
+                    const tourismData = await fetchTourismData(item.place, item.type);
                     return {
                         ...item,
-                        type: typeLabels[item.type] || "알 수 없음",
+                        type: typeLabels[item.type] || (item.type === "0" ? "행사" : "알 수 없음"),
                         imageUrl: tourismData.imageUrl,
                         address: tourismData.address,
                         tel: tourismData.tel
                     };
-                }));
+                }));                
 
                 setScheduleData({
                     id: data.id,
@@ -60,22 +60,26 @@ const ScheduleDetail = () => {
         fetchScheduleData();
     }, [id]);
 
-    const fetchTourismData = async (place) => {
+    const fetchTourismData = async (place, type) => {
         try {
-            const response = await fetch("http://localhost:8080/api/tourism");
-            if (!response.ok) throw new Error("관광지 데이터 검색 실패");
-
+            const apiUrl = type === "0" 
+                ? "http://localhost:8080/api/event"  // 행사 데이터 API
+                : "http://localhost:8080/api/tourism"; // 관광지 데이터 API
+    
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error("데이터 검색 실패");
+    
             const data = await response.json();
             const match = data.content.find(item => item.title === place);
-
+    
             return match ? {
                 imageUrl: match.firstimage || "",
                 address: match.addr1 || "정보 없음",
                 tel: match.tel && match.tel !== "null" ? match.tel : "정보 없음"
-            } : { imageUrl: "", address: "정보 없음", phone: "정보 없음" };
+            } : { imageUrl: "", address: "정보 없음", tel: "정보 없음" };
         } catch (error) {
-            console.error("관광지 데이터 검색 오류:", error);
-            return { imageUrl: "", address: "정보 없음", phone: "정보 없음" };
+            console.error("데이터 검색 오류:", error);
+            return { imageUrl: "", address: "정보 없음", tel: "정보 없음" };
         }
     };
 

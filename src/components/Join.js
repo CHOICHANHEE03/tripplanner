@@ -9,10 +9,9 @@ const Join = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [nickname, setNickname] = useState("");
 
     const handleJoin = async () => {
-        if (!username || !password || !nickname) {
+        if (!username || !password) {
             Swal.fire("회원가입 실패", "모든 필드를 입력해주세요", "error");
             return;
         }
@@ -31,7 +30,7 @@ const Join = () => {
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ username, nickname, password }),
+                        body: JSON.stringify({ username, password }),
                     });
 
                     const data = await response.json();
@@ -68,13 +67,6 @@ const Join = () => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <input
-                        type="text"
-                        placeholder="닉네임을 입력해주세요"
-                        className="input-text"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
-                    />
-                                        <input
                         type="password"
                         placeholder="비밀번호를 입력해주세요"
                         className="input-text"
