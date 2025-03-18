@@ -144,13 +144,13 @@ const MyPage = () => {
   }
 
   const handleEdit = () => {
-    navigate(`/MyPage/edit/${userData.id}`);
+    navigate(`/MyPage/edit/${userData.userId}`);
   };
 
   // "삭제하기" 버튼 클릭 시
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/user/${userData.id}`, {
+      const response = await fetch(`http://localhost:8080/api/user/${userData.userId}`, {
         method: "DELETE",
         credentials: "include",  
       });
