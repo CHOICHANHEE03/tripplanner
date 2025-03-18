@@ -117,7 +117,6 @@ const Home = () => {
               <div key={tourism.id} className="info-box">
                 <img src={tourism.firstimage} alt={tourism.title} className="info-image" />
                 <h3>{tourism.title}</h3>
-                <p className="truncated-text">{tourism.overview}</p>
                 <button
                   className="info-button"
                   onClick={() => navigate(`/tourism/${tourism.id}`)}
