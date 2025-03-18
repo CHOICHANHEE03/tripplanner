@@ -53,7 +53,6 @@ const NavigationBar = () => {
                 <Link className="navbarMenu" to={"/schedule"}>일정관리</Link>
                 {isLoggedIn ? (
                     <>
-                        <Link className="navbarMenu" to={"/mypage"}>마이페이지</Link>
                         <button className="navbarMenu" onClick={handleLogout}>로그아웃</button>
                     </>
                 ) : (

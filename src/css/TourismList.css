@@ -84,12 +84,12 @@
 }
 
 .event-status {
-    color: #439EA7;
+    color: #4DC1DF;
     font-weight: bold;
     padding: 6px 12px;
     background-color: #FDFCEC;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-left: 4px solid #439EA7;
+    border-left: 4px solid #4DC1DF;
     border-radius: 4px;
     display: block;
     text-align: left;
