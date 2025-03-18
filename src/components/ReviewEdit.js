@@ -101,13 +101,13 @@ const ReviewEdit = () => {
       });
 
       if (response.ok) {
-        alert("리뷰가 수정되었습니다.");
+        Swal.fire("수정 완료","리뷰가 수정되었습니다.","success");
         navigate(`/review/${id}`); // 수정된 리뷰 페이지로 이동
       } else {
-        alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
+        Swal.fire("오류","서버 오류가 발생했습니다. 다시 시도해 주세요.","error");
       }
     } catch (error) {
-      alert("서버에 연결할 수 없습니다. 다시 시도해 주세요.");
+      Swal.fire("오류","서버에 연결할 수 없습니다. 다시 시도해 주세요.","error");
     }
   };
 

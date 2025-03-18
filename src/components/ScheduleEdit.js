@@ -122,7 +122,7 @@ const ScheduleEdit = () => {
 
     const handleSubmit = async () => {
         if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
-            Swal.fire("오류", "모든 항목을 입력해주세요.", "error");
+            Swal.fire("알림", "모든 항목을 입력해주세요.", "info");
             return;
         }
 

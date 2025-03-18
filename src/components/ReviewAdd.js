@@ -55,7 +55,7 @@ const ReviewAdd = () => {
   // 리뷰 제출 핸들러
   const handleSubmit = async () => {
     if (rating === 0 || content.length < 15) {
-      alert("평점과 15자 이상의 리뷰를 작성해 주세요.");
+      Swal.fire("알림","평점과 15자 이상의 리뷰를 작성해 주세요.","info");
       return;
     }
 
@@ -69,17 +69,17 @@ const ReviewAdd = () => {
       });
 
       if (response.ok) {
-        alert("리뷰가 성공적으로 등록되었습니다.");
+        Swal.fire("등록 완료", "리뷰가 성공적으로 등록되었습니다.", "success")
         setRating(0);
         setContent("");
         setTitle(productInfo?.title || "");
 
         navigate("/review"); // 리뷰 목록 페이지로 이동
       } else {
-        alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
+        Swal.fire("오류","서버 오류가 발생했습니다. 다시 시도해 주세요.","error");
       }
     } catch (error) {
-      alert("서버에 연결할 수 없습니다. 다시 시도해 주세요.");
+      Swal.fire("오류","서버에 연결할 수 없습니다. 다시 시도해 주세요.","error");
     }
   };
 
