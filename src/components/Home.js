@@ -28,6 +28,7 @@ const Home = () => {
     try {
       const response = await fetch("http://localhost:8080/api/tourism");
       const result = await response.json();
+      console.log("데이터: ", result);
 
       if (result && Array.isArray(result)) {
         const shuffled = [...result].sort(() => 0.5 - Math.random()).slice(0, 3); // 랜덤으로 3개 선택

@@ -25,7 +25,7 @@
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
-    border-radius: 8px;
+    border-radius: 20px;
 }
 
 /* 카드 내용 */
@@ -35,11 +35,12 @@
 }
 /* 카드 내용 안 이미지 스타일 */
 .tourism-firstimage {
-    width: 100%;
+    width: 70%;
     height: 180px;
     object-fit: cover;
     object-position: center;
     border-bottom: 2px solid #DAEFF1;
+    border-radius: 20px;
 }
 
 /* 정보 버튼 스타일 */

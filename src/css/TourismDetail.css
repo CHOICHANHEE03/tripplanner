@@ -4,20 +4,21 @@
     margin: 40px auto;
     padding: 20px;
     border: 2px solid #DAEFF1;
-    border-radius: 8px;
+    border-radius: 20px;
     background: #FFFFFF;
     text-align: center;
 }
 
 /* 관광지 이미지 스타일 */
 .detail-image {
-    width: 80%;
+    width: 60%;
     height: 320px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 20px;
     border-bottom: 2px solid #DAEFF1;
     margin-bottom: 20px;
-}
+
+} 
 
 /* 제목 스타일 */
 .tourism-detail h2 {

@@ -84,6 +84,7 @@
   object-fit: cover;
   object-position: center;
   border-bottom: 2px solid #DAEFF1;
+  border-radius: 20px;
 }
 /*관광지 정보 카드 텍스트 css*/
 .info-text {
