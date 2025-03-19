@@ -72,7 +72,7 @@ const ScheduleEdit = () => {
             if (!eventResponse.ok) throw new Error("행사 검색 실패");
             const eventData = await eventResponse.json();
 
-            foundItem = eventData.content.find(item =>
+            foundItem = eventData.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 

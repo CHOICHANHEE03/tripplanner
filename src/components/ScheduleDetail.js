@@ -78,7 +78,7 @@ const ScheduleDetail = () => {
             if (!response.ok) throw new Error("데이터 검색 실패");
 
             const data = await response.json();
-            const match = data.content.find(item => item.title === place);
+            const match = data.find(item => item.title === place);
 
             return match ? {
                 imageUrl: match.firstimage || "",

@@ -29,8 +29,8 @@ const Home = () => {
       const response = await fetch("http://localhost:8080/api/tourism");
       const result = await response.json();
 
-      if (result && Array.isArray(result.content)) {
-        const shuffled = [...result.content].sort(() => 0.5 - Math.random()).slice(0, 3); // 랜덤으로 3개 선택
+      if (result && Array.isArray(result)) {
+        const shuffled = [...result].sort(() => 0.5 - Math.random()).slice(0, 3); // 랜덤으로 3개 선택
         setTourismData(shuffled);
       }
     } finally {
@@ -45,10 +45,10 @@ const Home = () => {
       const response = await fetch("http://localhost:8080/api/event");
       const result = await response.json();
 
-      if (result && Array.isArray(result.content)) {
+      if (result && Array.isArray(result)) {
         const currentDate = new Date();
 
-        const upcomingEvents = result.content.filter(event => {
+        const upcomingEvents = result.filter(event => {
           const rawStartDate = event.eventStartDate;
           const formattedStartDate = new Date(
             `${rawStartDate.slice(0, 4)}-${rawStartDate.slice(4, 6)}-${rawStartDate.slice(6, 8)}`

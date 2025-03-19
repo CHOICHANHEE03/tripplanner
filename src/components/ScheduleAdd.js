@@ -56,7 +56,7 @@ const ScheduleAdd = () => {
             if (!tourismResponse.ok) throw new Error("관광지 검색 실패");
             const tourismData = await tourismResponse.json();
 
-            let foundItem = tourismData.content.find(item =>
+            let foundItem = tourismData.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 
@@ -70,7 +70,7 @@ const ScheduleAdd = () => {
             if (!eventResponse.ok) throw new Error("행사 검색 실패");
             const eventData = await eventResponse.json();
 
-            foundItem = eventData.content.find(item =>
+            foundItem = eventData.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 

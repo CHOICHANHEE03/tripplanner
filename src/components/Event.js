@@ -7,20 +7,16 @@ import "../css/TourismList.css";
 import "../css/Pagination.css";
 
 const Event = () => {
-  // 상태 관리
-  const [data, setData] = useState([]); // 전체 이벤트 데이터
-  const [filteredData, setFilteredData] = useState([]); // 검색 필터링된 데이터
-  const [totalCount, setTotalCount] = useState(0); // 전체 데이터 개수
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
-  const [pageNumbers, setPageNumbers] = useState([]); // 페이지네이션 번호 리스트
-  const [loading, setLoading] = useState(true); // 데이터 로딩 상태
-  const [username, setUsername] = useState(null); // 로그인된 사용자 이름
-  const [selectedArea, setSelectedArea] = useState(""); // 선택된 지역 코드
-  const [selectedSubCategory, setSelectedSubCategory] = useState(""); // 선택된 서브 카테고리
-  const [currentGroup, setCurrentGroup] = useState(0); // 현재 페이지 그룹
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState(null);
+  const [selectedArea, setSelectedArea] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [itemsPerPage, setItemsPerPage] = useState(9); 
+  const [searchTerm, setSearchTerm] = useState(""); 
 
-  // 사용자 세션 확인
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -42,126 +38,99 @@ const Event = () => {
     checkSession();
   }, []);
 
-  // 이벤트 데이터 가져오기 함수
+  // 행사 데이터 가져오기 함수
   const fetchData = useCallback(async () => {
     setLoading(true);
     const url = new URL("http://localhost:8080/api/event");
     const params = new URLSearchParams();
 
-    // 선택된 필터 값 적용
     if (selectedArea) params.append("areaCode", selectedArea);
     if (selectedSubCategory) params.append("cat2", selectedSubCategory);
 
-    params.append("page", currentPage);
-    params.append("size", 9);
     url.search = params.toString();
 
     try {
       const response = await fetch(url);
       const result = await response.json();
-      setData(result.content);
-      setTotalCount(result.totalCount);
-      setPageNumbers(getPageNumbers(currentPage, Math.ceil(result.totalCount / 9)));
+
+      console.log("API 응답 데이터:", result);  // 응답 데이터 확인
+
+      if (result && result.length > 0) {
+        setData(result);  // 데이터가 배열이라면 바로 설정
+        setFilteredData(result);  // 필터링 데이터도 동일하게 설정
+      } else {
+        console.error("데이터가 없습니다.");
+        setData([]);  // 데이터가 없으면 빈 배열 설정
+        setFilteredData([]);  // 필터링 데이터도 빈 배열
+      }
+    } catch (error) {
+      console.error("데이터 가져오기 오류:", error);
+      setData([]);  // 오류 발생 시 빈 배열로 설정
+      setFilteredData([]);  // 오류 발생 시 빈 배열로 설정
     } finally {
       setLoading(false);
     }
-  }, [currentPage, selectedArea, selectedSubCategory]);
+  }, [selectedArea, selectedSubCategory]);
 
-  // 컴포넌트 마운트 및 필터 변경 시 데이터 가져옴
+  // 데이터가 처음 로드될 때 호출
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // 입력한 검색어로 데이터 필터링
+  // 필터링 로직: 필터가 변경되면 데이터 필터링
   useEffect(() => {
-    if (searchTerm) {
       const filtered = data.filter((item) =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredData(filtered);
-    } else {
-      setFilteredData(data);
-    }
+    setCurrentPage(1);  // 필터 변경 시 첫 페이지로 리셋
   }, [searchTerm, data]);
 
-  // 페이지 번호 그룹을 계산하는 함수 (5개씩 그룹화)
-  const getPageNumbers = (currentPage, totalPages) => {
-    const pageNumbers = [];
-    const startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
-    const endPage = Math.min(startPage + 4, totalPages);
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-    return pageNumbers;
+  // 페이지에 맞는 데이터 가져오기
+  const currentPageData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const getPageNumbers = () => {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
   };
 
-  // 페이지 그룹 변경 핸들러
-  const handleGroupChange = (direction) => {
-    const totalPages = Math.ceil(totalCount / 9);
-    const totalGroups = Math.ceil(totalPages / 5);
-
-    const newGroup = currentGroup + direction;
-
-    if (newGroup >= 0 && newGroup < totalGroups) {
-      setCurrentGroup(newGroup);
-      setCurrentPage(newGroup * 5 + 1);
-    }
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
-  // 필터 변경 핸들러 (지역, 카테고리 변경)
   const handleFilterChange = (filterType, value) => {
     if (filterType === "region") setSelectedArea(value);
     else if (filterType === "subCategory") setSelectedSubCategory(value);
-
-    setCurrentPage(1);
-    setSearchTerm((prevSearchTerm) => prevSearchTerm);
+    setCurrentPage(1);  // 필터 변경 시 첫 페이지로 리셋
   };
 
-  // 검색 핸들러
   const handleSearch = (term) => {
     setSearchTerm(term);
+  setCurrentPage(1); // 검색어 변경 시 첫 페이지로 리셋
 
-    if (term === "") {
-      setFilteredData(data); // 기존 필터 조건에 맞는 데이터를 복원
-    } else {
-      const filtered = data.filter((item) =>
-        item.title.toLowerCase().includes(term.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
-
-    setCurrentPage(1);
-  };
-
-  // 검색어 변경 시 데이터 다시 가져오기
-  useEffect(() => {
-    fetchData();
-  }, [fetchData, searchTerm]);
+  if (term.trim() !== "") {
+    setSelectedArea(""); // 검색어가 있으면 지역을 전체("")로 설정
+  }
+};
 
   return (
     <div className="tourism-list">
-      {/* 검색창 컴포넌트 */}
       <Search onSearch={handleSearch} />
-
-      {/* 이벤트 필터 (지역, 카테고리) */}
       <EventCategory
         selectedRegion={selectedArea}
         selectedSubCategory={selectedSubCategory}
         onFilterChange={handleFilterChange}
       />
-
-      {/* 이벤트 리스트 컴포넌트 */}
-      <EventList data={filteredData} loading={loading} />
-
-      {/* 페이지네이션 컴포넌트 */}
+      <EventList data={currentPageData} loading={loading} />
       {filteredData.length > 0 && (
         <Pagination
           currentPage={currentPage}
-          totalPages={Math.ceil(totalCount / 9)}
-          handlePageChange={setCurrentPage}
-          pageNumbers={pageNumbers}
-          currentGroup={currentGroup}
-          onGroupChange={handleGroupChange}
+          totalPages={Math.ceil(filteredData.length / itemsPerPage)}
+          handlePageChange={handlePageChange}
+          pageNumbers={getPageNumbers()}
         />
       )}
     </div>
