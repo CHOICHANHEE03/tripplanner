@@ -9,7 +9,7 @@ const ScheduleEdit = () => {
     const navigate = useNavigate();
     const { scheduleId } = useParams(); // URL에서 scheduleId를 가져옴
 
-    // 상태 변수 선언
+    // 일정 관련 상태 변수
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
     const [username, setUsername] = useState("");
@@ -18,8 +18,9 @@ const ScheduleEdit = () => {
     const [details, setDetails] = useState(["", "", ""]);
     const [scheduleCount, setScheduleCount] = useState(1);
 
-    // 유형 매핑 객체
+    // 타입 매핑 (코드 → 명칭)
     const typeMapping = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
+    // 타입 매핑 (명칭 → 코드)
     const reverseTypeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
     // 일정 정보를 불러오는 useEffect
@@ -51,10 +52,11 @@ const ScheduleEdit = () => {
         fetchSchedule();
     }, [scheduleId]);
 
-    // 관광지 검색 함수
+    // 관광지 및 행사 검색 함수
     const fetchTourism = async (searchTerm, index) => {
         if (!searchTerm) return;
         try {
+            // 관광지 검색
             const tourismResponse = await fetch("http://localhost:8080/api/tourism");
             if (!tourismResponse.ok) throw new Error("관광지 검색 실패");
             const tourismData = await tourismResponse.json();
@@ -68,6 +70,7 @@ const ScheduleEdit = () => {
                 return;
             }
 
+            // 행사 검색
             const eventResponse = await fetch("http://localhost:8080/api/event");
             if (!eventResponse.ok) throw new Error("행사 검색 실패");
             const eventData = await eventResponse.json();
@@ -120,6 +123,7 @@ const ScheduleEdit = () => {
         }
     };
 
+    // 일정 수정 함수
     const handleSubmit = async () => {
         if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("알림", "모든 항목을 입력해주세요.", "info");
@@ -195,6 +199,7 @@ const ScheduleEdit = () => {
                         isSchedulePage={true}
                         onSearch={(searchTerm) => fetchTourism(searchTerm, index)}
                     />
+                    <p className="schedule-info-text">🔍관광지 및 행사명을 검색하세요</p>
                     <div className="schedule-input-container">
                         <label>타입</label>
                         <input type="text" className="schedule-input" value={types[index]} disabled />

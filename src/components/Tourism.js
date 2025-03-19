@@ -33,7 +33,6 @@ const Tourism = () => {
           setUsername(null);
         }
       } catch (error) {
-        console.error("세션 확인 오류:", error);
         setUsername(null);
       }
     };
@@ -113,7 +112,11 @@ const Tourism = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    setCurrentPage(1);  // 검색어 변경 시 첫 페이지로 리셋
+    setCurrentPage(1); // 검색어 변경 시 첫 페이지로 리셋
+
+    if (term.trim() !== "") {
+      setSelectedArea(""); // 검색어가 있으면 지역을 전체("")로 설정
+    }
   };
 
   return (

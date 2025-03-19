@@ -13,11 +13,12 @@
 .scheduleBox {
     display: flex;
     align-items: center;
-    width: 50%;
+    width: 42.5%;
     max-width: 600px;
     border-radius: 20px;
     padding: 10px 15px;
     gap: 10px;
+    margin-left: 37.5px;
 }
 
 /* 검색창 */

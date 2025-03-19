@@ -71,8 +71,8 @@ const ScheduleDetail = () => {
                     return {
                         ...item,
                         type: typeLabels[item.type] || (item.type === "0" ? "행사" : "알 수 없음"),
-                        imageUrl: tourismData.imageUrl,
-                        address: tourismData.address,
+                        firstimage: tourismData.firstimage,
+                        addr1: tourismData.addr1,
                         tel: tourismData.tel
                     };
                 }));
@@ -106,15 +106,15 @@ const ScheduleDetail = () => {
             if (!response.ok) throw new Error("데이터 검색 실패");
 
             const data = await response.json();
-            const match = data.content.find(item => item.title === place);
+            const match = data.find(item => item.title === place);
 
             return match ? {
-                imageUrl: match.firstimage || "",
-                address: match.addr1 || "정보 없음",
+                firstimage: match.firstimage || "",
+                addr1: match.addr1 || "정보 없음",
                 tel: match.tel && match.tel !== "null" ? match.tel : "정보 없음"
-            } : { imageUrl: "", address: "정보 없음", tel: "정보 없음" };
+            } : { firstimage: "", addr1: "정보 없음", tel: "정보 없음" };
         } catch (error) {
-            return { imageUrl: "", address: "정보 없음", tel: "정보 없음" };
+            return { firstimage: "", addr1: "정보 없음", tel: "정보 없음" };
         }
     };
 
@@ -180,11 +180,11 @@ const ScheduleDetail = () => {
                         {scheduleData.scheduleItems.map((item, index) => (
                             <li key={index} className="schedule-item">
                                 {/* 일정에 대한 이미지 출력 */}
-                                {item.imageUrl && <img src={item.imageUrl} alt={item.place} className="schedule-image" />}
+                                {item.firstimage && <img src={item.firstimage} alt={item.place} className="schedule-image" />}
                                 <p><strong>유형:</strong> {item.type}</p>
                                 <p><strong>장소:</strong> {item.place}</p>
                                 <p><strong>내용:</strong> {item.details}</p>
-                                <p><strong>주소:</strong> {item.address}</p>
+                                <p><strong>주소:</strong> {item.addr1}</p>
                                 {item.tel && item.tel !== "정보 없음" && <p><strong>전화번호:</strong> {item.tel}</p>}
                             </li>
                         ))}

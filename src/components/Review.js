@@ -200,7 +200,7 @@ const Review = () => {
                       >
                         <div className="review-card-content">
                           <div className="review-card-header">
-                            <p className="review-card-text">{review.username}</p>
+                            <p className="review-card-text"> 작성자: {review.username}</p>
                             <p className="review-card-text">{review.createdAt}</p>
                           </div>
                           <div className="review-card-subheader">
