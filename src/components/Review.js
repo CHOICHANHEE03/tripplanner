@@ -169,19 +169,15 @@ const Review = () => {
       <Search onSearch={handleSearch} />
       <p className="search-review-title">🔍관광지 및 행사명을 검색하세요</p>
       <div className="review-list-container">
-        <div>
-          <div>
-            <h2>📄 리뷰 목록</h2>
-            <div className="review-view-select">
-              <label htmlFor="view-selection">리뷰 유형: </label>
-              <select id="view-selection" onChange={handleViewChange} value={view}>
-                <option value="all">전체 리뷰 보기</option>
-                {isAuthenticated && username && (
-                  <option value="mine">내 리뷰 보기</option>
-                )}
-              </select>
-            </div>
-          </div>
+        <h2>📄 리뷰 목록</h2>
+        <div className="review-view-select">
+          <label htmlFor="view-selection">리뷰 유형: </label>
+          <select id="view-selection" onChange={handleViewChange} value={view}>
+            <option value="all">전체 리뷰 보기</option>
+            {isAuthenticated && username && (
+              <option value="mine">내 리뷰 보기</option>
+            )}
+          </select>
         </div>
         {review.length === 0 ? (
           <div className="no-review">
@@ -192,23 +188,25 @@ const Review = () => {
             <div className="review-list-form-container">
               <div className="review-cards-container">
                 {getCurrentPageReview().map((review) => (
-                  <div className="review-card" key={review.review_id}>
-                    <button
-                      onClick={() => handleClick(review.review_id)}
-                      className="review-card-btn"
-                    >
-                      <div className="review-card-content">
-                        <div className="review-card-header">
-                          <p className="review-card-text">👤 작성자: {review.username}</p>
-                          <p className="review-card-text">{review.createdAt}</p>
+                  <div className="review-card-wrapper">
+                    <div className="review-card-subheader">
+                      <p className="review-card-text">{review.title}</p>
+                    </div>
+                    <div className="review-card" key={review.review_id}>
+                      <button
+                        onClick={() => handleClick(review.review_id)}
+                        className="review-card-btn"
+                      >
+                        <div className="review-card-content">
+                          <div className="review-card-header">
+                            <p className="review-card-text">👤 작성자: {review.username}</p>
+                            <p className="review-card-text" style={{ marginLeft: "110px" }}>⭐ 평점: {review.rating}점</p>
+                            <p className="review-card-text">{review.createdAt}</p>
+                          </div>
+                          <p className="review-card-context">{review.content}</p>
                         </div>
-                        <div className="review-card-subheader">
-                          <p className="review-card-text">{review.title}</p>
-                          <p className="review-card-text">⭐ 평점: {review.rating}점</p>
-                        </div>
-                        <p className="review-card-context">{review.content}</p>
-                      </div>
-                    </button>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

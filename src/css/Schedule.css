@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-size: 15px;
 }
 
 /* 검색창 안내문 글자 스타일 */
@@ -82,21 +83,25 @@
     flex-grow: 1;
 }
 
+/* 일정 카드 스타일 */
+.schedule-card-wrapper {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 일정 카드 스타일 효과 */
+.schedule-card-wrapper:hover {
+    transform: translateY(-5px);
+}
+
 /* 개별 일정 카드 스타일 */
 .schedule-card {
     background-color: #FFFFFF;
     border: 1px solid #D6D6D6;
     border-radius: 8px;
-    padding: 15px;
+    padding: 30px 15px 30px 15px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 400px;
     height: auto;
-    transition: transform 0.3s ease-in-out;
-}
-
-/* 개별 일정 카드 스타일 효과 */
-.schedule-card:hover {
-    transform: translateY(-5px);
 }
 
 /* 일정 카드 내부 링크 스타일 */
@@ -125,8 +130,8 @@
     margin: 0;
 }
 
-/* 일정 날짜 글자 스타일 */
-.schedule-date {
+/* 일정 카드 글자 스타일 */
+.schedule-card-text {
     font-weight: bold;
     color: #555;
     white-space: nowrap;
@@ -134,8 +139,7 @@
 
 /* 일정 제목 글자 스타일 */
 .schedule-title {
-    color: #45A7C5;
-    font-size: larger;
+    color: #555;
     font-weight: bold;
     text-align: center;
     margin-top: 10px;
@@ -145,7 +149,10 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-left: 4px solid #45A7C5;
     border-radius: 4px;
-    align-self: center;
+    display: inline-block;
+    max-width: fit-content;
+    text-align: left;
+    margin: 10px auto 10px 0;
 }
 
 /* 일정 추가 버튼 컨테이너 */

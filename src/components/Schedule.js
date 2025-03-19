@@ -184,16 +184,18 @@ const Schedule = () => {
             ) : (
               <div className="schedule-cards-container">
                 {schedule.map((schedule) => (
-                  <div className="schedule-card" key={schedule.id}>
-                    <Link to={`/schedule/${schedule.id}`} className="schedule-card-btn">
-                      <div className="schedule-card-content">
-                        <div className="schedule-card-header">
-                          <p><strong>👤 작성자:</strong> {schedule.username}</p>
-                          <p className="schedule-date">{schedule.date}</p>
+                  <div className="schedule-card-wrapper">
+                    <p className="schedule-title">{schedule.title}</p>
+                    <div className="schedule-card" key={schedule.id}>
+                      <Link to={`/schedule/${schedule.id}`} className="schedule-card-btn">
+                        <div className="schedule-card-content">
+                          <div className="schedule-card-header">
+                            <p className="schedule-card-text">👤 작성자: {schedule.username}</p>
+                            <p className="schedule-card-text">{schedule.date}</p>
+                          </div>
                         </div>
-                        <p className="schedule-title">{schedule.title}</p>
-                      </div>
-                    </Link>
+                      </Link>
+                    </div>
                   </div>
                 ))}
               </div>
