@@ -73,11 +73,12 @@ const ReviewEdit = () => {
   const handleSubmit = async () => {
     // 평점이 없거나, 리뷰 내용이 15자 미만이면 경고 표시
     if (rating === 0 || content.length < 15) {
-      Swal.fire({
-        icon: "error",
-        title: "입력 오류",
-        text: "평점과 15자 이상의 리뷰를 작성해 주세요.",
-      });
+      Swal.fire("알림", "평점과 15자 이상의 리뷰를 작성해 주세요.", "info");
+      return;
+    }
+
+    if (title.length > 15) {
+      Swal.fire("알림", "제목을 15자 이하로 작성해 주세요.", "info");
       return;
     }
 

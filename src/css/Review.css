@@ -11,8 +11,9 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
 /*검색창 안내문 글자 스타일*/
-.search-review-title{
+.search-review-title {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,11 +45,13 @@
     align-items: center;
     margin-bottom: 15px;
 }
+
 /* 필터 선택 영역 유형 글자 스타일 */
 .review-view-select label {
     font-size: 15px;
     margin-right: 10px;
 }
+
 /* 필터 선택 영역 안 셀렉트 스타일 */
 .review-view-select select {
     font-size: 14px;
@@ -62,6 +65,7 @@
     outline: none;
     cursor: pointer;
 }
+
 /* 필터 선택 영역 안 셀렉트 스타일 */
 .review-view-select select option {
     cursor: pointer;
@@ -84,10 +88,13 @@
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: 450px; /* 너비 조정 */
-    height: auto; /* 높이 자동 조정 */
+    width: 450px;
+    /* 너비 조정 */
+    height: auto;
+    /* 높이 자동 조정 */
     transition: transform 0.3s ease-in-out;
 }
+
 /* 개별 리뷰 카드 스타일 효과 */
 .review-card:hover {
     transform: translateY(-5px);
@@ -109,20 +116,36 @@
     flex-direction: column;
     gap: 10px;
 }
-/* 리뷰 카드 내용 상단 스타일 */
+
+/* 첫 줄: 작성자 & 날짜 */
 .review-card-header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    /* 간격 조정 */
 }
-/* 리뷰 카드 내용 상단 글자 스타일 */
-.review-card-header p {
-    margin: 0;
+
+/* 둘째 줄: 제목 & 평점 */
+.review-card-subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
 }
-/* 리뷰 카드 내용 스타일 */
+
+/* 텍스트 스타일 */
 .review-card-text {
     font-weight: bold;
     color: #555;
+    font-size: 15px;
+    margin: 0;
+}
+
+/* 리뷰 내용 스타일 (두 줄 제한) */
+.review-card-context {
+    font-weight: bold;
+    color: #333;
     font-size: 15px;
     margin: 0;
     display: -webkit-box;
@@ -152,6 +175,7 @@
     font-size: 15px;
     transition: background 0.3s ease-in-out;
 }
+
 /* 리뷰 추가 버튼 스타일 효과*/
 .add-review-button:hover {
     background-color: #BBDBE5;

@@ -59,7 +59,7 @@ const ScheduleEdit = () => {
             if (!tourismResponse.ok) throw new Error("관광지 검색 실패");
             const tourismData = await tourismResponse.json();
 
-            let foundItem = tourismData.content.find(item =>
+            let foundItem = tourismData.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 
@@ -123,6 +123,11 @@ const ScheduleEdit = () => {
     const handleSubmit = async () => {
         if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("알림", "모든 항목을 입력해주세요.", "info");
+            return;
+        }
+
+        if (title.length > 15) {
+            Swal.fire("알림", "제목을 15자 이하로 작성해 주세요.", "info");
             return;
         }
 

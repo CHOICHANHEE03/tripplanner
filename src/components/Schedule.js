@@ -105,6 +105,13 @@ const Schedule = () => {
     filterSchedule();
   }, [view, allSchedule, searchTerm]);
 
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * size;
+    const endIndex = startIndex + size;
+    setSchedule(allSchedule.slice(startIndex, endIndex));
+    setTotalPages(Math.ceil(allSchedule.length / size));
+  }, [currentPage, allSchedule]);
+
   const filterSchedule = () => {
     let filteredSchedule = allSchedule;
 
@@ -133,16 +140,14 @@ const Schedule = () => {
     }
 
     setSchedule(filteredSchedule);
+    setCurrentPage(1);
+    setTotalPages(Math.ceil(filteredSchedule.length / size));
   };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-
-    if (term.trim() === "") {
-      setSchedule(allSchedule); // 검색어 없을 때 모든 데이터 복원
-    } else {
-      filterSchedule(); // 필터링 적용
-    }
+    setCurrentPage(1);
+    filterSchedule();
   };
 
   const handlePageChange = (page) => {
@@ -186,7 +191,7 @@ const Schedule = () => {
                           <p><strong>작성자:</strong> {schedule.username}</p>
                           <p className="schedule-date">{schedule.date}</p>
                         </div>
-                        <p><strong>제목:</strong> {schedule.title}</p>
+                        <p className="schedule-title">{schedule.title}</p>
                       </div>
                     </Link>
                   </div>

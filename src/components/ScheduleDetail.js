@@ -13,6 +13,34 @@ const ScheduleDetail = () => {
     const [scheduleData, setScheduleData] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // 현재 로그인한 사용자 정보 가져오기
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+    // 로그인된 사용자 정보 가져오기
+    useEffect(() => {
+        const fetchSession = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/api/session", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                const data = await response.json();
+
+                if (data.authenticated) {
+                    setCurrentUser(data.user);
+                    setIsUserLoggedIn(true);
+                } else {
+                    setIsUserLoggedIn(false);
+                }
+            } catch (error) {
+                setIsUserLoggedIn(false);
+            }
+        };
+
+        fetchSession();
+    }, []);
+
     // 일정 데이터를 가져오는 useEffect
     useEffect(() => {
         const fetchScheduleData = async () => {
@@ -78,7 +106,7 @@ const ScheduleDetail = () => {
             if (!response.ok) throw new Error("데이터 검색 실패");
 
             const data = await response.json();
-            const match = data.find(item => item.title === place);
+            const match = data.content.find(item => item.title === place);
 
             return match ? {
                 imageUrl: match.firstimage || "",
@@ -129,6 +157,9 @@ const ScheduleDetail = () => {
         return <p>해당 일정 정보를 찾을 수 없습니다.</p>;
     }
 
+    // 현재 로그인한 사용자와 일정 작성자가 같은지 확인
+    const isOwner = currentUser && scheduleData && currentUser === scheduleData.username;
+
     return (
         <div className="schedule-detail-container">
             {/* 뒤로 가기 버튼 */}
@@ -162,10 +193,12 @@ const ScheduleDetail = () => {
             )}
 
             {/* 수정 및 삭제 버튼 */}
-            <div className="schedule-detail-buttons">
-                <button onClick={() => navigate(`/schedule/edit/${scheduleData.id}`)} className="schedule-detail-button">수정하기</button>
-                <button onClick={handleDelete} className="schedule-detail-button">삭제하기</button>
-            </div>
+            {isOwner && (
+                <div className="schedule-detail-buttons">
+                    <button onClick={() => navigate(`/schedule/edit/${scheduleData.id}`)} className="schedule-detail-button">수정하기</button>
+                    <button onClick={handleDelete} className="schedule-detail-button">삭제하기</button>
+                </div>
+            )}
         </div>
     );
 };

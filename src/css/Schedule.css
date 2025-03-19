@@ -11,8 +11,9 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
 /*검색창 안내문 글자 스타일*/
-.search-schedule-title{
+.search-schedule-title {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,11 +45,13 @@
     align-items: center;
     margin-bottom: 15px;
 }
+
 /* 필터 선택 영역 스타일 일정 유형 글자*/
 .schedule-view-select label {
     font-size: 15px;
     margin-right: 10px;
 }
+
 /* 필터 선택 영역 스타일 일정 유형 메뉴*/
 .schedule-view-select select {
     font-size: 14px;
@@ -62,6 +65,7 @@
     outline: none;
     cursor: pointer;
 }
+
 /* 필터 선택 영역 스타일 일정 유형 메뉴 글자*/
 .schedule-view-select select option {
     cursor: pointer;
@@ -84,10 +88,13 @@
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: 450px; /* 너비 조정 */
-    height: auto; /* 높이 자동 조정 */
+    width: 450px;
+    /* 너비 조정 */
+    height: auto;
+    /* 높이 자동 조정 */
     transition: transform 0.3s ease-in-out;
 }
+
 /* 개별 일정 카드 스타일 효과 */
 .schedule-card:hover {
     transform: translateY(-5px);
@@ -106,21 +113,31 @@
     flex-direction: column;
     gap: 10px;
 }
+
 /* 일정 카드 제목 글자 컨테이너 정렬 */
 .schedule-card-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 /* 일정 카드 제목 글자 스타일 */
 .schedule-card-header p {
     margin: 0;
 }
+
 /* 일정 날짜 글자 스타일 */
 .schedule-date {
     font-weight: bold;
     color: #555;
     white-space: nowrap;
+}
+
+/* 일정 제목 글자 스타일 */
+.schedule-title {
+    font-size: larger;
+    font-weight: bold;
+    text-align: center;
 }
 
 /* 일정 추가 버튼 컨테이너 */
@@ -142,6 +159,7 @@
     font-size: 15px;
     transition: background 0.3s ease-in-out;
 }
+
 /* 일정 추가 버튼 스타일 효과 */
 .add-schedule-button:hover {
     background-color: #BBDBE5;

@@ -124,6 +124,11 @@ const ScheduleAdd = () => {
             return;
         }
 
+        if (title.length > 15) {
+            Swal.fire("알림", "제목을 15자 이하로 작성해 주세요.", "info");
+            return;
+        }
+
         const scheduleData = {
             title,
             date,

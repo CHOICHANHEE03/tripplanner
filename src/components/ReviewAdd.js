@@ -76,10 +76,10 @@ const ReviewAdd = () => {
 
         navigate("/review"); // 리뷰 목록 페이지로 이동
       } else {
-        Swal.fire("오류","서버 오류가 발생했습니다. 다시 시도해 주세요.","error");
+        Swal.fire("오류", "서버 오류가 발생했습니다. 다시 시도해 주세요.", "error");
       }
     } catch (error) {
-      Swal.fire("오류","서버에 연결할 수 없습니다. 다시 시도해 주세요.","error");
+      Swal.fire("오류", "서버에 연결할 수 없습니다. 다시 시도해 주세요.", "error");
     }
   };
 
@@ -113,7 +113,7 @@ const ReviewAdd = () => {
           </div>
           <div className="reviewform-container">
             <div className="form-title">
-            <h1>상세 리뷰를 작성해주세요.</h1>
+              <h1>상세 리뷰를 작성해주세요.</h1>
             </div>
 
             {/* 별점 입력 */}

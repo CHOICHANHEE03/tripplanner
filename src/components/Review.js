@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import Pagination from "./Pagination";
 import Search from "./Search";
-import "../css/Pagination.css";
+import Pagination from "./Pagination";
 import "../css/Review.css";
+import "../css/Pagination.css";
 
 const Review = () => {
   const [review, setReview] = useState([]); // 필터링된 리뷰 데이터
   const [allReview, setAllReview] = useState([]); // 전체 리뷰 데이터 (누적된 데이터)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState(""); // 세션에서 받아온 사용자 이름
+  const [view, setView] = useState("all"); // 리뷰 보기 방식
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
   const [currentGroup, setCurrentGroup] = useState(0); // 페이지 그룹
-  const [view, setView] = useState("all"); // 리뷰 보기 방식
   const [size, setSize] = useState(5); // 한 페이지 크기
-  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const handleClick = (id) => {
@@ -52,41 +52,21 @@ const Review = () => {
 
   // 페이지네이션된 리뷰 데이터 불러옴
   const fetchReview = async () => {
-    let allFetchedReview = [];
-    let page = 0;
-    let moreDataAvailable = true;
+    try {
+      const response = await fetch("http://localhost:8080/api/review");
+      if (!response.ok) throw new Error("서버 오류");
 
-    // 데이터가 더 이상 없을 때까지 5개씩 페이지네이션
-    while (moreDataAvailable) {
-      try {
-        const response = await fetch(
-          `http://localhost:8080/api/review?page=${page}&size=${size}`
-        );
-        if (!response.ok) throw new Error("서버 오류");
+      const data = await response.json();
 
-        const data = await response.json();
-
-        if (data.content && Array.isArray(data.content)) {
-          allFetchedReview = [...allFetchedReview, ...data.content]; // 데이터 누적
-          if (data.content.length < size) {
-            moreDataAvailable = false; // 더 이상 데이터가 없으면 종료
-          }
-        } else {
-          break;
-        }
-      } catch (error) {
-        Swal.fire(
-          "오류",
-          "리뷰 데이터를 불러오는 중 오류가 발생했습니다.",
-          "error"
-        );
-        break;
+      if (Array.isArray(data)) {
+        setAllReview(data);
+        filterReview(data);
+      } else {
+        throw new Error("데이터 형식 오류");
       }
-      page++; // 다음 페이지로 이동
+    } catch (error) {
+      Swal.fire("오류", "리뷰 데이터를 불러오는 중 오류가 발생했습니다.", "error");
     }
-
-    setAllReview(allFetchedReview); // 모든 리뷰 데이터를 상태에 저장
-    filterReview(allFetchedReview); // 필터링된 리뷰로 상태 업데이트
   };
 
   // 내 리뷰만 필터링하는 함수
@@ -220,19 +200,20 @@ const Review = () => {
                       >
                         <div className="review-card-content">
                           <div className="review-card-header">
-                            <p className="review-card-text">
-                              작성자: {review.username}
-                            </p>
+                            <p className="review-card-text">{review.username}</p>
                             <p className="review-card-text">{review.createdAt}</p>
                           </div>
-                          <p className="review-card-text">제목: {review.title}</p>
-                          <p className="review-card-text">평점: {review.rating}점</p>
-                          <p className="review-card-text">내용: {review.content}</p>
+                          <div className="review-card-subheader">
+                            <p className="review-card-text">{review.title}</p>
+                            <p className="review-card-text">평점: {review.rating}점</p>
+                          </div>
+                          <p className="review-card-context">{review.content}</p>
                         </div>
                       </button>
                     </div>
                   ))}
                 </div>
+
                 {review.length > 0 && (
                   <Pagination
                     currentPage={currentPage}
