@@ -7,23 +7,27 @@ import "../../css/Tourism/TourismList.css";
 import "../../css/Function/Pagination.css";
 
 const Tourism = () => {
-  const [data, setData] = useState([]); 
-  const [filteredData, setFilteredData] = useState([]); 
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
-  const [selectedArea, setSelectedArea] = useState(""); 
-  const [selectedType, setSelectedType] = useState(""); 
-  const [selectedSubCategory, setSelectedSubCategory] = useState(""); 
-  const [currentPage, setCurrentPage] = useState(1); 
-  const [itemsPerPage, setItemsPerPage] = useState(9); 
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [selectedArea, setSelectedArea] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/session", {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
           method: "GET",
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await response.json();
 
@@ -52,7 +56,14 @@ const Tourism = () => {
     url.search = params.toString();
 
     try {
-      const response = await fetch(url);
+      const token = localStorage.getItem("token");
+      const response = await fetch(url, { // JWT가 적용된 URL로 변경
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const result = await response.json();
 
       console.log("API 응답 데이터:", result);  // 응답 데이터 확인

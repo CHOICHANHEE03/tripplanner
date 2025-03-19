@@ -21,8 +21,14 @@ const ReviewEdit = () => {
     if (id) {
       const fetchReview = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/api/review/${id}`); // API 호출
-          if (!response.ok) throw new Error("리뷰를 불러오는 데 실패했습니다.");
+          const token = localStorage.getItem("token");
+          const response = await fetch(`http://localhost:8080/api/review/${id}`, { // JWT가 적용된 URL로 변경
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
           const data = await response.json(); // JSON 데이터 변환
 
           // 기존 리뷰 데이터 설정
@@ -41,9 +47,13 @@ const ReviewEdit = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/session", {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
           method: "GET",
-          credentials: "include", // 쿠키를 포함하여 요청
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await response.json();
 
@@ -93,14 +103,15 @@ const ReviewEdit = () => {
 
     try {
       // API 호출하여 리뷰 수정 요청
-      const response = await fetch(`http://localhost:8080/api/review/${id}`, {
-        method: "PUT",
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:8080/api/review/${id}`, { // JWT가 적용된 URL로 변경
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(reviewData),
       });
-
       if (response.ok) {
         Swal.fire("수정 완료", "리뷰가 수정되었습니다.", "success");
         navigate(`/review/${id}`); // 수정된 리뷰 페이지로 이동

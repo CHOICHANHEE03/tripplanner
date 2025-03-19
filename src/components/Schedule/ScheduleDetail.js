@@ -21,9 +21,13 @@ const ScheduleDetail = () => {
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/session", {
+                const token = localStorage.getItem("token");
+                const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
                     method: "GET",
-                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
                 const data = await response.json();
 
@@ -45,10 +49,14 @@ const ScheduleDetail = () => {
     useEffect(() => {
         const fetchScheduleData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/schedule/${id}`);
-                if (!response.ok) {
-                    throw new Error("데이터를 불러오는 데 실패했습니다.");
-                }
+                const token = localStorage.getItem("token");
+                const response = await fetch(`http://localhost:8080/api/schedule/${id}`, { // JWT가 적용된 URL로 변경
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const data = await response.json();
 
                 // 일정 유형 매핑 (숫자 코드를 한글로 변환)
@@ -101,10 +109,14 @@ const ScheduleDetail = () => {
             const apiUrl = type === "0"
                 ? "http://localhost:8080/api/event"  // 행사 데이터 API
                 : "http://localhost:8080/api/tourism"; // 관광지 데이터 API
-
-            const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error("데이터 검색 실패");
-
+            const token = localStorage.getItem("token");
+            const response = await fetch(apiUrl, { // JWT가 적용된 URL로 변경
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const data = await response.json();
             const match = data.find(item => item.title === place);
 
@@ -131,9 +143,15 @@ const ScheduleDetail = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`http://localhost:8080/api/schedule/${id}`, {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(`http://localhost:8080/api/schedule/${id}`, { // JWT가 적용된 URL로 변경
                         method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
                     });
+
                     if (!response.ok) {
                         throw new Error("삭제에 실패했습니다.");
                     }

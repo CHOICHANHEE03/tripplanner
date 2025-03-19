@@ -29,7 +29,7 @@ const Join = () => {
             if (result.isConfirmed) { // 사용자가 확인 버튼을 클릭한 경우
                 try {
                     // 서버로 회원가입 요청 보내기
-                    const response = await fetch("http://localhost:8080/api/signup", {
+                    const response = await fetch("http://localhost:8080/api/join", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json", // JSON 형식으로 요청 보냄

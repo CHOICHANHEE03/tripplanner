@@ -16,8 +16,14 @@ const TourismDetail = () => {
       setLoading(true);
       try {
         // API 호출을 통해 관광지 데이터 가져오기
-        const response = await fetch(`http://localhost:8080/api/tourism/${id}`);
-        if (!response.ok) throw new Error("데이터를 불러오는 데 실패했습니다."); // 응답 실패 시 에러 발생
+        const token = localStorage.getItem("token");
+        const response = await fetch(`http://localhost:8080/api/event/${id}`, { // JWT가 적용된 URL로 변경
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         setTourism(data); // 가져온 데이터를 상태에 저장
       } catch (error) {
@@ -33,9 +39,13 @@ const TourismDetail = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/session", {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
           method: "GET",
-          credentials: "include", // 쿠키 포함하여 요청
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await response.json();
         if (data.authenticated && data.user) {

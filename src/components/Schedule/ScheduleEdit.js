@@ -27,12 +27,14 @@ const ScheduleEdit = () => {
     useEffect(() => {
         const fetchSchedule = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, {
+                const token = localStorage.getItem("token");
+                const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, { // JWT가 적용된 URL로 변경
                     method: "GET",
-                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
-                if (!response.ok) throw new Error("일정 불러오기 실패");
-
                 const data = await response.json();
                 setTitle(data.title);
                 setDate(data.date);
@@ -57,8 +59,14 @@ const ScheduleEdit = () => {
         if (!searchTerm) return;
         try {
             // 관광지 검색
-            const tourismResponse = await fetch("http://localhost:8080/api/tourism");
-            if (!tourismResponse.ok) throw new Error("관광지 검색 실패");
+            const token = localStorage.getItem("token");
+            const tourismResponse = await fetch("http://localhost:8080/api/tourism", { // JWT가 적용된 URL로 변경
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const tourismData = await tourismResponse.json();
 
             let foundItem = tourismData.find(item =>
@@ -71,8 +79,13 @@ const ScheduleEdit = () => {
             }
 
             // 행사 검색
-            const eventResponse = await fetch("http://localhost:8080/api/event");
-            if (!eventResponse.ok) throw new Error("행사 검색 실패");
+            const eventResponse = await fetch("http://localhost:8080/api/event", { // JWT가 적용된 URL로 변경
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const eventData = await eventResponse.json();
 
             foundItem = eventData.find(item =>
@@ -151,10 +164,14 @@ const ScheduleEdit = () => {
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, {
+            const token = localStorage.getItem("token");
+            const response = await fetch("http://localhost:8080/api/schedule/${scheduleId}", { // JWT가 적용된 URL로 변경
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(scheduleData),
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(scheduleData)
             });
 
             if (!response.ok) throw new Error("서버 요청 실패");

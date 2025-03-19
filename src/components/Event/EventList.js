@@ -10,9 +10,13 @@ const EventList = ({ data, loading }) => {
     // 사용자의 세션을 확인하는 함수
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/session", {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
           method: "GET",
-          credentials: "include", // 쿠키를 포함하여 요청
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const sessionData = await response.json();
         setIsAuthenticated(sessionData.authenticated || false); // 인증 여부 상태 업데이트

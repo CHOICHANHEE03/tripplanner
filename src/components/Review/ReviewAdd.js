@@ -20,9 +20,13 @@ const ReviewAdd = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/session", {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
           method: "GET",
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await response.json();
 
@@ -55,15 +59,17 @@ const ReviewAdd = () => {
   // 리뷰 제출 핸들러
   const handleSubmit = async () => {
     if (rating === 0 || content.length < 15) {
-      Swal.fire("알림","평점과 15자 이상의 리뷰를 작성해 주세요.","info");
+      Swal.fire("알림", "평점과 15자 이상의 리뷰를 작성해 주세요.", "info");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/review", {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8080/api/review", { // JWT가 적용된 URL로 변경
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ rating, content, username, title }),
       });

@@ -16,9 +16,13 @@ const ReviewDetail = () => {
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/session", {
+                const token = localStorage.getItem("token");
+                const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
                     method: "GET",
-                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
                 const data = await response.json();
 
@@ -40,10 +44,14 @@ const ReviewDetail = () => {
     useEffect(() => {
         const fetchReviewData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/review/${id}`);
-                if (!response.ok) {
-                    throw new Error("데이터를 불러오는 데 실패했습니다.");
-                }
+                const token = localStorage.getItem("token");
+                const response = await fetch(`http://localhost:8080/api/review/${id}`, { // JWT가 적용된 URL로 변경
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const data = await response.json();
 
                 if (data) {
@@ -80,8 +88,13 @@ const ReviewDetail = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`http://localhost:8080/api/review/${id}`, {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch("http://localhost:8080/api/review", { // JWT가 적용된 URL로 변경
                         method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
                     });
                     if (!response.ok) {
                         throw new Error("삭제에 실패했습니다.");

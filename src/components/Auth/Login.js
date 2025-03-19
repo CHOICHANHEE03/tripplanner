@@ -33,16 +33,15 @@ const Login = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: "include", // 세션 쿠키 유지
             body: JSON.stringify({ username, password }),
+            credentials: "include",
           });
 
           const data = await response.json();
 
-          // 로그인 성공 시 메인 페이지로 이동, 실패 시 오류 메시지 표시
-          if (response.ok && data.success) {
+          if (response.ok) {
             Swal.fire("로그인 성공!", "환영합니다!", "success");
-            navigate("/");
+            navigate("/"); // 로그인 성공 시 메인 페이지로 이동
           } else {
             Swal.fire("로그인 실패", data.message, "error");
           }
@@ -87,12 +86,16 @@ const Login = () => {
         </div>
 
         {/* 로그인 버튼 */}
-        <button onClick={handleLogin} className="button">로그인</button>
+        <button onClick={handleLogin} className="button">
+          로그인
+        </button>
 
         {/* 회원가입 링크 */}
         <p className="font-text">
           아직 회원가입을 안하셨나요?&nbsp;&nbsp;&nbsp;
-          <Link to="/join" className="join-Btn">회원가입</Link>
+          <Link to="/join" className="join-Btn">
+            회원가입
+          </Link>
         </p>
       </div>
     </div>

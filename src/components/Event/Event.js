@@ -13,16 +13,20 @@ const Event = () => {
   const [username, setUsername] = useState(null);
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); 
-  const [itemsPerPage, setItemsPerPage] = useState(9); 
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/session", {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
           method: "GET",
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await response.json();
 
@@ -50,7 +54,14 @@ const Event = () => {
     url.search = params.toString();
 
     try {
-      const response = await fetch(url);
+      const token = localStorage.getItem("token");
+      const response = await fetch(url, { // JWT가 적용된 URL로 변경
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const result = await response.json();
 
       console.log("API 응답 데이터:", result);  // 응답 데이터 확인
@@ -79,10 +90,10 @@ const Event = () => {
 
   // 필터링 로직: 필터가 변경되면 데이터 필터링
   useEffect(() => {
-      const filtered = data.filter((item) =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredData(filtered);
+    const filtered = data.filter((item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
     setCurrentPage(1);  // 필터 변경 시 첫 페이지로 리셋
   }, [searchTerm, data]);
 
@@ -109,12 +120,12 @@ const Event = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-  setCurrentPage(1); // 검색어 변경 시 첫 페이지로 리셋
+    setCurrentPage(1); // 검색어 변경 시 첫 페이지로 리셋
 
-  if (term.trim() !== "") {
-    setSelectedArea(""); // 검색어가 있으면 지역을 전체("")로 설정
-  }
-};
+    if (term.trim() !== "") {
+      setSelectedArea(""); // 검색어가 있으면 지역을 전체("")로 설정
+    }
+  };
 
   return (
     <div className="tourism-list">

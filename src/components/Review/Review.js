@@ -27,9 +27,13 @@ const Review = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/session", {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/session", { // JWT가 적용된 URL로 변경
           method: "GET",
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await response.json();
 
@@ -53,9 +57,14 @@ const Review = () => {
   // 페이지네이션된 리뷰 데이터 불러옴
   const fetchReview = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/review");
-      if (!response.ok) throw new Error("서버 오류");
-
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8080/api/review", { // JWT가 적용된 URL로 변경
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
 
       if (Array.isArray(data)) {

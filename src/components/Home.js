@@ -43,7 +43,14 @@ const Home = () => {
   const fetchEventData = useCallback(async () => {
     setLoadingEvent(true);
     try {
-      const response = await fetch("http://localhost:8080/api/event");
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8080/api/event", { // JWT가 적용된 URL로 변경
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
