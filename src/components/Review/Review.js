@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import Search from "./Search";
-import Pagination from "./Pagination";
-import "../css/Review.css";
-import "../css/Pagination.css";
+import Search from "../Function/Search";
+import Pagination from "../Function/Pagination";
+import "../../css/Review/Review.css";
+import "../../css/Function/Pagination.css";
 
 const Review = () => {
   const [review, setReview] = useState([]); // 필터링된 리뷰 데이터

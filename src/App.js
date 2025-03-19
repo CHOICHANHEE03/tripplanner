@@ -2,23 +2,22 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 import Home from './components/Home';
-import Tourism from './components/Tourism';
-import TourismDetail from './components/TourismDetail';
-import Event from './components/Event';
-import EventDetail from './components/EventDetail';
-import Review from './components/Review';
-import Schedule from './components/Schedule';
-import ScheduleDetail from './components/ScheduleDetail';
-import ScheduleAdd from './components/ScheduleAdd';
-import ScheduleEdit from './components/ScheduleEdit';
-import Login from './components/Login';
-import Join from './components/Join';
-import NavigationBar from './components/NavigationBar';
-import Footer from './components/Footer';
-import ReviewAdd from './components/ReviewAdd';
-import ReviewDetail from './components/ReviewDetail';
-import ReviewEdit from "./components/ReviewEdit";
-
+import Login from './components/Auth/Login';
+import Join from './components/Auth/Join';
+import Event from './components/Event/Event';
+import EventDetail from './components/Event/EventDetail';
+import Footer from './components/Function/Footer';
+import NavigationBar from './components/Function/NavigationBar';
+import Review from './components/Review/Review';
+import ReviewAdd from './components/Review/ReviewAdd';
+import ReviewDetail from './components/Review/ReviewDetail';
+import ReviewEdit from "./components/Review/ReviewEdit";
+import Schedule from './components/Schedule/Schedule';
+import ScheduleAdd from './components/Schedule/ScheduleAdd';
+import ScheduleDetail from './components/Schedule/ScheduleDetail';
+import ScheduleEdit from './components/Schedule/ScheduleEdit';
+import Tourism from './components/Tourism/Tourism';
+import TourismDetail from './components/Tourism/TourismDetail';
 
 const AppContent = () => {
   const location = useLocation();

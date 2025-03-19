@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
 import { IoCaretBackCircle } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import "../css/ReviewEdit.css";
+import "../../css/Review/ReviewEdit.css";
 import Swal from "sweetalert2";
 
 const ReviewEdit = () => {

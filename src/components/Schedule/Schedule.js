@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import Search from "./Search";
-import Pagination from "./Pagination";
-import "../css/Schedule.css";
+import Search from "../Function/Search";
+import Pagination from "../Function/Pagination";
+import "../../css/Schedule/Schedule.css";
 
 const Schedule = () => {
   const [schedule, setSchedule] = useState([]);

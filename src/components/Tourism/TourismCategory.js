@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/TourismCategory.css";
+import "../../css/Tourism/TourismCategory.css";
 
 // 관광 카테고리를 선택하는 컴포넌트
 const TourismCategory = ({

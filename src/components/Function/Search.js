@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import styles from "../css/Search.module.css";
+import styles from "../../css/Function/Search.module.css";
 
 // Search 컴포넌트 정의, onSearch 함수와 isSchedulePage 여부를 props로 받음
 const Search = ({ onSearch, isSchedulePage = false }) => {

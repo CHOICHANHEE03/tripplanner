@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { PiStarFill, PiStarLight } from "react-icons/pi";
 import { IoCaretBackCircle } from "react-icons/io5";
 import Swal from "sweetalert2";
-import "../css/ReviewAdd.css";
+import "../../css/Review/ReviewAdd.css";
 
 const ReviewAdd = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 hook

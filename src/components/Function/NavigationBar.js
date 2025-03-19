@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../css/NavigationBar.css';
-import logo from '../image/logo.png';
+import '../../css/Function/NavigationBar.css';
+import logo from '../../image/logo.png';
 
 const NavigationBar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 state

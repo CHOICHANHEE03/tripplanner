@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { IoCaretBackCircle } from "react-icons/io5";
 import Swal from "sweetalert2"; // SweetAlert2를 사용하여 경고창을 표시
-import "../css/ScheduleDetail.css";
+import "../../css/Schedule/ScheduleDetail.css";
 
 const ScheduleDetail = () => {
     // URL에서 일정 ID를 가져옴

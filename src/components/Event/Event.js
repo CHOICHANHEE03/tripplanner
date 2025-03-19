@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Pagination from "./Pagination";
+import Pagination from "../Function/Pagination";
 import EventCategory from "./EventCategory";
 import EventList from "./EventList";
-import Search from "./Search";
-import "../css/TourismList.css";
-import "../css/Pagination.css";
+import Search from "../Function/Search";
+import "../../css/Tourism/TourismList.css";
+import "../../css/Function/Pagination.css";
 
 const Event = () => {
   const [data, setData] = useState([]);

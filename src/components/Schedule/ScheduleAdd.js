@@ -1,56 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoCaretBackCircle } from "react-icons/io5";
 import Swal from "sweetalert2";
-import Search from "./Search";
-import "../css/ScheduleModify.css";
+import Search from "../Function/Search";
+import "../../css/Schedule/ScheduleModify.css";
 
-const ScheduleEdit = () => {
-    const navigate = useNavigate();
-    const { scheduleId } = useParams(); // URL에서 scheduleId를 가져옴
+const ScheduleAdd = () => {
+    const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
     // 일정 관련 상태 변수
-    const [title, setTitle] = useState("");
-    const [date, setDate] = useState("");
-    const [username, setUsername] = useState("");
-    const [types, setTypes] = useState(["", "", ""]);
-    const [places, setPlaces] = useState(["", "", ""]);
-    const [details, setDetails] = useState(["", "", ""]);
-    const [scheduleCount, setScheduleCount] = useState(1);
+    const [title, setTitle] = useState(""); // 일정 제목
+    const [date, setDate] = useState(""); // 일정 날짜
+    const [username, setUsername] = useState(""); // 사용자 이름
+    const [types, setTypes] = useState(["", "", ""]); // 장소 타입
+    const [places, setPlaces] = useState(["", "", ""]); // 장소명
+    const [details, setDetails] = useState(["", "", ""]); // 상세 설명
+    const [scheduleCount, setScheduleCount] = useState(1); // 일정 개수
 
     // 타입 매핑 (코드 → 명칭)
     const typeMapping = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
     // 타입 매핑 (명칭 → 코드)
     const reverseTypeMapping = { "관광지": "12", "문화시설": "14", "레포츠": "28" };
 
-    // 일정 정보를 불러오는 useEffect
+    // 사용자 로그인 확인
     useEffect(() => {
-        const fetchSchedule = async () => {
+        const fetchUser = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, {
+                const response = await fetch("http://localhost:8080/api/session", {
                     method: "GET",
-                    credentials: "include",
+                    credentials: "include"
                 });
-                if (!response.ok) throw new Error("일정 불러오기 실패");
-
                 const data = await response.json();
-                setTitle(data.title);
-                setDate(data.date);
-                setUsername(data.username);
-                setTypes([
-                    typeMapping[data.type1] || "",
-                    typeMapping[data.type2] || "",
-                    typeMapping[data.type3] || ""
-                ]);
-                setPlaces([data.place1, data.place2, data.place3]);
-                setDetails([data.details1, data.details2, data.details3]);
-                setScheduleCount(data.type3 ? 3 : data.type2 ? 2 : 1);
+
+                if (data.authenticated) {
+                    setUsername(data.user);
+                } else {
+                    Swal.fire("오류", "로그인이 필요합니다.", "error");
+                    navigate("/login");
+                }
             } catch (error) {
-                Swal.fire("오류", "일정 정보를 불러오는 중 오류가 발생했습니다.", "error");
+                Swal.fire("오류", "로그인 확인 중 오류가 발생했습니다.", "error");
+                navigate("/login");
             }
         };
-        fetchSchedule();
-    }, [scheduleId]);
+
+        fetchUser();
+    }, [navigate]);
 
     // 관광지 및 행사 검색 함수
     const fetchTourism = async (searchTerm, index) => {
@@ -85,13 +80,12 @@ const ScheduleEdit = () => {
             }
 
             Swal.fire("검색 실패", "일치하는 관광지나 행사가 없습니다.", "warning");
-
         } catch (error) {
             Swal.fire("오류", "검색 중 문제가 발생했습니다.", "error");
         }
     };
 
-    // 일정 항목 업데이트 함수
+    // 일정 필드 업데이트 함수
     const updateScheduleFields = (index, place, type) => {
         const updatedPlaces = [...places];
         updatedPlaces[index] = place;
@@ -102,7 +96,7 @@ const ScheduleEdit = () => {
         setTypes(updatedTypes);
     };
 
-    // 일정 추가 함수
+    // 일정 추가
     const addSchedule = () => {
         if (scheduleCount < 3) {
             setScheduleCount(scheduleCount + 1);
@@ -111,7 +105,7 @@ const ScheduleEdit = () => {
         }
     };
 
-    // 일정 삭제 함수
+    // 일정 삭제
     const removeSchedule = () => {
         if (scheduleCount > 1) {
             setScheduleCount(scheduleCount - 1);
@@ -123,7 +117,7 @@ const ScheduleEdit = () => {
         }
     };
 
-    // 일정 수정 함수
+    // 일정 등록 함수
     const handleSubmit = async () => {
         if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("알림", "모든 항목을 입력해주세요.", "info");
@@ -140,26 +134,26 @@ const ScheduleEdit = () => {
             date,
             username,
             type1: types[0] === "행사" ? "0" : reverseTypeMapping[types[0]] || "",
-            place1: places[0] || "",
-            details1: details[0] || "",
-            type2: scheduleCount > 1 ? (types[1] === "행사" ? "0" : reverseTypeMapping[types[1]] || "") : "",
-            place2: scheduleCount > 1 ? places[1] || "" : "",
-            details2: scheduleCount > 1 ? details[1] || "" : "",
-            type3: scheduleCount > 2 ? (types[2] === "행사" ? "0" : reverseTypeMapping[types[2]] || "") : "",
-            place3: scheduleCount > 2 ? places[2] || "" : "",
-            details3: scheduleCount > 2 ? details[2] || "" : "",
+            place1: places[0],
+            details1: details[0],
+            type2: types[1] === "행사" ? "0" : reverseTypeMapping[types[1]] || "",
+            place2: places[1],
+            details2: details[1],
+            type3: types[2] === "행사" ? "0" : reverseTypeMapping[types[2]] || "",
+            place3: places[2],
+            details3: details[2]
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, {
-                method: "PUT",
+            const response = await fetch("http://localhost:8080/api/schedule", {
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(scheduleData),
+                body: JSON.stringify(scheduleData)
             });
 
             if (!response.ok) throw new Error("서버 요청 실패");
 
-            Swal.fire("수정 완료", "일정이 성공적으로 수정되었습니다.", "success");
+            Swal.fire("등록 완료", "일정이 성공적으로 등록되었습니다.", "success");
             navigate("/schedule");
         } catch (error) {
             Swal.fire("오류", "서버 요청 실패", "error");
@@ -180,7 +174,7 @@ const ScheduleEdit = () => {
             <div className="schedule-back-button" onClick={() => navigate(-1)}>
                 <IoCaretBackCircle size={32} />
             </div>
-            <h2 className="add-title">✏️ 일정 수정</h2>
+            <h2 className="add-title">🚎 일정 등록</h2>
             <div className="schedule-button-container">
                 <button onClick={addSchedule} className="schedule-button">일정 추가</button>
                 <button onClick={removeSchedule} className="schedule-button">일정 삭제</button>
@@ -195,11 +189,7 @@ const ScheduleEdit = () => {
             </div>
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
-                    <Search
-                        isSchedulePage={true}
-                        onSearch={(searchTerm) => fetchTourism(searchTerm, index)}
-                    />
-                    <p className="schedule-info-text">🔍관광지 및 행사명을 검색하세요</p>
+                    <Search isSchedulePage={true} onSearch={(searchTerm) => fetchTourism(searchTerm, index)} />
                     <div className="schedule-input-container">
                         <label>타입</label>
                         <input type="text" className="schedule-input" value={types[index]} disabled />
@@ -215,9 +205,9 @@ const ScheduleEdit = () => {
                     </div>
                 </div>
             ))}
-            <button onClick={handleSubmit} className="schedule-button">일정 수정하기</button>
+            <button onClick={handleSubmit} className="schedule-button">일정 등록하기</button>
         </div>
     );
 };
 
-export default ScheduleEdit;
+export default ScheduleAdd;

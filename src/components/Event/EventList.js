@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/TourismList.css"; // 스타일 파일 불러오기
+import "../../css/Tourism/TourismList.css"; // 스타일 파일 불러오기
 
 const EventList = ({ data, loading }) => {
   const navigate = useNavigate(); // 페이지 이동을 위한 네비게이트 함수

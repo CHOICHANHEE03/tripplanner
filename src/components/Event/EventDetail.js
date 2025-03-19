@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../css/TourismDetail.css";
+import "../../css/Tourism/TourismDetail.css";
 
 const EventDetail = () => {
   const { id } = useParams(); // URL에서 이벤트 ID를 가져옴

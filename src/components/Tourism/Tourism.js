@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Pagination from "./Pagination";
-import TourismCategory from "./TourismCategory";
-import TourismList from "./TourismList";
-import Search from "./Search";
-import "../css/TourismList.css";
-import "../css/Pagination.css";
+import Pagination from "../Function/Pagination";
+import TourismCategory from "../Tourism/TourismCategory";
+import TourismList from "../Tourism/TourismList";
+import Search from "../Function/Search";
+import "../../css/Tourism/TourismList.css";
+import "../../css/Function/Pagination.css";
 
 const Tourism = () => {
   const [data, setData] = useState([]); 

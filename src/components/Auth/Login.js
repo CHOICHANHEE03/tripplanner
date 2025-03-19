@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoCaretBackCircle } from "react-icons/io5";
 import Swal from "sweetalert2";
-import logo from "../image/logo.png";
-import "../css/LoginJoin.css";
+import logo from "../../image/logo.png";
+import "../../css/LoginJoin.css";
 
 const Login = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 네비게이트 함수
