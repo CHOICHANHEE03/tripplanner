@@ -30,7 +30,7 @@ const ReviewEdit = () => {
           setContent(data.content);
           setTitle(data.title);
         } catch (error) {
-          console.error(error);
+          // 오류 발생 시 무시
         }
       };
       fetchReview();
@@ -101,13 +101,13 @@ const ReviewEdit = () => {
       });
 
       if (response.ok) {
-        Swal.fire("수정 완료","리뷰가 수정되었습니다.","success");
+        Swal.fire("수정 완료", "리뷰가 수정되었습니다.", "success");
         navigate(`/review/${id}`); // 수정된 리뷰 페이지로 이동
       } else {
-        Swal.fire("오류","서버 오류가 발생했습니다. 다시 시도해 주세요.","error");
+        Swal.fire("오류", "서버 오류가 발생했습니다. 다시 시도해 주세요.", "error");
       }
     } catch (error) {
-      Swal.fire("오류","서버에 연결할 수 없습니다. 다시 시도해 주세요.","error");
+      Swal.fire("오류", "서버에 연결할 수 없습니다. 다시 시도해 주세요.", "error");
     }
   };
 
@@ -165,6 +165,7 @@ const ReviewEdit = () => {
                 onChange={handleReviewChange}
                 placeholder="내용 15자 이상 기입해주세요."
                 className="reviewform-text"
+                spellCheck="false"
                 rows="5"
                 cols="50"
               />

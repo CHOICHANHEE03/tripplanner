@@ -3,6 +3,7 @@
     display: flex;
     justify-content: center;
 }
+
 /*리뷰 작성 컨포넌트 상단 제목 css*/
 .review-header {
     width: 100%;
@@ -12,6 +13,7 @@
     padding: 0;
     margin-top: 10px;
 }
+
 /*리뷰 페이지 전체 안 div css*/
 .review-add-detail-container {
     display: flex;
@@ -25,6 +27,7 @@
     height: 830px;
     position: relative;
 }
+
 /*리뷰 작성하는 장소 컨포넌트 css*/
 .before-information {
     display: flex;
@@ -38,6 +41,7 @@
     width: 550px;
     height: 250px;
 }
+
 /*리뷰 작성하는 장소 컨포넌트 안 이미지 css*/
 .before-img {
     width: 100%;
@@ -45,10 +49,12 @@
     object-fit: cover;
     object-position: center;
 }
+
 /*리뷰 작성하는 장소 컨포넌트 안 타이틀 css*/
 .before-title {
     padding-left: 40px;
 }
+
 /*리뷰 작성하는 카드 안 타이틀 css*/
 .form-title {
     font-size: 13px;
@@ -65,12 +71,14 @@
     font-size: 16px;
     cursor: pointer;
 }
+
 /*리뷰 작성하는 평점 별 css*/
 .star-lg {
     color: yellow;
     font-size: 35px;
     transition: color 0.3s ease;
 }
+
 /*리뷰 작성하는 평점 별끼리 위치css*/
 .stars,
 .star-text-container {
@@ -78,11 +86,13 @@
     justify-content: center;
     align-items: center;
 }
+
 /*리뷰 작성하는 평점 별끼리 너비 css*/
 .stars {
     padding-top: 5px;
     padding-left: 5px;
 }
+
 /*리뷰 작성하는 폼 컨테이너 css*/
 .reviewform-container {
     display: flex;
@@ -94,19 +104,23 @@
     border-radius: 10px;
     border: 2px solid #D6D6D6;
 }
+
 /*리뷰 작성하는 폼 상단 제목 css*/
 .review-header {
     font-size: 20px;
     margin-bottom: 17px;
 }
+
 /*리뷰 작성하는 폼 작성 css*/
 .star-text-container {
     margin-bottom: 20px;
 }
+
 /*리뷰 작성하라는 폼 제목 css*/
 .review-title {
     margin-bottom: 30px;
 }
+
 /*리뷰 작성하는 폼 작성 제목 css*/
 .reviewform-title {
     width: 350px;
@@ -115,6 +129,7 @@
     padding-right: 10px;
     margin-left: 10px;
 }
+
 /*리뷰 작성하는 폼 작성 내용 css*/
 .reviewform-text {
     width: 350px;
@@ -123,12 +138,18 @@
     line-height: 1.5;
     margin-left: 10px;
     outline: none;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    resize: none;
 }
+
 /*리뷰 작성하는 폼 작성 상자 효과 css*/
 input:focus,
 select:focus {
     outline: none;
 }
+
 /*리뷰 작성하는 폼 작성 버튼 css*/
 .reviewform-btn {
     background: #DAEFF1;

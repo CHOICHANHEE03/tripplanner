@@ -191,11 +191,12 @@ const ScheduleAdd = () => {
                     </div>
                     <div className="schedule-input-container">
                         <label>내용</label>
-                        <input type="text" className="schedule-input" value={details[index]} onChange={(e) => {
-                            const updatedDetails = [...details];
-                            updatedDetails[index] = e.target.value;
-                            setDetails(updatedDetails);
-                        }} />
+                        <textarea className="schedule-inputarea" value={details[index]}
+                            spellCheck="false" rows="5" cols="50" onChange={(e) => {
+                                const updatedDetails = [...details];
+                                updatedDetails[index] = e.target.value;
+                                setDetails(updatedDetails);
+                            }} />
                     </div>
                 </div>
             ))}

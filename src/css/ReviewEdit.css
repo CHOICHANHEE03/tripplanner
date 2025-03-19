@@ -3,12 +3,14 @@
     display: flex;
     justify-content: center;
 }
+
 /*리뷰 수정 전체 감싸는 컨테이너 css*/
 .review-edit-container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 /*리뷰 수정 상세정보 감싸는  컨테이너 css*/
 .review-edit-detail-container {
     display: flex;
@@ -24,6 +26,7 @@
     padding-bottom: 10px;
     position: relative;
 }
+
 /*리뷰 수정 제목 컨테이너 css*/
 .review-header {
     width: 100%;
@@ -32,8 +35,6 @@
     justify-content: center;
     padding: 0;
     margin-top: 10px;
-
-
 }
 
 /* 뒤로 가기 버튼 스타일 */
@@ -47,12 +48,14 @@
     font-size: 16px;
     cursor: pointer;
 }
+
 /* 평점 별 스타일 */
 .star-lg {
     color: yellow;
     font-size: 35px;
     transition: color 0.3s ease;
 }
+
 /* 평점 별끼리 정렬 컨포넌트 스타일 */
 .stars,
 .star-text-container {
@@ -60,12 +63,14 @@
     justify-content: center;
     align-items: center;
 }
+
 /* 평점 별끼리 정렬 컨포넌트 스타일 */
 .stars {
     padding-top: 5px;
     padding-left: 5px;
     cursor: pointer;
 }
+
 /* 리뷰 수정 폼 컨테이너 */
 .reviewform-container {
     display: flex;
@@ -78,19 +83,23 @@
     border: 2px solid #D6D6D6;
 
 }
+
 /* 리뷰 수정 폼 수정 글자 */
 .review-header {
     font-size: 20px;
     margin-bottom: 17px;
 }
+
 /* 리뷰 수정 폼 평점 컨테이너 */
 .star-text-container {
     margin-bottom: 20px;
 }
+
 /* 리뷰 수정 폼 제목 컨테이너 */
 .review-title {
     margin-bottom: 30px;
 }
+
 /* 리뷰 수정 폼 제목 안 input 컨테이너 */
 .reviewform-title {
     width: 350px;
@@ -99,6 +108,7 @@
     padding-right: 10px;
     margin-left: 10px;
 }
+
 /* 리뷰 수정 폼 내용 안  컨테이너 */
 .reviewform-text {
     width: 350px;
@@ -107,12 +117,18 @@
     line-height: 1.5;
     margin-left: 10px;
     outline: none;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    resize: none;
 }
+
 /* 리뷰 수정 폼 상자 테두리줄 효과 */
 input:focus,
 select:focus {
     outline: none;
 }
+
 /* 리뷰 수정 폼 상자 버튼 */
 .reviewform-btn {
     background: #DAEFF1;

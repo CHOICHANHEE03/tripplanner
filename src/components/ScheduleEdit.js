@@ -131,30 +131,29 @@ const ScheduleEdit = () => {
             date,
             username,
             type1: types[0] === "행사" ? "0" : reverseTypeMapping[types[0]] || "",
-            place1: places[0],
-            details1: details[0],
-            type2: types[1] === "행사" ? "0" : reverseTypeMapping[types[1]] || "",
-            place2: places[1],
-            details2: details[1],
-            type3: types[2] === "행사" ? "0" : reverseTypeMapping[types[2]] || "",
-            place3: places[2],
-            details3: details[2]
+            place1: places[0] || "",
+            details1: details[0] || "",
+            type2: scheduleCount > 1 ? (types[1] === "행사" ? "0" : reverseTypeMapping[types[1]] || "") : "",
+            place2: scheduleCount > 1 ? places[1] || "" : "",
+            details2: scheduleCount > 1 ? details[1] || "" : "",
+            type3: scheduleCount > 2 ? (types[2] === "행사" ? "0" : reverseTypeMapping[types[2]] || "") : "",
+            place3: scheduleCount > 2 ? places[2] || "" : "",
+            details3: scheduleCount > 2 ? details[2] || "" : "",
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/schedule", {
-                method: "POST",
+            const response = await fetch(`http://localhost:8080/api/schedule/${scheduleId}`, {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(scheduleData)
+                body: JSON.stringify(scheduleData),
             });
 
             if (!response.ok) throw new Error("서버 요청 실패");
 
-            Swal.fire("등록 완료", "일정이 성공적으로 등록되었습니다.", "success");
+            Swal.fire("수정 완료", "일정이 성공적으로 수정되었습니다.", "success");
             navigate("/schedule");
         } catch (error) {
             Swal.fire("오류", "서버 요청 실패", "error");
-            console.error("Error submitting schedule:", error);
         }
     };
 
@@ -197,11 +196,12 @@ const ScheduleEdit = () => {
                     </div>
                     <div className="schedule-input-container">
                         <label>내용</label>
-                        <input type="text" className="schedule-input" value={details[index]} onChange={(e) => {
-                            const updatedDetails = [...details];
-                            updatedDetails[index] = e.target.value;
-                            setDetails(updatedDetails);
-                        }} />
+                        <textarea className="schedule-inputarea" value={details[index]}
+                            spellCheck="false" rows="5" cols="50" onChange={(e) => {
+                                const updatedDetails = [...details];
+                                updatedDetails[index] = e.target.value;
+                                setDetails(updatedDetails);
+                            }} />
                     </div>
                 </div>
             ))}

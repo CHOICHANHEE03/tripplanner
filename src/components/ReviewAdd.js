@@ -154,6 +154,7 @@ const ReviewAdd = () => {
                 onChange={handleReviewChange}
                 placeholder="내용 15자 이상 기입해주세요."
                 className="reviewform-text"
+                spellCheck="false"
                 rows="5"
                 cols="50"
               />

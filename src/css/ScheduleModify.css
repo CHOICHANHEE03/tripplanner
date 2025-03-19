@@ -48,6 +48,22 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
+/* textarea 입력 필드 기본 스타일 */
+.schedule-inputarea {
+    width: 40%;
+    min-width: 150px;
+    padding: 8px;
+    border: 1px solid #D6D6D6;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    resize: vertical;
+    max-height: 200px;
+}
+
 /* 선택 박스 스타일 조정 */
 select.schedule-input {
     width: 42.5%;

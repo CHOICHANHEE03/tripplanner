@@ -37,7 +37,6 @@ const Tourism = () => {
           setUsername(null);
         }
       } catch (error) {
-        console.error("세션 확인 오류:", error);
         setUsername(null);
       }
     };
@@ -65,8 +64,6 @@ const Tourism = () => {
       setData(result.content);
       setTotalCount(result.totalCount);
       setPageNumbers(getPageNumbers(currentPage, Math.ceil(result.totalCount / 9)));
-    } catch (error) {
-      console.error("데이터 가져오기 오류:", error);
     } finally {
       setLoading(false);
     }
