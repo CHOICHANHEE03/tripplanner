@@ -58,18 +58,33 @@ const ScheduleEdit = () => {
     const fetchTourism = async (searchTerm, index) => {
         if (!searchTerm) return;
         try {
-            // 관광지 검색
             const token = localStorage.getItem("token");
-            const tourismResponse = await fetch("http://localhost:8080/api/tourism", { // JWT가 적용된 URL로 변경
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const tourismData = await tourismResponse.json();
 
-            let foundItem = tourismData.find(item =>
+            // 관광지 및 행사 데이터 동시 요청
+            const [tourismResponse, eventResponse] = await Promise.all([
+                fetch(`http://localhost:8080/api/tourism?page=${currentPage - 1}&size=${itemsPerPage}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }),
+                fetch(`http://localhost:8080/api/event?page=${currentPage - 1}&size=${itemsPerPage}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+            ]);
+
+            const [tourismData, eventData] = await Promise.all([
+                tourismResponse.json(),
+                eventResponse.json()
+            ]);
+
+            // 관광지 검색
+            let foundItem = tourismData?.data?.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 
@@ -79,16 +94,7 @@ const ScheduleEdit = () => {
             }
 
             // 행사 검색
-            const eventResponse = await fetch("http://localhost:8080/api/event", { // JWT가 적용된 URL로 변경
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const eventData = await eventResponse.json();
-
-            foundItem = eventData.find(item =>
+            foundItem = eventData?.data?.find(item =>
                 item.title.toLowerCase() === searchTerm.toLowerCase()
             );
 
@@ -98,13 +104,12 @@ const ScheduleEdit = () => {
             }
 
             Swal.fire("검색 실패", "일치하는 관광지나 행사가 없습니다.", "warning");
-
         } catch (error) {
             Swal.fire("오류", "검색 중 문제가 발생했습니다.", "error");
         }
     };
 
-    // 일정 항목 업데이트 함수
+    // 일정 필드 업데이트 함수
     const updateScheduleFields = (index, place, type) => {
         const updatedPlaces = [...places];
         updatedPlaces[index] = place;
@@ -115,7 +120,7 @@ const ScheduleEdit = () => {
         setTypes(updatedTypes);
     };
 
-    // 일정 추가 함수
+    // 일정 추가
     const addSchedule = () => {
         if (scheduleCount < 3) {
             setScheduleCount(scheduleCount + 1);
@@ -124,7 +129,7 @@ const ScheduleEdit = () => {
         }
     };
 
-    // 일정 삭제 함수
+    // 일정 삭제
     const removeSchedule = () => {
         if (scheduleCount > 1) {
             setScheduleCount(scheduleCount - 1);
@@ -136,7 +141,7 @@ const ScheduleEdit = () => {
         }
     };
 
-    // 일정 수정 함수
+    // 일정 수정
     const handleSubmit = async () => {
         if (!title || !date || places.every(p => !p) || details.every(d => !d)) {
             Swal.fire("알림", "모든 항목을 입력해주세요.", "info");

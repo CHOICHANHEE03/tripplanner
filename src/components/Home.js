@@ -21,69 +21,87 @@ const Home = () => {
   const [eventData, setEventData] = useState([]); // 행사 데이터 상태
   const [loadingTourism, setLoadingTourism] = useState(true); // 관광지 데이터 로딩 상태
   const [loadingEvent, setLoadingEvent] = useState(true); // 행사 데이터 로딩 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
 
   // 관광지 데이터를 불러오는 함수
   const fetchTourismData = useCallback(async () => {
     setLoadingTourism(true);
-    try {
-      const response = await fetch("http://localhost:8080/api/tourism");
-      const result = await response.json();
-      console.log("데이터: ", result);
 
-      if (result && Array.isArray(result)) {
-        const shuffled = [...result].sort(() => 0.5 - Math.random()).slice(0, 3); // 랜덤으로 3개 선택
-        setTourismData(shuffled);
+    try {
+      const url = new URL("http://localhost:8080/api/tourism");
+      const params = new URLSearchParams();
+      params.append("page", currentPage - 1); // API는 0-based 페이지 인덱스 사용
+      params.append("size", itemsPerPage);
+
+      url.search = params.toString();
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+      if (result && result.data) {
+        setTourismData(result.data);
+      } else {
+        setTourismData([]);
       }
+    } catch (error) {
+      setTourismData([]);
     } finally {
       setLoadingTourism(false);
     }
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
   // 행사 데이터를 불러오는 함수
   const fetchEventData = useCallback(async () => {
     setLoadingEvent(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/api/event", { // JWT가 적용된 URL로 변경
+      const url = new URL("http://localhost:8080/api/event");
+      const params = new URLSearchParams();
+      params.append("page", currentPage - 1);
+      params.append("size", itemsPerPage);
+
+      url.search = params.toString();
+      const response = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
+
       const result = await response.json();
-
-      if (result && Array.isArray(result)) {
+      if (result && result.data) {
+        // "곧 개최될 행사" 필터링
         const currentDate = new Date();
-
-        const upcomingEvents = result.filter(event => {
-          const rawStartDate = event.eventStartDate;
-          const formattedStartDate = new Date(
-            `${rawStartDate.slice(0, 4)}-${rawStartDate.slice(4, 6)}-${rawStartDate.slice(6, 8)}`
+        const upcomingEvents = result.data.filter(event => {
+          const eventDate = new Date(
+            `${event.eventStartDate.slice(0, 4)}-${event.eventStartDate.slice(4, 6)}-${event.eventStartDate.slice(6, 8)}`
           );
-          return formattedStartDate >= currentDate; // 현재 날짜 이후의 이벤트만 선택
+          return eventDate >= currentDate;
         });
 
-        upcomingEvents.sort((a, b) => {
-          const dateA = new Date(
-            `${a.eventStartDate.slice(0, 4)}-${a.eventStartDate.slice(4, 6)}-${a.eventStartDate.slice(6, 8)}`
-          );
-          const dateB = new Date(
-            `${b.eventStartDate.slice(0, 4)}-${b.eventStartDate.slice(4, 6)}-${b.eventStartDate.slice(6, 8)}`
-          );
-          return dateA - dateB; // 이벤트 시작 날짜 기준으로 정렬
-        });
-
-        setEventData(upcomingEvents.slice(0, 3)); // 상위 3개의 이벤트만 저장
+        // 정렬 및 저장
+        upcomingEvents.sort((a, b) => new Date(a.eventStartDate) - new Date(b.eventStartDate));
+        setEventData(upcomingEvents);
+      } else {
+        setEventData([]);
       }
+    } catch (error) {
+      setEventData([]);
     } finally {
       setLoadingEvent(false);
     }
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
+  // 데이터 다시 불러오기 (페이지 변경 시)
   useEffect(() => {
-    fetchTourismData(); // 관광지 데이터 불러오기
-    fetchEventData(); // 행사 데이터 불러오기
+    fetchTourismData();
+    fetchEventData();
   }, [fetchTourismData, fetchEventData]);
 
   return (
