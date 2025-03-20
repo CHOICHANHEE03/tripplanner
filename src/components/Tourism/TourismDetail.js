@@ -17,7 +17,7 @@ const TourismDetail = () => {
       try {
         // API 호출을 통해 관광지 데이터 가져오기
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:8080/api/event/${id}`, { // JWT가 적용된 URL로 변경
+        const response = await fetch(`http://localhost:8080/api/tourism/${id}`, { // JWT가 적용된 URL로 변경
           method: "GET",
           headers: {
             "Content-Type": "application/json",
