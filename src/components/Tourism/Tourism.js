@@ -46,12 +46,18 @@ const Tourism = () => {
   // 관광 데이터 가져오기 함수
   const fetchData = useCallback(async () => {
     setLoading(true);
+
+    // 요청 URL과 파라미터 설정
     const url = new URL("http://localhost:8080/api/tourism");
     const params = new URLSearchParams();
 
+    // 필터링 값 추가
     if (selectedArea) params.append("areaCode", selectedArea);
     if (selectedType) params.append("contentTypeId", selectedType);
     if (selectedSubCategory) params.append("cat2", selectedSubCategory);
+    if (searchTerm) params.append("search", searchTerm);
+    params.append("page", currentPage);
+    params.append("size", itemsPerPage);
 
     url.search = params.toString();
 
@@ -64,46 +70,32 @@ const Tourism = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const result = await response.json();
 
+      const result = await response.json();
       console.log("API 응답 데이터:", result);  // 응답 데이터 확인
 
-      if (result && result.length > 0) {
-        setData(result);  // 데이터가 배열이라면 바로 설정
-        setFilteredData(result);  // 필터링 데이터도 동일하게 설정
+      if (result && result.data && result.data.length > 0) {
+        setData(result.data);
+        setFilteredData(result.data);
       } else {
-        console.error("데이터가 없습니다.");
         setData([]);  // 데이터가 없으면 빈 배열 설정
         setFilteredData([]);  // 필터링 데이터도 빈 배열
       }
     } catch (error) {
-      console.error("데이터 가져오기 오류:", error);
       setData([]);  // 오류 발생 시 빈 배열로 설정
       setFilteredData([]);  // 오류 발생 시 빈 배열로 설정
     } finally {
       setLoading(false);
     }
-  }, [selectedArea, selectedType, selectedSubCategory]);
+  }, [selectedArea, selectedType, selectedSubCategory, searchTerm, currentPage, itemsPerPage]);
 
   // 데이터가 처음 로드될 때 호출
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // 필터링 로직: 필터가 변경되면 데이터 필터링
-  useEffect(() => {
-    const filtered = data.filter((item) =>
-      item.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredData(filtered);
-    setCurrentPage(1);  // 필터 변경 시 첫 페이지로 리셋
-  }, [searchTerm, data]);
-
   // 페이지에 맞는 데이터 가져오기
-  const currentPageData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const currentPageData = filteredData;
 
   const getPageNumbers = () => {
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
