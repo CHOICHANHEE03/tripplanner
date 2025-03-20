@@ -43,8 +43,10 @@ const Home = () => {
       });
 
       const result = await response.json();
-      if (result && result.data) {
-        setTourismData(result.data);
+      if (result && Array.isArray(result)) {
+        // 관광지 데이터를 랜덤으로 3개 선택
+        const shuffled = [...result].sort(() => 0.5 - Math.random()).slice(0, 3);
+        setTourismData(shuffled);
       } else {
         setTourismData([]);
       }

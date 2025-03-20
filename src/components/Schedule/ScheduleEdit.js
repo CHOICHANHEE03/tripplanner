@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoCaretBackCircle } from "react-icons/io5";
 import Swal from "sweetalert2";
-import Search from "../Function/Search";
+import SearchTerm from "../Function/SearchTerm";
 import "../../css/Schedule/ScheduleModify.css";
 
 const ScheduleEdit = () => {
@@ -10,13 +10,15 @@ const ScheduleEdit = () => {
     const { scheduleId } = useParams(); // URL에서 scheduleId를 가져옴
 
     // 일정 관련 상태 변수
-    const [title, setTitle] = useState("");
-    const [date, setDate] = useState("");
-    const [username, setUsername] = useState("");
-    const [types, setTypes] = useState(["", "", ""]);
-    const [places, setPlaces] = useState(["", "", ""]);
-    const [details, setDetails] = useState(["", "", ""]);
-    const [scheduleCount, setScheduleCount] = useState(1);
+    const [title, setTitle] = useState(""); // 일정 제목
+    const [date, setDate] = useState(""); // 일정 날짜
+    const [username, setUsername] = useState(""); // 사용자 이름
+    const [types, setTypes] = useState(["", "", ""]); // 장소 타입
+    const [places, setPlaces] = useState(["", "", ""]); // 장소명
+    const [details, setDetails] = useState(["", "", ""]); // 상세 설명
+    const [scheduleCount, setScheduleCount] = useState(1); // 일정 개수
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
 
     // 타입 매핑 (코드 → 명칭)
     const typeMapping = { "12": "관광지", "14": "문화시설", "28": "레포츠" };
@@ -60,16 +62,22 @@ const ScheduleEdit = () => {
         try {
             const token = localStorage.getItem("token");
 
-            // 관광지 및 행사 데이터 동시 요청
+            // URLSearchParams를 사용하여 쿼리 파라미터 생성
+            const params = new URLSearchParams();
+            if (searchTerm.trim().length > 0) params.append("search", searchTerm);
+            params.append("page", currentPage - 1);
+            params.append("size", itemsPerPage);
+
+            // 관광지 및 행사 데이터 동시 요청 (검색어 포함)
             const [tourismResponse, eventResponse] = await Promise.all([
-                fetch(`http://localhost:8080/api/tourism?page=${currentPage - 1}&size=${itemsPerPage}`, {
+                fetch(`http://localhost:8080/api/tourism?${params.toString()}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
                 }),
-                fetch(`http://localhost:8080/api/event?page=${currentPage - 1}&size=${itemsPerPage}`, {
+                fetch(`http://localhost:8080/api/event?${params.toString()}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -83,20 +91,16 @@ const ScheduleEdit = () => {
                 eventResponse.json()
             ]);
 
-            // 관광지 검색
-            let foundItem = tourismData?.data?.find(item =>
-                item.title.toLowerCase() === searchTerm.toLowerCase()
-            );
+            // 검색된 데이터에서 첫 번째 항목 선택
+            let foundItem = tourismData?.data?.length > 0 ? tourismData.data[0] : null;
 
             if (foundItem) {
                 updateScheduleFields(index, foundItem.title, typeMapping[foundItem.contentTypeId] || "기타");
                 return;
             }
 
-            // 행사 검색
-            foundItem = eventData?.data?.find(item =>
-                item.title.toLowerCase() === searchTerm.toLowerCase()
-            );
+            // 관광지에서 찾지 못한 경우, 행사 데이터에서 검색
+            foundItem = eventData?.data?.length > 0 ? eventData.data[0] : null;
 
             if (foundItem) {
                 updateScheduleFields(index, foundItem.title, "행사");
@@ -217,7 +221,7 @@ const ScheduleEdit = () => {
             </div>
             {[...Array(scheduleCount)].map((_, index) => (
                 <div key={index} className="add-item">
-                    <Search
+                    <SearchTerm
                         isSchedulePage={true}
                         onSearch={(searchTerm) => fetchTourism(searchTerm, index)}
                     />

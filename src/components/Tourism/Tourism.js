@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Pagination from "../Function/Pagination";
-import TourismCategory from "../Tourism/TourismCategory";
-import TourismList from "../Tourism/TourismList";
-import Search from "../Function/Search";
+import TourismCategory from "./TourismCategory";
+import TourismList from "./TourismList";
+import SearchTerm from "../Function/SearchTerm";
 import "../../css/Tourism/TourismList.css";
 import "../../css/Function/Pagination.css";
 
@@ -54,10 +54,11 @@ const Tourism = () => {
         const url = new URL("http://localhost:8080/api/tourism");
         const params = new URLSearchParams();
 
+        // 필터링 값 추가
         if (selectedArea) params.append("areaCode", selectedArea);
         if (selectedType) params.append("contentTypeId", selectedType);
         if (selectedSubCategory) params.append("cat2", selectedSubCategory);
-        if (searchTerm) params.append("search", searchTerm);
+        if (searchTerm.trim().length > 0) params.append("search", searchTerm);
         params.append("page", page);
         params.append("size", itemsPerPage || 9); // 기본값 9개
 
@@ -132,7 +133,7 @@ const Tourism = () => {
 
   return (
     <div className="tourism-list">
-      <Search onSearch={handleSearch} />
+      <SearchTerm onSearch={handleSearch} />
       <TourismCategory
         selectedRegion={selectedArea}
         selectedType={selectedType}
