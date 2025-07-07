@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+## 📘 tripplanner
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+tripplanner는 특정 지역의 관광지와 행사 정보를 한눈에 확인할 수 있도록 만들어졌습니다.
 
-## Available Scripts
+사용자는 카테고리별 관광지 검색과 방문자 리뷰를 참고해 여행지를 선택하고, 일정을 관리할 수 있습니다.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+### ✨ 주요 기능
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* 🔍 **카테고리별 관광지 검색**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+원하는 테마나 카테고리로 관광지를 쉽고 빠르게 찾을 수 있습니다.
 
-### `npm test`
+* 🗣️ **방문자 리뷰 제공**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+다른 여행자들의 리뷰를 참고하여 여행지를 선택할 수 있습니다.
 
-### `npm run build`
+* 🗓️ **여행 일정 계획 및 관리**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+나만의 여행 일정을 만들고 관리하며 효율적인 여행 계획을 세울 수 있습니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 💡 기여하기
 
-### `npm run eject`
+tripplanner는 모두의 참여를 기다립니다.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+이슈 등록, 버그 수정, 새로운 기능 제안 등 자유롭게 기여해주세요!
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 📜 라이선스
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+이 프로젝트는 MIT License를 따릅니다.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 🙌 함께해요
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+더 많은 사람들이 쉽고 즐겁게 여행을 계획할 수 있도록 많은 관심과 참여 부탁드립니다!
